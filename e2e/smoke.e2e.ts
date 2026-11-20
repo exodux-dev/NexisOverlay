@@ -214,14 +214,6 @@ test("data source picker switches the recommendation and falls back", async ({ s
   await expect(bar.getByRole("radio", { name: "HexMayhem" })).toHaveCount(0);
 });
 
-test("browser right-click menu is hidden outside text fields", async ({ start }) => {
-  const page = await start();
-  const blocked = (sel: string) =>
-    page.locator(sel).first().evaluate((el) => !el.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true })));
-  expect(await blocked(".nav")).toBe(true);
-  expect(await blocked('input[role="combobox"]')).toBe(false);
-});
-
 test("SR role editor swaps lanes, Team power follows, Reset restores", async ({ start }) => {
   const POS: Record<string, string> = {
     Ahri: "MIDDLE", Jinx: "BOTTOM", Leona: "UTILITY", Lux: "JUNGLE", Darius: "TOP",

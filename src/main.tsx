@@ -3,13 +3,11 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import { demoGame } from "./app/demo";
 import { actions, devHooks, getState, init, registerDemo, DerivedProvider } from "./app/store";
-import { installBrowserMenuGuard } from "./app/browserMenu";
 import "@fontsource-variable/inter";
 import "./ui/theme.css";
 import "./ui/polish.css";
 
 registerDemo(demoGame);
-installBrowserMenuGuard();
 
 const view = new URLSearchParams(window.location.search).get("view");
 const root = createRoot(document.getElementById("root")!);
