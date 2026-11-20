@@ -1,0 +1,34 @@
+/* "Import to League" button (Build tab) + Settings → League client card. */
+.import-league:disabled {
+  pointer-events: none; /* let the tooltip anchor receive hover */
+}
+.import-league-ready {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent);
+}
+.import-league-ready:hover {
+  background: color-mix(in srgb, var(--accent) 14%, var(--panel-2));
+}
+.league-client-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  border-radius: var(--r-md);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.league-client-note > svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+.league-client-note p {
+  margin: 0;
+}
+.league-client-note p + p {
+  margin-top: 4px;
+}

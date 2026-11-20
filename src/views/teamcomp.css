@@ -1,0 +1,550 @@
+/* Team composition (TeamComp.tsx). Prefix: tc- */
+
+.tc-section,
+.tc-card {
+  --tc-ally: var(--accent);
+  --tc-enemy: var(--red);
+  --tc-ad: var(--ad);
+  --tc-ap: var(--ap);
+  --tc-true: var(--silver);
+}
+
+/* ---------------------------------------------------------------- shared bits */
+
+.tc-dmg {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: rgba(var(--ink-rgb), 0.06);
+}
+.tc-dmg > span {
+  transition: width 0.4s var(--ease);
+}
+.tc-dmg-thin {
+  height: 4px;
+  opacity: 0.75;
+}
+.tc-dmg-ad {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+.tc-dmg-ap {
+  background: linear-gradient(90deg, #6d28d9, var(--tc-ap));
+}
+.tc-dmg-true {
+  background: var(--tc-true);
+}
+.tc-dmg-legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px 9px;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.tc-dmg-legend b {
+  color: var(--text-2);
+  font-weight: 700;
+}
+.tc-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 4px;
+  border-radius: 2px;
+  vertical-align: 0;
+}
+.tc-dot-ad {
+  background: var(--tc-ad);
+}
+.tc-dot-ap {
+  background: var(--tc-ap);
+}
+.tc-dot-true {
+  background: var(--tc-true);
+}
+
+.tc-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-2);
+}
+.tc-note svg {
+  flex: none;
+  margin-top: 2px;
+}
+.tc-note-warn svg {
+  color: var(--orange);
+}
+.tc-note-good svg {
+  color: var(--green);
+}
+.tc-note-info svg {
+  color: var(--blue);
+}
+.tc-empty {
+  padding: 8px 0;
+}
+.tc-tt-curve {
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- champ select section */
+
+.tc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: calc(12px * var(--d));
+  border-top: 1px solid var(--frame-subtle, var(--border));
+}
+.tc-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tc-section-head .eyebrow {
+  margin: 0;
+}
+.tc-roster {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.tc-roster .gicon {
+  box-shadow: 0 0 0 1px var(--border-2);
+}
+.tc-roster-empty {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px dashed var(--border-2);
+}
+.tc-roster .small {
+  margin-left: 6px;
+}
+.tc-section-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: calc(18px * var(--d));
+  align-items: start;
+}
+@container (max-width: 640px) {
+  .tc-section-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tc-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.tc-row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) 92px;
+  align-items: center;
+  gap: 10px;
+  min-height: 18px;
+}
+.tc-row-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: help;
+  white-space: nowrap;
+}
+.tc-row-dmg {
+  align-items: start;
+}
+.tc-row-dmg .tc-row-label {
+  cursor: default;
+}
+.tc-dmg-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 5px;
+}
+.tc-dmg-stack .tc-dmg-legend {
+  margin-top: 1px;
+  font-size: 10.5px;
+}
+.tc-hint {
+  padding: 7px 10px;
+  border-radius: var(--r-md);
+  border: 1px dashed var(--frame-subtle, var(--border));
+}
+.tc-track {
+  position: relative;
+  height: 7px;
+  border-radius: 99px;
+  background: rgba(var(--ink-rgb), 0.06);
+  overflow: hidden;
+}
+.tc-track > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transition:
+    width 0.35s var(--ease),
+    left 0.35s var(--ease);
+}
+.tc-fill {
+  left: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent));
+}
+.tc-gain {
+  border-radius: 0 99px 99px 0;
+  background: repeating-linear-gradient(135deg, var(--green) 0 3px, color-mix(in srgb, var(--green) 60%, transparent) 3px 6px);
+  box-shadow: 0 0 8px -1px color-mix(in srgb, var(--green) 70%, transparent);
+}
+.tc-loss {
+  border-radius: 0 99px 99px 0;
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--red) 70%, transparent) 0 3px, transparent 3px 6px);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 60%, transparent);
+}
+.tc-lvl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  font-size: 11.5px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.tc-hi {
+  color: var(--green);
+}
+.tc-mid {
+  color: var(--text-2);
+}
+.tc-lo {
+  color: var(--orange);
+}
+.tc-none {
+  color: var(--red);
+}
+.tc-arrow {
+  flex: none;
+}
+.tc-arrow.tc-up {
+  color: var(--green);
+  transform: rotate(-90deg);
+}
+.tc-arrow.tc-down {
+  color: var(--red);
+  transform: rotate(90deg);
+}
+
+.tc-side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.tc-impact {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 11px;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  animation: tc-in 0.18s var(--ease);
+}
+@keyframes tc-in {
+  from {
+    opacity: 0.4;
+    transform: translateY(2px);
+  }
+}
+.tc-impact .gicon {
+  flex: none;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.tc-impact-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.tc-impact-title {
+  color: var(--text-2);
+}
+.tc-impact-title b {
+  color: var(--text);
+}
+.tc-impact-sum {
+  font-weight: 700;
+  color: var(--teal-2);
+}
+.tc-impact-fix {
+  color: var(--green);
+}
+.tc-impact-add {
+  color: var(--orange);
+}
+
+/* pick-helper option note: "+Frontline +Engage" */
+.csh-opt-comp {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: -7px 0 3px;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--teal-2);
+  min-width: 0;
+}
+.csh-opt-comp-k {
+  flex: none;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.csh-opt-comp.csh-opt-comp-down {
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- players tab: two-team comparison */
+
+.tc-card {
+  container-type: inline-size;
+}
+.tc-ally {
+  color: var(--tc-ally);
+}
+.tc-enemy {
+  color: var(--tc-enemy);
+}
+.tc-legend {
+  display: inline-flex;
+  gap: 12px;
+  font-size: 11.5px;
+  font-weight: 650;
+}
+.tc-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.tc-key {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.tc-key-ally {
+  background: var(--tc-ally);
+}
+.tc-key-enemy {
+  background: var(--tc-enemy);
+}
+
+.tc-vs {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: calc(18px * var(--d));
+  align-items: center;
+}
+@container (max-width: 700px) {
+  .tc-vs {
+    grid-template-columns: 1fr;
+  }
+  .tc-vs-chart {
+    max-width: 300px;
+    justify-self: center;
+  }
+}
+.tc-vs-chart {
+  width: 100%;
+}
+.tc-radar {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.tc-radar-ring {
+  fill: none;
+  stroke: rgba(var(--ink-rgb), 0.08);
+  stroke-width: 1;
+}
+.tc-radar-spoke {
+  stroke: rgba(var(--ink-rgb), 0.07);
+  stroke-width: 1;
+}
+.tc-radar-label {
+  fill: var(--muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  font-family: var(--font);
+}
+.tc-radar-ally {
+  fill: color-mix(in srgb, var(--tc-ally) 20%, transparent);
+  stroke: var(--tc-ally);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.tc-radar-enemy {
+  fill: color-mix(in srgb, var(--tc-enemy) 14%, transparent);
+  stroke: var(--tc-enemy);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-dasharray: 5 3;
+}
+.tc-radar-dot {
+  stroke: rgb(var(--panel-rgb));
+  stroke-width: 1.5;
+}
+.tc-radar-dot-ally {
+  fill: var(--tc-ally);
+}
+.tc-radar-dot-enemy {
+  fill: var(--tc-enemy);
+}
+
+.tc-vs-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.tc-vs-teams {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.tc-team-icons {
+  display: inline-flex;
+  gap: 3px;
+}
+.tc-team-icons.tc-ally .gicon {
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--tc-ally) 70%, transparent);
+}
+.tc-team-icons.tc-enemy .gicon {
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--tc-enemy) 70%, transparent);
+}
+.tc-vs-row,
+.tc-vs-dmg {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 118px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+.tc-vs-dmg {
+  align-items: start;
+  padding-bottom: 4px;
+  margin-bottom: 1px;
+  border-bottom: 1px solid var(--border);
+}
+.tc-vs-dmg-side {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.tc-vs-dmg-side.tc-right {
+  align-items: flex-end;
+}
+.tc-vs-dmg-side .tc-dmg {
+  width: 100%;
+}
+.tc-vs-mid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+.tc-vs-label {
+  font-size: 11.5px;
+  font-weight: 650;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.tc-vs-tag {
+  font-size: 9.5px;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0 5px;
+  line-height: 15px;
+  border-radius: 99px;
+  background: var(--panel-2);
+}
+.tc-vs-tag.tc-good {
+  color: var(--tc-ally);
+  background: color-mix(in srgb, var(--tc-ally) 14%, transparent);
+}
+.tc-vs-tag.tc-bad {
+  color: var(--tc-enemy);
+  background: color-mix(in srgb, var(--tc-enemy) 14%, transparent);
+}
+.tc-vs-tag.tc-even {
+  color: var(--muted);
+}
+.tc-vs-bar {
+  position: relative;
+  display: flex;
+  height: 8px;
+  width: 100%;
+  border-radius: 99px;
+  background: rgba(var(--ink-rgb), 0.06);
+  overflow: hidden;
+  cursor: help;
+}
+.tc-vs-left {
+  justify-content: flex-end;
+}
+.tc-vs-bar > i {
+  display: block;
+  height: 100%;
+  transition: width 0.45s var(--ease);
+}
+.tc-vs-fill-ally {
+  border-radius: 99px 0 0 99px;
+  background: linear-gradient(270deg, var(--accent), var(--accent-deep));
+}
+.tc-vs-fill-enemy {
+  border-radius: 0 99px 99px 0;
+  background: linear-gradient(90deg, #f87171, #dc2626);
+}
+
+.tc-vs-notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(18px * var(--d));
+  margin-top: calc(14px * var(--d));
+  padding-top: calc(12px * var(--d));
+  border-top: 1px solid var(--border);
+}
+@container (max-width: 620px) {
+  .tc-vs-notes {
+    grid-template-columns: 1fr;
+  }
+}

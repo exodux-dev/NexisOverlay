@@ -1,0 +1,1031 @@
+/* ==================================================================
+   Polish layer: toasts, onboarding, skeletons, About, and global
+   refinements (focus rings, scrollbars, type scale). Loaded after
+   theme.css so it can refine without restructuring it.
+   ================================================================== */
+
+:root {
+  /* Spacing scale (multiplied by density where it matters). */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  /* Type scale. */
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-body: 13.5px;
+  --fs-md: 15px;
+  --fs-lg: 18px;
+  --fs-xl: 22px;
+  --focus: color-mix(in srgb, var(--hex) 80%, #ffffff);
+  --skel-base: rgba(var(--ink-rgb), 0.06);
+  --skel-hi: rgba(var(--ink-rgb), 0.13);
+}
+:root[data-theme="light"] {
+  --focus: var(--accent);
+  --skel-base: rgba(var(--ink-rgb), 0.06);
+  --skel-hi: rgba(var(--ink-rgb), 0.12);
+}
+
+/* ------------------------------------------------------------------ focus & interaction */
+
+/* One crisp, consistent focus ring for keyboard users only. */
+.nx-main :focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+.nx-main :focus:not(:focus-visible) {
+  outline: none;
+}
+.nx-main .nav-btn:focus-visible,
+.nx-main .settings-tab:focus-visible,
+.nx-main .seg-btn:focus-visible {
+  outline-offset: -2px;
+}
+.nx-main .switch:focus-visible {
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+.nx-main input[type="range"]:focus-visible {
+  outline-offset: 4px;
+}
+.nx-main button,
+.nx-main a,
+.nx-main [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+.nx-main button:disabled {
+  cursor: not-allowed;
+}
+
+/* ------------------------------------------------------------------ scrollbars */
+
+.nx-main ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.nx-main ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--frame) 70%, transparent);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-clip: content-box;
+}
+.nx-main ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--frame-bright);
+}
+.nx-main ::-webkit-scrollbar-corner {
+  background: transparent;
+}
+@supports not selector(::-webkit-scrollbar) {
+  .nx-main * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--frame) transparent;
+  }
+}
+
+/* ------------------------------------------------------------------ type hierarchy */
+
+.card-head {
+  min-height: 26px;
+}
+.card-title {
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+.card-extra {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.field-label {
+  font-weight: 600;
+}
+.field-hint {
+  line-height: 1.45;
+}
+.empty {
+  padding: calc(26px * var(--d)) var(--sp-4);
+  gap: var(--sp-2);
+}
+.empty-title {
+  font-size: var(--fs-md);
+  letter-spacing: 0.01em;
+}
+.empty-body {
+  line-height: 1.55;
+}
+.empty-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.empty-action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+.empty-error .empty-icon {
+  color: var(--red);
+  border-color: color-mix(in srgb, var(--red) 45%, transparent);
+}
+/* Inline variant inside a card body: icon · text · action in one row. */
+.empty.empty-compact {
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  gap: var(--sp-3);
+  padding: var(--sp-3) 0;
+}
+.empty-compact .empty-icon {
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  flex: none;
+}
+.empty-compact .empty-text {
+  align-items: flex-start;
+  flex: 1;
+  gap: 2px;
+}
+.empty-compact .empty-title {
+  font-size: var(--fs-body);
+}
+.empty-compact .empty-body {
+  font-size: var(--fs-sm);
+}
+.empty-compact .empty-action {
+  margin: 0;
+  flex: none;
+}
+
+/* ------------------------------------------------------------------ view transition */
+
+@media (prefers-reduced-motion: no-preference) {
+  .view {
+    animation: nx-view-in 0.24s var(--ease) both;
+  }
+  .settings-grid {
+    animation: nx-view-in 0.2s var(--ease) both;
+  }
+}
+@keyframes nx-view-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ------------------------------------------------------------------ toasts */
+
+.toasts {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  pointer-events: none;
+  max-width: min(380px, calc(100% - 32px));
+}
+.toast {
+  --tone: var(--hex);
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  width: 340px;
+  max-width: 100%;
+  padding: 11px 10px 12px 12px;
+  border: 1px solid var(--frame);
+  border-left: 3px solid var(--tone);
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 12%, transparent), transparent 55%), var(--tip-bg);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 16px 36px -12px rgba(0, 0, 0, 0.75);
+  color: var(--text);
+  font-size: 13px;
+  animation: nx-toast-in 0.24s var(--ease) both;
+}
+.toast-good {
+  --tone: var(--green);
+}
+.toast-warn {
+  --tone: var(--orange);
+}
+.toast-bad {
+  --tone: var(--red);
+}
+.toast-out {
+  animation: nx-toast-out 0.18s ease-in both;
+}
+.toast-icon {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone) 40%, transparent);
+}
+.toast-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+  min-width: 0;
+}
+.toast-msg {
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.toast-detail {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.toast-close {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.toast-close:hover {
+  color: var(--text);
+  background: var(--panel-3);
+}
+.toast-timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  transform-origin: left;
+  background: color-mix(in srgb, var(--tone) 70%, transparent);
+  animation: nx-toast-timer linear both;
+}
+.toast:hover .toast-timer {
+  animation-play-state: paused;
+}
+@keyframes nx-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px) scale(0.98);
+  }
+}
+@keyframes nx-toast-out {
+  to {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+@keyframes nx-toast-timer {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+:root[data-theme="light"] .toast {
+  border-color: var(--border-2);
+  border-left-color: var(--tone);
+  box-shadow: 0 14px 34px -12px rgba(var(--shade-rgb), 0.35);
+}
+
+/* ------------------------------------------------------------------ onboarding */
+
+.ob-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(var(--bg-rgb), 0.55), rgba(var(--bg-rgb), 0.86));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: nx-fade-in 0.2s ease-out both;
+}
+.ob-scrim.ob-closing {
+  animation: nx-fade-out 0.16s ease-in both;
+}
+.ob-dialog {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--frame);
+  border-radius: calc(var(--radius) + 2px);
+  background:
+    radial-gradient(420px 180px at 50% -40px, color-mix(in srgb, var(--hex) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, rgb(var(--panel-rgb)), rgb(var(--bg-rgb)));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--frame-bright) 30%, transparent),
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 40px 90px -24px rgba(0, 0, 0, 0.85);
+  animation: nx-pop-in 0.26s var(--ease) both;
+  overflow: hidden;
+}
+.ob-dialog::before,
+.ob-dialog::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  width: 12px;
+  height: 12px;
+  border-top: 1px solid var(--frame-bright);
+  pointer-events: none;
+}
+.ob-dialog::before {
+  left: -1px;
+  border-left: 1px solid var(--frame-bright);
+}
+.ob-dialog::after {
+  right: -1px;
+  border-right: 1px solid var(--frame-bright);
+}
+.ob-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px 0 24px;
+}
+.ob-step-label {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--title);
+}
+.ob-skip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 6px 0 10px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+.ob-skip:hover {
+  color: var(--text);
+  background: var(--panel-2);
+}
+.ob-skip .kbd {
+  font-size: 10px;
+}
+.ob-body {
+  padding: 18px 28px 6px;
+  overflow-y: auto;
+  min-height: 0;
+  text-align: center;
+  animation: nx-step-fwd 0.26s var(--ease) both;
+}
+.ob-body.ob-back {
+  animation-name: nx-step-back;
+}
+.ob-hero {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  display: grid;
+  place-items: center;
+  color: var(--frame-bright);
+  border: 1px solid var(--frame);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--frame-bright) 14%, transparent), transparent 70%);
+  box-shadow: 0 0 24px -6px color-mix(in srgb, var(--frame-bright) 50%, transparent);
+}
+.ob-hero-brand {
+  width: 76px;
+  height: 76px;
+  border-color: color-mix(in srgb, var(--hex) 55%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--hex) 18%, transparent), transparent 70%);
+  box-shadow: 0 0 32px -6px color-mix(in srgb, var(--hex) 60%, transparent);
+}
+.ob-hero-good {
+  color: var(--green);
+  border-color: color-mix(in srgb, var(--green) 50%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--green) 16%, transparent), transparent 70%);
+  box-shadow: 0 0 24px -6px color-mix(in srgb, var(--green) 50%, transparent);
+}
+.ob-title {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--gold-text);
+}
+.ob-lead {
+  margin: 0 auto 18px;
+  max-width: 420px;
+  color: var(--text-2);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.ob-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+.ob-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--frame-subtle);
+  border-radius: var(--radius);
+  background: rgba(var(--bg-rgb), 0.4);
+}
+.ob-row-icon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius);
+  border: 1px solid var(--frame);
+  color: var(--frame-bright);
+}
+.ob-checks .ob-row-icon {
+  color: var(--green);
+  border-color: color-mix(in srgb, var(--green) 45%, transparent);
+}
+.ob-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-top: 1px;
+}
+.ob-row-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+}
+.ob-row-sub {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.ob-row-sub b {
+  color: var(--text-2);
+  font-weight: 600;
+}
+.ob-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.ob-mode {
+  padding: 2px 8px;
+  border: 1px solid var(--frame);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gold-text);
+  background: var(--panel-2);
+}
+.ob-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px 20px;
+  margin-top: 12px;
+  border-top: 1px solid var(--frame-subtle);
+}
+.ob-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ob-dot {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.ob-dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--frame-subtle);
+  box-shadow: inset 0 0 0 1px var(--frame);
+  transition:
+    width 0.2s var(--ease),
+    background 0.2s;
+}
+.ob-dot.seen::before {
+  background: var(--frame);
+}
+.ob-dot.active::before {
+  width: 20px;
+  background: var(--frame-bright);
+  box-shadow: 0 0 10px -1px color-mix(in srgb, var(--frame-bright) 70%, transparent);
+}
+.ob-dot:hover::before {
+  background: var(--frame-bright);
+}
+.ob-actions {
+  display: flex;
+  gap: 8px;
+}
+.ob-actions .btn {
+  min-width: 96px;
+  height: 36px;
+}
+@keyframes nx-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes nx-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes nx-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+@keyframes nx-step-fwd {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+}
+@keyframes nx-step-back {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+}
+:root[data-theme="light"] .ob-dialog {
+  border-color: var(--border-2);
+  background:
+    radial-gradient(420px 180px at 50% -40px, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
+    rgb(var(--panel-rgb));
+  box-shadow: 0 30px 80px -24px rgba(var(--shade-rgb), 0.45);
+}
+:root[data-theme="light"] .ob-scrim {
+  background: rgba(var(--bg-rgb), 0.7);
+}
+:root[data-theme="light"] .ob-row {
+  background: rgba(var(--ink-rgb), 0.025);
+}
+:root[data-theme="light"] .ob-title {
+  color: var(--text);
+}
+@media (max-height: 640px) {
+  .ob-hero {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+  }
+  .ob-hero svg {
+    width: 24px;
+    height: 24px;
+  }
+  .ob-hero-brand svg {
+    width: 40px;
+    height: 40px;
+  }
+  .ob-body {
+    padding-top: 10px;
+  }
+  .ob-title {
+    font-size: var(--fs-lg);
+  }
+  .ob-lead {
+    margin-bottom: 12px;
+  }
+  .ob-row {
+    padding: 8px 10px;
+  }
+  .ob-foot {
+    padding: 12px 24px 14px;
+    margin-top: 8px;
+  }
+}
+
+/* ------------------------------------------------------------------ skeletons */
+
+.skel {
+  display: inline-block;
+  flex: none;
+  border-radius: calc(var(--radius) * 0.75 + 2px);
+  background: linear-gradient(90deg, var(--skel-base) 0%, var(--skel-hi) 40%, var(--skel-base) 80%) 0 0 / 300% 100%;
+  animation: nx-shimmer 1.4s ease-in-out infinite;
+}
+.skel-round {
+  border-radius: 999px;
+}
+.skel-label {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.skel-label:not(:empty)::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.skel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.skel-icons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 4px 8px;
+}
+.skel-icon-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.skel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.skel-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.build-skeleton {
+  display: contents;
+}
+@keyframes nx-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel,
+  .skel-label::before {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ about */
+
+.about-hero {
+  background:
+    radial-gradient(520px 160px at 0% 0%, color-mix(in srgb, var(--hex) 12%, transparent), transparent 70%),
+    var(--box-bg);
+}
+.about-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.about-mark {
+  width: 60px;
+  height: 60px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--hex) 50%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--hex) 16%, transparent), transparent 70%);
+  box-shadow: 0 0 24px -6px color-mix(in srgb, var(--hex) 55%, transparent);
+}
+.about-id {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1 1 220px;
+}
+.about-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--gold-text);
+}
+.about-tag {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.about-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 5px;
+}
+.about-hero-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gold-text);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+}
+.ext-link:hover {
+  color: var(--frame-bright);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ext-link .ext-icon {
+  opacity: 0.6;
+  flex: none;
+}
+.btn.ext-link {
+  color: var(--gold-text);
+  text-decoration: none;
+}
+.credits {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.credits li {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--frame-subtle);
+}
+.credits li:first-child {
+  padding-top: 0;
+}
+.credits li:last-child {
+  border-bottom: 0;
+}
+.about-storage {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: rgba(var(--bg-rgb), 0.35);
+  border: 1px solid var(--frame-subtle);
+}
+.about-storage .field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.about-path {
+  display: block;
+  margin-top: 2px;
+  padding: 4px 6px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+.settings-about .card > p + .about-storage,
+.settings-about .card > .about-storage + div {
+  margin-top: 12px;
+}
+:root[data-theme="light"] .about-name,
+:root[data-theme="light"] .ext-link,
+:root[data-theme="light"] .btn.ext-link {
+  color: var(--accent-deep);
+}
+:root[data-theme="light"] .about-name {
+  color: var(--text);
+}
+
+/* ------------------------------------------------------------------ top bar & nav refinements */
+
+.tb-champ-text {
+  overflow: hidden;
+}
+.tb-champ-name,
+.tb-champ-arch {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tb-stats,
+.tb-stat {
+  flex: none;
+}
+@media (max-width: 980px) {
+  /* The portrait is enough at narrow widths; the name would collide with the game clock. */
+  .tb-champ-text {
+    display: none;
+  }
+  .tb-champ {
+    padding-left: 10px;
+  }
+}
+/* Daylight: "gold" text is a warm brown there, so active states follow the accent instead. */
+:root[data-theme="light"] .nav-btn.active .nav-label,
+:root[data-theme="light"] .settings-tab.active {
+  color: var(--accent-deep);
+}
+:root[data-theme="light"] .nav-btn.active {
+  color: var(--accent);
+}
+.nav-version {
+  margin-top: 6px;
+}
+
+/* ------------------------------------------------------------------ build: narrow layouts */
+
+/* When the meta row wraps, the skill strip fills its line instead of floating at half width. */
+.meta-row .skill-strip {
+  flex: 1 0 auto;
+}
+@media (max-width: 1100px) {
+  .explore-demo {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+}
+.meta-row .skill-strip .skill-link {
+  margin-left: auto;
+}
+:root[data-theme="light"] .ob-mode {
+  color: var(--accent-deep);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+/* "Update available" pill in the top bar */
+.update-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--text);
+  font: 600 11.5px var(--font-body, inherit);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.update-pill:hover {
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+.update-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ==================================================================
+   Visual QA pass — shared fixes (spacing, alignment, contrast, focus)
+   ================================================================== */
+
+/* Card headers: extras up to ~34px tall (segmented controls, buttons) no longer push the
+   title down, so titles of side-by-side cards sit on the same line. */
+.card-head > .card-extra {
+  margin-block: -4px;
+}
+/* Flush cards (tables) keep the same title offset as padded cards: min-height applies to
+   the content box, not padding + content. */
+.card-flush > .card-head {
+  box-sizing: content-box;
+  min-height: 26px;
+  padding: calc(14px * var(--d)) calc(16px * var(--d)) calc(10px * var(--d));
+}
+
+/* Build order: badges line up even when a long item name uses the smaller font. */
+.slot-name {
+  min-height: calc(11.5px * 1.25 * 2);
+}
+.slot-next .kind-badge.kind-badge {
+  background: var(--frame-bright);
+  color: rgb(var(--bg-rgb));
+}
+:root[data-theme="light"] .slot-next .kind-badge.kind-badge,
+:root[data-theme="light"] .slot-next .slot-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Low-contrast text in Daylight. */
+:root[data-theme="light"] .nav-version {
+  color: var(--muted);
+}
+
+/* Keyboard focus: rows/tiles that only changed their background now get the shared ring. */
+.nx-main .tl-champ:focus-visible,
+.nx-main .gd-spell:focus-visible,
+.nx-main .sc-tag:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+.nx-main .tl-table tbody tr:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+.nx-main .input:focus-visible,
+.nx-main .search:focus-within,
+.nx-main .home-search-field:focus-within {
+  outline: 2px solid color-mix(in srgb, var(--focus) 55%, transparent);
+  outline-offset: 1px;
+}
+.nx-main .slider input[type="range"]:focus-visible {
+  outline: 2px solid var(--focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-skel-icon,
+  .sc-skel-bar {
+    animation: none;
+  }
+}
+
+/* Demo toggle in the context bar: keep its caption on one line instead of a 3-line orphan. */
+.demo-flag {
+  flex: none;
+}
+.demo-flag .toggle-sub,
+.demo-flag .field-hint {
+  white-space: nowrap;
+}
+
+/* Daylight: active segmented buttons sit on an accent tint, so their label follows the accent
+   (the warm-brown "gold" text clashed with the teal fill). */
+:root[data-theme="light"] .seg-btn.active,
+:root[data-theme="light"] .topbar .seg-btn.active,
+:root[data-theme="light"] .style-bar .seg-btn.active {
+  color: var(--accent-deep);
+}
+
+/* Contrast: "faint" text (legends, hints, version, separators) was ~2.8–3.2:1 on the dark
+   panels. Lift it to ~4.3–4.5:1 while keeping it a step below --muted. */
+:root {
+  --faint: color-mix(in srgb, var(--muted) 75%, rgb(var(--bg-rgb)));
+}
+:root[data-theme="league"] {
+  --faint: #7e7b72;
+}
+:root[data-theme="light"] {
+  --faint: color-mix(in srgb, var(--muted) 88%, rgb(var(--bg-rgb)));
+}

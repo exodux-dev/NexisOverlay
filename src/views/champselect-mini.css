@@ -1,0 +1,114 @@
+/* Compact champ-select view (small window at the side of the screen). */
+.shell-mini {
+  border-radius: 10px;
+}
+.csm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  cursor: grab;
+  user-select: none;
+}
+.csm-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.csm-ph {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+.csm-who {
+  flex: 1;
+  min-width: 0;
+}
+.csm-name {
+  font-weight: 700;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.csm-sub {
+  display: flex;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.csm-wr {
+  color: var(--accent);
+  font-weight: 600;
+}
+.csm-btn {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.csm-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+.csm-order {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+}
+.csm-item {
+  display: grid;
+  place-items: center;
+  cursor: help;
+}
+.csm-skills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+.csm-label {
+  margin-right: 4px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.csm-key {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 1px solid var(--frame, rgba(200, 170, 110, 0.4));
+  font-weight: 700;
+}
+.csm-chev {
+  color: var(--muted);
+  margin: 0 2px;
+}
+.csm-expand {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--text);
+  font: 600 12px var(--font-body, inherit);
+  cursor: pointer;
+}
+.csm-expand:hover {
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}

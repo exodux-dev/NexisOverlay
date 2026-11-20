@@ -1,0 +1,70 @@
+/* Favourite star toggle (Home, Build header, tier list). */
+
+.fav-star {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  padding: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+  line-height: 0;
+  transition: color 0.12s, transform 0.12s, background 0.12s;
+}
+.fav-star:hover {
+  color: var(--gold-text);
+  background: rgba(var(--ink-rgb), 0.06);
+}
+.fav-star:active {
+  transform: scale(0.88);
+}
+.fav-star.is-on {
+  color: var(--frame-bright, var(--gold));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--frame-bright, var(--gold)) 55%, transparent));
+}
+
+/* Build header: next to the champion button. */
+.explore-me {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.explore-fav {
+  padding: 7px;
+}
+
+/* Tier list chips: a corner star, shown on hover / focus or when starred. */
+.tl-chip-wrap {
+  position: relative;
+}
+.tl-fav {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  padding: 3px;
+  background: rgb(var(--bg-rgb));
+  box-shadow: 0 0 0 1px var(--frame-subtle, var(--border));
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.tl-fav:hover {
+  background: rgb(var(--bg-rgb));
+}
+.tl-chip-wrap:hover .tl-fav,
+.tl-fav:focus-visible,
+.tl-fav.is-on {
+  opacity: 1;
+}
+
+/* Tier list table: star after the name. */
+.tl-row-fav {
+  margin-left: -4px;
+  opacity: 0.55;
+}
+tr:hover .tl-row-fav,
+.tl-row-fav:focus-visible,
+.tl-row-fav.is-on {
+  opacity: 1;
+}

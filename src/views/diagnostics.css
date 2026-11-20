@@ -1,0 +1,225 @@
+/* Settings → Diagnostics */
+
+.diag-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.diag-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.diag-row {
+  display: grid;
+  grid-template-columns: 12px minmax(120px, 170px) 1fr;
+  gap: 10px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.diag-row:first-child {
+  border-top: 0;
+}
+.diag-rows-compact .diag-row {
+  grid-template-columns: 12px minmax(110px, 180px) 1fr;
+  padding: 5px 0;
+}
+.diag-label {
+  color: var(--text);
+  font-weight: 600;
+}
+.diag-value {
+  color: var(--text-2);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.diag-hint {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.diag-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  align-self: center;
+  background: var(--faint);
+}
+.diag-ok {
+  background: var(--green);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--green) 60%, transparent);
+}
+.diag-warn {
+  background: var(--gold);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--gold) 55%, transparent);
+}
+.diag-bad {
+  background: var(--red);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--red) 60%, transparent);
+}
+.diag-off {
+  background: transparent;
+  border: 2px solid var(--faint);
+  box-sizing: border-box;
+}
+
+/* event log */
+.diag-log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow: auto;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.diag-log li {
+  display: grid;
+  grid-template-columns: auto 52px 1fr;
+  gap: 8px;
+  padding: 2px 0;
+  border-top: 1px solid var(--border);
+}
+.diag-log time,
+.diag-log-area {
+  color: var(--muted);
+}
+.diag-log-msg {
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+.diag-log-warn .diag-log-msg {
+  color: var(--gold-text);
+}
+.diag-log-error .diag-log-msg {
+  color: var(--red-text);
+}
+
+/* calibration */
+.diag-calib-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(220px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .diag-calib-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.diag-calib-view,
+.diag-calib-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.diag-shot {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--r-sm, 8px);
+  border: 1px solid var(--border-2);
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  overflow: hidden;
+}
+.diag-shot img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+.diag-shot-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+.diag-shot-region {
+  position: absolute;
+  border: 2px solid var(--teal);
+  border-radius: 3px;
+  box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.35);
+}
+.diag-shot-current {
+  position: absolute;
+  border: 2px dashed var(--gold);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.diag-ocr-box {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+.diag-ocr-box.hit {
+  border-color: var(--green);
+  background: color-mix(in srgb, var(--green) 25%, transparent);
+}
+.diag-calib-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.diag-ocr {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.diag-matched {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.diag-lines {
+  margin: 0;
+  padding: 6px 8px 6px 28px;
+  max-height: 160px;
+  overflow: auto;
+  font-size: 11.5px;
+  border-radius: var(--r-sm, 8px);
+  background: var(--panel-2);
+  color: var(--text-2);
+}
+.diag-lines li.hit {
+  color: var(--green-text);
+}
+.diag-line-hit {
+  color: var(--green);
+}
+
+.diag-card .card-head {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.diag-card .card-title {
+  white-space: normal;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .diag-row,
+  .diag-rows-compact .diag-row {
+    grid-template-columns: 12px 1fr;
+    row-gap: 2px;
+  }
+  .diag-row .diag-value {
+    grid-column: 2;
+  }
+  .diag-dot {
+    align-self: baseline;
+    margin-top: 3px;
+  }
+}

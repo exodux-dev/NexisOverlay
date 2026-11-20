@@ -1,0 +1,990 @@
+/* Guide view — League-client look: framed boxes, gold hairlines, display-font headings.
+   Tokens derive from the active theme; the "league" preset gets the exact client palette. */
+
+.view-guide {
+  container-type: inline-size;
+  --gd-display: var(--font-display, "Inter Variable", "Inter", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif);
+  --gd-gold: var(--accent);
+  --gd-title: color-mix(in srgb, var(--accent) 55%, var(--text));
+  --gd-frame: color-mix(in srgb, var(--accent) 45%, rgb(var(--bg-rgb)));
+  --gd-frame-hi: color-mix(in srgb, var(--accent) 80%, rgb(var(--bg-rgb)));
+  --gd-frame-lo: color-mix(in srgb, var(--accent) 22%, rgb(var(--bg-rgb)));
+  --gd-well: rgba(var(--bg-rgb), 0.45);
+  --gd-pick: var(--accent);
+  --gd-ult: var(--accent-2);
+  --gd-red: #e84057;
+  --gd-blue: #3b9cf0;
+  --gd-r: var(--radius);
+}
+:root[data-theme="league"] .view-guide {
+  --gd-gold: #c8aa6e;
+  --gd-title: #f0e6d2;
+  --gd-frame: #785a28;
+  --gd-frame-hi: #c8aa6e;
+  --gd-frame-lo: #463714;
+  --gd-well: rgba(1, 10, 19, 0.55);
+  --gd-pick: #0ac8b9;
+  --gd-ult: #c8aa6e;
+}
+:root[data-theme="light"] .view-guide {
+  --gd-red: #c81e3a;
+  --gd-blue: #1d6fd1;
+  --gd-well: rgba(var(--ink-rgb), 0.035);
+  --gd-title: var(--text);
+  --gd-frame-lo: color-mix(in srgb, var(--accent) 22%, white);
+}
+
+/* Shared League frame: thin border, brighter top edge, square-ish corners. */
+.gd-hero,
+.gd-mech-item,
+.gd-combo,
+.gd-adv,
+.gd-pairs li,
+.gd-weapon,
+.gd-kayn-form,
+.gd-nodata,
+.gd-grid-wrap {
+  border-radius: var(--gd-r);
+  border: 1px solid var(--gd-frame-lo);
+  border-top-color: var(--gd-frame);
+  background: var(--gd-well);
+}
+
+/* Display-font headings */
+.gd-hero-name,
+.gd-sec-title,
+.gd-mech-title,
+.gd-combo-name,
+.gd-adv-title,
+.gd-kayn-name,
+.gd-wtitle,
+.gd-ability-name {
+  font-family: var(--gd-display);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.gd-hero {
+  display: flex;
+  align-items: center;
+  gap: calc(14px * var(--d));
+  padding: calc(10px * var(--d)) 16px;
+  flex-wrap: wrap;
+  border-color: var(--gd-frame);
+  border-top-color: var(--gd-frame-hi);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gd-gold) 10%, transparent), transparent 60%), var(--gd-well);
+}
+.gd-hero-icon {
+  border-radius: var(--gd-r) !important;
+  border: 2px solid var(--gd-frame-hi) !important;
+  box-shadow: 0 0 0 1px var(--gd-frame-lo), 0 0 14px -4px color-mix(in srgb, var(--gd-gold) 70%, transparent);
+}
+.gd-hero-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.gd-hero-text .eyebrow {
+  margin: 0 0 2px;
+  color: var(--gd-gold);
+}
+.gd-hero-name {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 21px;
+  line-height: 1.15;
+  color: var(--gd-title);
+}
+.gd-hero-arch {
+  font-family: var(--font-body, var(--font));
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--muted);
+}
+.gd-hero-style {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.gd-hero-style .eyebrow {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ abilities */
+
+.gd-skill-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: calc(14px * var(--d));
+}
+.gd-abilities {
+  display: flex;
+  gap: calc(8px * var(--d));
+  min-width: 0;
+}
+.gd-ability {
+  width: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+.gd-ability-name {
+  max-width: 100%;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  text-align: center;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.5em;
+}
+.gd-spell {
+  position: relative;
+  display: inline-flex;
+  outline: none;
+}
+/* HUD-style framed ability icon */
+.gd-spell .gicon {
+  border-radius: var(--gd-r) !important;
+  border: 2px solid var(--gd-frame) !important;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+.gd-spell:hover .gicon,
+.gd-spell:focus-visible .gicon {
+  border-color: var(--gd-frame-hi) !important;
+}
+.gd-spell-r .gicon {
+  border-color: var(--gd-frame-hi) !important;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55), 0 0 12px -3px color-mix(in srgb, var(--gd-ult) 80%, transparent);
+}
+.gd-spell-key {
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  transform: translateX(-50%);
+  min-width: 16px;
+  height: 15px;
+  padding: 0 3px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--gd-r);
+  font-size: 9.5px;
+  font-weight: 800;
+  background: rgb(var(--bg-rgb));
+  border: 1px solid var(--gd-frame);
+  color: var(--gd-title);
+}
+.gd-spell-r .gd-spell-key {
+  color: var(--gd-ult);
+  border-color: var(--gd-frame-hi);
+}
+.gd-tt-key {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: var(--gd-r);
+  border: 1px solid var(--gd-frame);
+  color: var(--gd-gold);
+}
+.gd-tt-cd {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+.gd-tt-cd strong {
+  color: var(--text);
+}
+
+.gd-max {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.gd-max .eyebrow {
+  margin-bottom: 6px;
+}
+.gd-max-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.gd-max-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 3px 11px 3px 3px;
+  border-radius: var(--gd-r);
+  border: 1px solid var(--gd-frame-lo);
+  border-top-color: var(--gd-frame);
+  background: var(--gd-well);
+}
+.gd-max-chip.first {
+  border-color: var(--gd-frame);
+  border-top-color: var(--gd-frame-hi);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gd-pick) 16%, transparent), transparent), var(--gd-well);
+}
+.gd-max-chip .gd-spell-key {
+  display: none;
+}
+.gd-max-chip .gd-spell .gicon {
+  border-width: 1px !important;
+}
+.gd-max-key {
+  font-family: var(--gd-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-2);
+}
+.gd-max-chip.first .gd-max-key {
+  color: var(--gd-pick);
+}
+.gd-max-arrow {
+  color: var(--gd-frame);
+}
+
+/* ------------------------------------------------------------------ 18-level grid */
+
+.gd-grid-wrap {
+  overflow-x: auto;
+}
+.gd-grid {
+  display: flex;
+  flex-direction: column;
+  min-width: 560px;
+  padding: 6px 8px 8px;
+  gap: 3px;
+}
+.gd-row {
+  display: grid;
+  grid-template-columns: 52px repeat(18, minmax(0, 1fr));
+  gap: 3px;
+  align-items: center;
+}
+.gd-row-head {
+  border-bottom: 1px solid var(--gd-frame-lo);
+  padding-bottom: 3px;
+  margin-bottom: 2px;
+}
+.gd-rowlabel {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-left: 2px;
+  font-size: 12px;
+}
+.gd-rowlabel .gicon {
+  border-radius: var(--gd-r) !important;
+  border: 1px solid var(--gd-frame) !important;
+}
+.gd-rowlabel b {
+  font-family: var(--gd-display);
+  font-weight: 700;
+  color: var(--gd-title);
+}
+.gd-row-R .gd-rowlabel b {
+  color: var(--gd-ult);
+}
+.gd-lvl {
+  height: 20px;
+  display: grid;
+  place-items: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  border-radius: var(--gd-r);
+}
+.gd-cell {
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--gd-r);
+  background: rgba(var(--ink-rgb), 0.035);
+  border: 1px solid rgba(var(--ink-rgb), 0.04);
+  font-family: var(--gd-display);
+  font-size: 13px;
+  font-weight: 700;
+}
+.gd-row-R .gd-cell {
+  background: color-mix(in srgb, var(--gd-ult) 5%, rgba(var(--ink-rgb), 0.025));
+}
+.gd-cell.on {
+  color: var(--gd-pick);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gd-pick) 28%, transparent), color-mix(in srgb, var(--gd-pick) 12%, transparent));
+  border-color: color-mix(in srgb, var(--gd-pick) 60%, transparent);
+}
+.gd-cell.ult {
+  color: rgb(var(--bg-rgb));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gd-ult) 70%, white), var(--gd-ult) 55%, color-mix(in srgb, var(--gd-ult) 75%, black));
+  border-color: color-mix(in srgb, var(--gd-ult) 60%, white);
+  box-shadow: 0 0 10px -3px var(--gd-ult);
+}
+:root[data-theme="light"] .gd-cell.ult {
+  color: #fff;
+}
+.gd-cell.past {
+  opacity: 0.45;
+}
+.gd-lvl.gd-now {
+  background: var(--gd-gold);
+  color: rgb(var(--bg-rgb));
+}
+.gd-cell.gd-now {
+  outline: 1px solid var(--gd-frame-hi);
+}
+.gd-cell.gd-now:not(.on) {
+  background: color-mix(in srgb, var(--gd-gold) 8%, transparent);
+}
+.gd-skill-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.gd-skill-note svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--gd-gold);
+}
+.gd-now-note {
+  color: var(--gd-pick);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ coach */
+
+.gd-advice {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+.gd-kayn + .gd-advice {
+  margin-top: 10px;
+}
+.gd-adv {
+  --tone: var(--blue);
+  display: flex;
+  gap: 11px;
+  padding: 11px 13px;
+  border-left: 2px solid var(--tone);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 9%, transparent), transparent 70%), var(--gd-well);
+}
+.gd-adv-good {
+  --tone: var(--green);
+}
+.gd-adv-warn {
+  --tone: var(--orange);
+}
+.gd-adv-icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--gd-r);
+  color: var(--tone);
+  border: 1px solid color-mix(in srgb, var(--tone) 45%, transparent);
+}
+.gd-adv-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+.gd-adv-title {
+  font-size: 13px;
+  color: var(--gd-title);
+}
+.gd-adv-text {
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.gd-adv-body .btn {
+  margin-top: 4px;
+}
+.gd-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: 11.5px;
+  font-weight: 650;
+  color: var(--green);
+}
+
+.gd-calm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.gd-calm svg {
+  color: var(--green);
+  flex: none;
+}
+
+/* Kayn: Rhaast (red) vs Shadow Assassin (blue) */
+.gd-kayn {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 10px;
+}
+.gd-kayn-vs {
+  align-self: center;
+  font-family: var(--gd-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--gd-gold);
+}
+.gd-kayn-form {
+  --form: var(--gd-red);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 13px 15px;
+  border-color: color-mix(in srgb, var(--form) 22%, transparent);
+  opacity: 0.6;
+}
+.gd-kayn-blue {
+  --form: var(--gd-blue);
+}
+.gd-kayn-form.rec {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--form) 60%, transparent);
+  border-top: 2px solid var(--form);
+  background:
+    radial-gradient(120% 160% at 0% 0%, color-mix(in srgb, var(--form) 22%, transparent), transparent 62%),
+    var(--gd-well);
+  box-shadow: 0 0 22px -10px var(--form), inset 0 0 0 1px color-mix(in srgb, var(--form) 12%, transparent);
+}
+.gd-kayn-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+}
+.gd-kayn-orb {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--gd-frame);
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--form) 40%, white), var(--form) 55%, color-mix(in srgb, var(--form) 55%, black));
+  box-shadow: 0 0 14px -2px var(--form);
+}
+.gd-kayn-name {
+  font-size: 15px;
+  color: color-mix(in srgb, var(--form) 72%, var(--text));
+}
+.gd-kayn-sub {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.gd-kayn-badge {
+  margin-left: auto;
+  padding: 3px 8px;
+  border-radius: var(--gd-r);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: color-mix(in srgb, var(--form) 85%, black);
+  border: 1px solid color-mix(in srgb, var(--form) 60%, white);
+}
+.gd-kayn-text {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.gd-kayn-form .btn-primary {
+  background: color-mix(in srgb, var(--form) 80%, black);
+  border-color: color-mix(in srgb, var(--form) 60%, white);
+  color: #fff !important;
+  box-shadow: 0 0 14px -6px var(--form);
+}
+.gd-kayn-form .btn-primary:hover {
+  background: var(--form);
+}
+.gd-kayn-form .gd-current {
+  color: color-mix(in srgb, var(--form) 75%, var(--text));
+  margin-top: 0;
+}
+
+/* ------------------------------------------------------------------ mechanics */
+
+.gd-sec + .gd-sec,
+.gd-weapons + .gd-sec,
+.gd-weapons + .gd-pairs,
+.gd-pairs + .gd-sec {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gd-frame-lo);
+}
+.gd-sec-title {
+  font-size: 11.5px;
+  color: var(--gd-gold);
+  margin-bottom: 9px;
+}
+.gd-mech {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px;
+}
+.gd-mech-item {
+  padding: 10px 13px 11px;
+  min-width: 0;
+}
+.gd-mech-title {
+  font-size: 12.5px;
+  color: var(--gd-title);
+  margin-bottom: 4px;
+}
+.gd-mech-text {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.gd-mi-red,
+.gd-mi-blue {
+  --form: var(--gd-red);
+  border-color: color-mix(in srgb, var(--form) 35%, transparent);
+  border-top: 2px solid var(--form);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--form) 12%, transparent), transparent 70%), var(--gd-well);
+}
+.gd-mi-blue {
+  --form: var(--gd-blue);
+}
+.gd-mi-red .gd-mech-title,
+.gd-mi-blue .gd-mech-title {
+  color: color-mix(in srgb, var(--form) 72%, var(--text));
+}
+
+/* Aphelios weapons */
+.gd-weapons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gd-wstrip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px minmax(0, 1fr) 14px minmax(0, 1fr) 14px minmax(0, 1fr) 14px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 4px;
+}
+.gd-warrow {
+  align-self: center;
+  color: var(--gd-frame);
+}
+.gd-weapon {
+  --wc: var(--w);
+  padding: 10px 11px 11px;
+  border-color: color-mix(in srgb, var(--wc) 30%, transparent);
+  border-top: 2px solid var(--wc);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--wc) 14%, transparent), transparent 65%), var(--gd-well);
+  min-width: 0;
+}
+.gd-whead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gd-wnum {
+  margin-left: auto;
+  align-self: flex-start;
+  font-family: var(--gd-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--faint);
+}
+.gd-wdot {
+  flex: none;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--gd-frame);
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--w) 45%, white), var(--w) 60%, color-mix(in srgb, var(--w) 60%, black));
+  box-shadow: 0 0 10px -2px var(--w);
+}
+.gd-wdot.sm {
+  width: 10px;
+  height: 10px;
+}
+.gd-wtext {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.gd-wtitle {
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: var(--wtext, var(--w));
+}
+.gd-wkind {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.gd-wrole {
+  margin: 7px 0 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+.gd-wloop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.gd-wloop svg {
+  color: var(--gd-gold);
+}
+.gd-pairs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 6px 8px;
+}
+.gd-pairs li {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 11px;
+  font-size: 12px;
+}
+.gd-pair-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gd-title);
+}
+.gd-pair-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.gd-pair-chips {
+  color: var(--muted);
+  line-height: 1.95;
+}
+.gd-pair-chips .gd-wname {
+  display: inline-block;
+  padding: 0 6px;
+  line-height: 17px;
+  border-radius: var(--gd-r);
+  background: color-mix(in srgb, var(--w) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--w) 38%, transparent);
+}
+.gd-pair-text {
+  color: var(--text-2);
+}
+/* Weapon names in running text: coloured, not boxed. */
+.gd-wname {
+  font-weight: 700;
+  color: var(--wtext, var(--w));
+}
+/* Daylight: deeper weapon hues so Crescendum (white) and friends stay readable. */
+:root[data-theme="light"] .view-guide [style*="--w-light"] {
+  --wtext: var(--w-light);
+}
+:root[data-theme="light"] .gd-weapon {
+  --wc: color-mix(in srgb, var(--w) 45%, var(--w-light));
+}
+
+/* ------------------------------------------------------------------ combos + how to play */
+
+.gd-cols {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: calc(14px * var(--d));
+  align-items: start;
+}
+.gd-cols > :only-child {
+  grid-column: 1 / -1;
+}
+.gd-combos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gd-combo {
+  padding: 10px 12px;
+}
+.gd-combo-name {
+  font-size: 12.5px;
+  color: var(--gd-title);
+  margin-bottom: 8px;
+}
+.gd-combo-keys {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.gd-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.gd-combo-arrow {
+  color: var(--gd-frame);
+}
+.gd-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 26px;
+  padding: 2px 9px;
+  border-radius: var(--gd-r);
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--text-2);
+  background: linear-gradient(180deg, rgba(var(--ink-rgb), 0.07), rgba(var(--ink-rgb), 0.02));
+  border: 1px solid var(--gd-frame-lo);
+  border-top-color: var(--gd-frame);
+}
+.gd-key-spell {
+  padding-left: 3px;
+}
+.gd-key-spell .gicon {
+  border-radius: var(--gd-r) !important;
+  border: 1px solid var(--gd-frame) !important;
+}
+.gd-key b {
+  font-family: var(--gd-display);
+  font-weight: 700;
+  color: var(--gd-pick);
+}
+.gd-key-r b {
+  color: var(--gd-ult);
+}
+.gd-key-extra {
+  font-weight: 550;
+  color: var(--text-2);
+}
+.gd-key-weapon {
+  color: var(--wtext, var(--w));
+  border-color: color-mix(in srgb, var(--w) 35%, transparent);
+  border-top-color: color-mix(in srgb, var(--w) 70%, transparent);
+  background: color-mix(in srgb, var(--w) 9%, transparent);
+}
+.gd-key-note {
+  min-height: 22px;
+  font-weight: 550;
+  font-style: italic;
+  color: var(--muted);
+  background: transparent;
+  border-style: dashed;
+}
+.gd-key-aa {
+  color: var(--muted);
+}
+.gd-combo-when {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.gd-play .card-head {
+  flex-wrap: wrap;
+}
+.gd-summary {
+  margin: 0 0 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--gd-frame-lo);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text);
+}
+.gd-tips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gd-tips li {
+  display: flex;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+.gd-tip-n {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.5px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--gd-r);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gd-gold);
+  border: 1px solid var(--gd-frame);
+  background: var(--gd-well);
+}
+
+.gd-nodata {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 13px;
+  font-size: 12.5px;
+  color: var(--text-2);
+  border-style: dashed;
+}
+.gd-nodata svg {
+  color: var(--gd-gold);
+  flex: none;
+}
+
+.gd-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 2px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--gd-frame-lo);
+  font-size: 11px;
+  color: var(--muted);
+}
+.gd-foot svg {
+  color: var(--gd-gold);
+}
+
+/* ------------------------------------------------------------------ narrow */
+
+@container (max-width: 820px) {
+  .gd-cols {
+    grid-template-columns: 1fr;
+  }
+  .gd-wstrip {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .gd-warrow {
+    display: none;
+  }
+  .gd-max {
+    align-items: flex-start;
+  }
+}
+@container (max-width: 620px) {
+  .gd-kayn {
+    grid-template-columns: 1fr;
+  }
+  .gd-kayn-vs {
+    justify-self: center;
+  }
+  .gd-ability {
+    width: 64px;
+  }
+}
+
+/* Ability hover cards in the level-order grid: the Tip anchor becomes the grid item. */
+.gd-cell-tip,
+.gd-rowlabel-tip {
+  display: flex;
+  min-width: 0;
+}
+.gd-cell-tip > .gd-cell,
+.gd-rowlabel-tip > .gd-rowlabel {
+  flex: 1;
+  min-width: 0;
+}
+.gd-cell-tip > .gd-cell.on {
+  cursor: help;
+}
+
+.gd-stacks {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.gd-stacks th,
+.gd-stacks td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+}
+.gd-stacks th {
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.gd-stacks .is-cur {
+  color: var(--accent);
+}
+.gd-stack-n {
+  font-weight: 700;
+  color: var(--gold, #f0c86e);
+}
+
+.gd-burn {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.gd-burn-step {
+  display: grid;
+  grid-template-columns: minmax(200px, auto) 1fr;
+  gap: 2px 14px;
+  padding: 8px 10px;
+  border-radius: var(--r-md, 8px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+}
+.gd-burn-pair {
+  font-weight: 600;
+}
+.gd-burn-note {
+  color: var(--muted);
+  font-size: 13px;
+}
+.gd-burn-next {
+  grid-column: 1 / -1;
+}
+.gd-gun {
+  font-weight: 700;
+  white-space: nowrap;
+}

@@ -1,0 +1,70 @@
+.mu-lane {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--frame-subtle, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius);
+  background: rgba(var(--panel-rgb), 0.4);
+}
+.mu-lane.mu-good {
+  box-shadow: inset 3px 0 0 #2dd4bf;
+}
+.mu-lane.mu-bad {
+  box-shadow: inset 3px 0 0 #f87171;
+}
+.mu-lane-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.mu-lane-text strong {
+  font-size: 15px;
+}
+.mu-cols {
+  display: grid;
+  gap: 12px;
+}
+.mu-h {
+  margin-bottom: 8px;
+}
+.mu-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+.mu-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 2px;
+  text-align: center;
+  border-radius: var(--radius);
+  background: rgba(var(--panel-rgb), 0.35);
+  border: 1px solid transparent;
+}
+.mu-chip:hover {
+  border-color: var(--frame-subtle, rgba(255, 255, 255, 0.12));
+}
+.mu-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.mu-wr {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.mu-good .mu-wr {
+  color: #2dd4bf;
+}
+.mu-bad .mu-wr {
+  color: #f87171;
+}

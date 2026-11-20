@@ -1,0 +1,65 @@
+/* Arena placement summary (avg place · 1st · top 4) shown in champion headers. */
+.arena-place {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 2px;
+  color: var(--text);
+  white-space: nowrap;
+}
+.arena-place b {
+  font-weight: 700;
+}
+.order-arena {
+  display: flex;
+  margin: -8px 0 12px;
+}
+.gd-hero-arena,
+.csh-me-arena {
+  display: flex;
+  margin-top: 2px;
+}
+
+/* Build view: Arena Prismatic items row. */
+.prism-card {
+  margin-bottom: calc(14px * var(--d));
+}
+.prism-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 8px;
+}
+.prism {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: calc(8px * var(--d)) 10px;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  background: linear-gradient(135deg, rgba(232, 121, 249, 0.07), rgba(45, 212, 191, 0.05));
+  min-width: 0;
+}
+.prism-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.prism-body .wr {
+  white-space: normal;
+}
+.prism-body .sit-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.next-round {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-weight: 500;
+}

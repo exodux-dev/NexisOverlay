@@ -1,0 +1,362 @@
+/* Champ select pick helper (ChampSelectHelper.tsx). Prefix: csh- */
+
+.csh {
+  position: relative;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: calc(12px * var(--d));
+  padding: calc(12px * var(--d)) 16px calc(14px * var(--d));
+  border-radius: var(--r-card);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--frame-bright, var(--accent)) 6%, transparent), transparent 55%), var(--box-bg, rgba(var(--panel-rgb), 0.38));
+  border: 1px solid var(--frame-subtle, var(--border));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--frame-bright, var(--accent)) 22%, transparent);
+}
+.csh-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.csh-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display, inherit);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--title, var(--text));
+}
+.csh-title svg {
+  color: var(--frame-bright, var(--accent));
+}
+.csh-meta {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.csh-body {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.8fr) 1.6fr;
+  gap: calc(16px * var(--d));
+  align-items: start;
+}
+@container (max-width: 640px) {
+  .csh-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- your pick */
+.csh-mine {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.csh-mine .eyebrow,
+.csh-options .eyebrow {
+  margin-bottom: 0;
+}
+.csh-me {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.csh-me-icon {
+  position: relative;
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.csh-me-icon .gicon {
+  display: block;
+  border-color: var(--frame-bright, var(--accent));
+  box-shadow: 0 0 0 1px var(--frame-bright, var(--accent)), 0 0 14px -2px color-mix(in srgb, var(--frame-bright, var(--accent)) 60%, transparent);
+}
+.csh-me-icon .tl-badge {
+  position: absolute;
+  right: -8px;
+  bottom: -6px;
+  box-shadow: 0 0 0 2px rgb(var(--bg-rgb));
+}
+.csh-me-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.csh-me-name {
+  font-family: var(--font-display, inherit);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gold-text, var(--text));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.csh-me-stat {
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.csh-me-stat b {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.csh-me-rank {
+  font-size: 11.5px;
+}
+.csh-me-empty {
+  min-height: 56px;
+}
+.csh-ph {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: var(--icon-radius, 4px);
+  border: 1px dashed var(--frame, var(--border-2));
+  background: rgba(var(--bg-rgb), 0.35);
+}
+.csh-ph-sm {
+  width: 34px;
+  height: 34px;
+  border-style: solid;
+  border-color: var(--border);
+}
+.csh-ph-line {
+  height: 10px;
+  width: 40%;
+  border-radius: 5px;
+  background: var(--panel-3);
+}
+
+.csh-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.csh-note-warn {
+  color: var(--orange-text, var(--orange));
+}
+.csh-note svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.csh-rec {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 11px;
+  border-radius: var(--r-md);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-2);
+}
+.csh-rec b {
+  color: var(--text);
+}
+.csh-rec-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+.csh-rec-up {
+  background: color-mix(in srgb, var(--green) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--green) 30%, transparent);
+}
+.csh-rec-up .csh-rec-icon {
+  background: color-mix(in srgb, var(--green) 20%, transparent);
+  color: var(--green);
+}
+.csh-rec-keep {
+  background: rgba(var(--bg-rgb), 0.35);
+  border: 1px solid var(--frame-subtle, var(--border));
+}
+.csh-rec-keep .csh-rec-icon {
+  background: color-mix(in srgb, var(--frame-bright, var(--accent)) 16%, transparent);
+  color: var(--frame-bright, var(--accent));
+}
+
+/* ---------- options */
+.csh-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.csh-opt-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.csh-legend {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--faint);
+}
+.csh-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.csh-opt {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 84px 58px 112px;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 3px 10px 3px 4px;
+  border: 1px solid var(--frame-subtle, var(--border));
+  border-radius: var(--r-md);
+  background: rgba(var(--bg-rgb), 0.35);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.csh-opt:hover {
+  border-color: var(--frame, var(--border-2));
+  background: rgba(var(--panel-rgb), 0.5);
+}
+.csh-opt .gicon {
+  display: block;
+}
+.csh-opt-skel {
+  grid-template-columns: 34px 1fr;
+  cursor: default;
+}
+.csh-opt-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.csh-opt-title {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.csh-opt-src {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.csh-opt-tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.csh-opt-wr {
+  font-weight: 700;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+}
+.csh-delta {
+  text-align: right;
+  font-weight: 700;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+.csh-verdict {
+  justify-self: end;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.csh-tone-up {
+  color: var(--green);
+}
+.csh-verdict.csh-tone-up {
+  background: transparent;
+}
+.csh-best .csh-verdict.csh-tone-up {
+  color: #04140c;
+  background: var(--green);
+}
+.csh-tone-even {
+  color: var(--muted);
+}
+.csh-verdict.csh-tone-even {
+  background: var(--panel-2);
+}
+.csh-tone-down {
+  color: var(--red);
+}
+.csh-verdict.csh-tone-down {
+  color: var(--muted);
+  background: transparent;
+}
+.csh-tone-none {
+  color: var(--faint);
+}
+.csh-verdict.csh-tone-none {
+  color: var(--muted);
+}
+
+/* your own row and the recommended one */
+.csh-src-you {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--frame-bright, var(--accent)) 10%, transparent), transparent 70%), rgba(var(--bg-rgb), 0.35);
+  border-color: var(--frame, var(--border-2));
+}
+.csh-src-you .csh-verdict {
+  color: var(--frame-bright, var(--accent));
+  background: transparent;
+  border: 1px solid var(--frame, var(--border-2));
+}
+.csh-src-bench .gicon,
+.csh-src-team .gicon {
+  border-radius: 50%;
+}
+.csh-best {
+  border-color: color-mix(in srgb, var(--green) 55%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--green) 11%, transparent), transparent 70%), rgba(var(--bg-rgb), 0.35);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--green) 20%, transparent), 0 0 18px -6px color-mix(in srgb, var(--green) 55%, transparent);
+}
+.csh-best:hover {
+  border-color: var(--green);
+}
+.csh-best-tag {
+  padding: 0 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--green) 18%, transparent);
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 16px;
+}
+.csh-none {
+  padding: 14px 12px;
+  border: 1px dashed var(--frame-subtle, var(--border));
+  border-radius: var(--r-md);
+}
+
+@container (max-width: 560px) {
+  .csh-opt {
+    grid-template-columns: 34px minmax(0, 1fr) 76px 52px;
+  }
+  .csh-verdict {
+    display: none;
+  }
+}

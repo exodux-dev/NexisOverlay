@@ -1,0 +1,287 @@
+/* ------------------------------------------------------------------ resize grips (frameless window) */
+
+.resize-grips {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+}
+.grip {
+  position: absolute;
+  pointer-events: auto;
+}
+.grip-n,
+.grip-s {
+  left: 14px;
+  right: 14px;
+  height: 5px;
+  cursor: ns-resize;
+}
+.grip-n {
+  top: 0;
+}
+.grip-s {
+  bottom: 0;
+}
+.grip-e,
+.grip-w {
+  top: 14px;
+  bottom: 14px;
+  width: 5px;
+  cursor: ew-resize;
+}
+.grip-e {
+  right: 0;
+}
+.grip-w {
+  left: 0;
+}
+.grip-ne,
+.grip-nw,
+.grip-se,
+.grip-sw {
+  width: 14px;
+  height: 14px;
+}
+.grip-ne {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+.grip-sw {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+.grip-nw {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+.grip-se {
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+/* A subtle corner affordance so users discover they can resize. */
+.grip-se::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--border-2);
+  border-bottom: 1.5px solid var(--border-2);
+  border-bottom-right-radius: 3px;
+  transition: border-color 0.15s;
+}
+.grip-se:hover::after {
+  border-color: var(--teal);
+}
+
+/* ------------------------------------------------------------------ top bar window menu */
+
+.tb-window {
+  position: relative;
+  flex: none;
+}
+.tb-window-btn.active {
+  background: var(--panel-3);
+  color: var(--text);
+}
+.win-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 320px;
+  max-width: calc(100vw / var(--ui-scale) - 24px);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: var(--r-md, 10px);
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  z-index: 50;
+  animation: win-pop-in 0.14s ease-out;
+}
+@keyframes win-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+.win-pop-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.win-pop-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+.win-pop-foot .dim {
+  line-height: 1.35;
+}
+
+.win-presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.win-preset {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px 8px;
+  border-radius: var(--r-sm, 8px);
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text-2);
+  cursor: pointer;
+  font: inherit;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.win-preset:hover:not(:disabled) {
+  background: var(--panel-3);
+  color: var(--text);
+}
+.win-preset:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.win-preset.active {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--teal-bg);
+  color: var(--text);
+}
+.win-preset-glyph {
+  display: block;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  opacity: 0.75;
+}
+.win-glyph-compact {
+  width: 18px;
+  height: 13px;
+  margin: 3px 0;
+}
+.win-glyph-standard {
+  width: 24px;
+  height: 16px;
+  margin: 1.5px 0;
+}
+.win-glyph-large {
+  width: 29px;
+  height: 19px;
+}
+.win-preset-label {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.win-preset-size {
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ "use Borderless" note */
+
+.display-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 9px 11px;
+  border-radius: var(--r-sm, 8px);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+}
+.display-note svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--muted);
+}
+.display-note.good svg {
+  color: var(--green);
+}
+.display-note.bad {
+  border-color: rgba(250, 204, 21, 0.35);
+  background: var(--gold-bg);
+}
+.display-note.bad svg {
+  color: var(--gold);
+}
+.display-note.compact {
+  font-size: 12px;
+  padding: 7px 10px;
+}
+
+/* ------------------------------------------------------------------ "Your data & safety" */
+
+.safety-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+.safety-list li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.safety-list svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--teal);
+}
+.settings-notice {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 9px 11px;
+  border-radius: var(--r-sm, 8px);
+  font-size: 12.5px;
+  line-height: 1.45;
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  background: var(--gold-bg);
+  color: var(--text);
+}
+.settings-notice svg {
+  flex: none;
+  color: var(--gold);
+  margin-top: 1px;
+}
+
+/* ------------------------------------------------------------------ narrow windows (Compact preset / minimum size) */
+
+@media (max-width: 1000px) {
+  .settings-tab {
+    padding: 0 9px;
+    gap: 5px;
+    letter-spacing: 0.04em;
+  }
+}
+@media (max-width: 880px) {
+  .settings-tab {
+    padding: 0 7px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+  .settings-tab svg {
+    display: none;
+  }
+}

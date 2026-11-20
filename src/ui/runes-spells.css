@@ -1,0 +1,350 @@
+/* RunesSpells — top rune page + summoner spell pairs.
+   League-client framed look; every color derives from the theme tokens (theme.css). */
+
+.rs-card {
+  --rs-frame: var(--frame, color-mix(in srgb, var(--accent) 45%, rgb(var(--bg-rgb))));
+  --rs-frame-lo: var(--frame-subtle, color-mix(in srgb, var(--accent) 22%, rgb(var(--bg-rgb))));
+  --rs-frame-hi: var(--frame-bright, var(--accent));
+  --rs-title: var(--title, color-mix(in srgb, var(--accent) 60%, var(--text)));
+  --rs-well: rgba(var(--bg-rgb), 0.45);
+  --rs-gap: calc(10px * var(--density, 1));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--rs-gap);
+  font-family: var(--font-body, var(--font));
+  color: var(--text);
+  min-width: 0;
+}
+:root[data-theme="light"] .rs-card {
+  --rs-well: rgba(var(--ink-rgb), 0.035);
+}
+
+.rs-block {
+  position: relative;
+  min-width: 0;
+  padding: calc(10px * var(--density, 1)) calc(12px * var(--density, 1));
+  border: 1px solid var(--rs-frame-lo);
+  border-top-color: var(--rs-frame);
+  border-radius: var(--radius);
+  background: var(--rs-well);
+}
+/* Gold hairline accent along the top edge. */
+.rs-block::before {
+  content: "";
+  position: absolute;
+  inset: -1px 18% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--rs-frame-hi), transparent);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.rs-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: calc(8px * var(--density, 1));
+}
+.rs-title {
+  margin: 0;
+  font-family: var(--font-display, var(--font));
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rs-title);
+  white-space: nowrap;
+}
+
+.rs-rates {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rs-wr {
+  font-size: 11px;
+  color: var(--muted);
+}
+.rs-wr b {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+.rs-wr.rs-good b {
+  color: var(--green, #34d399);
+}
+.rs-wr.rs-bad b {
+  color: var(--red, #f87171);
+}
+.rs-pr {
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+/* ---------- rune page */
+.rs-page {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-gap);
+}
+.rs-keystone {
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  border-radius: 50%;
+  border: 1px solid var(--rs-frame);
+  background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%);
+  box-shadow: 0 0 0 1px rgba(var(--shade-rgb), 0.4), 0 0 14px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.rs-trees {
+  display: flex;
+  flex-direction: column;
+  gap: calc(6px * var(--density, 1));
+  min-width: 0;
+}
+.rs-tree {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.rs-style {
+  opacity: 0.85;
+  margin-right: 2px;
+}
+.rs-rune {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--rs-frame-lo);
+  background: rgba(var(--shade-rgb), 0.25);
+}
+.rs-tree-sub .rs-rune {
+  opacity: 0.92;
+}
+.rs-shards {
+  display: inline-flex;
+  gap: 3px;
+  margin-left: 6px;
+  padding-left: 8px;
+  border-left: 1px solid var(--rs-frame-lo);
+}
+.rs-shard {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(var(--shade-rgb), 0.35);
+}
+.rs-names {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: calc(8px * var(--density, 1));
+  font-size: 12px;
+  min-width: 0;
+}
+.rs-names b {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+.rs-names span {
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- summoner spells */
+.rs-spells {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(6px * var(--density, 1));
+}
+.rs-spell-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.rs-spell-row + .rs-spell-row {
+  padding-top: calc(6px * var(--density, 1));
+  border-top: 1px solid var(--border);
+}
+.rs-spell-icons {
+  flex: none;
+  display: inline-flex;
+  gap: 3px;
+}
+.rs-spell {
+  display: inline-flex;
+  border-radius: var(--icon-radius, 4px);
+}
+.rs-spell-icons .gicon {
+  border: 1px solid var(--rs-frame);
+}
+.rs-spell-names {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-2, var(--text));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- options: rune page tabs + pickable spell pairs (u.gg-style) */
+.rs-hint {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.rs-tabs {
+  display: grid;
+  gap: 4px;
+  padding: 3px;
+  margin-bottom: calc(10px * var(--density, 1));
+  border-radius: var(--r-md, 10px);
+  background: rgba(var(--shade-rgb), calc(0.28 * var(--shade-k, 1)));
+  border: 1px solid var(--border);
+}
+.rs-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 5px 7px;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm, 8px);
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.rs-tab:disabled {
+  cursor: default;
+}
+.rs-tab:not(.is-on):not(:disabled):hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+.rs-tab.is-on {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--rs-frame-hi) 55%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--rs-frame-hi) 16%, transparent), color-mix(in srgb, var(--rs-frame-hi) 5%, transparent));
+  box-shadow: 0 1px 2px rgba(var(--shade-rgb), calc(0.3 * var(--shade-k, 1))), inset 0 1px 0 color-mix(in srgb, var(--rs-frame-hi) 22%, transparent);
+}
+.rs-tab-icons {
+  position: relative;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+}
+.rs-tab:not(.is-on) .rs-tab-icons {
+  opacity: 0.8;
+}
+.rs-tab-icons .rs-tab-sub {
+  position: absolute;
+  right: -4px;
+  bottom: -3px;
+  border-radius: 50%;
+  background: rgb(var(--bg-rgb));
+  box-shadow: 0 0 0 1px var(--rs-frame-lo);
+}
+.rs-tab-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.rs-tab-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.rs-tab.is-on .rs-tab-label {
+  color: var(--rs-title);
+}
+.rs-tab-wr {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+.rs-tab-wr.rs-good {
+  color: var(--green, #34d399);
+}
+.rs-tab-wr.rs-bad {
+  color: var(--red, #f87171);
+}
+.rs-tab-pr {
+  font-size: 10px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rs-spell-row.rs-pickable {
+  position: relative;
+  margin: 0 -6px;
+  padding: 5px 6px;
+  border-radius: var(--r-sm, 8px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rs-spell-row.rs-pickable + .rs-spell-row.rs-pickable {
+  padding-top: 5px;
+  border-top: 1px solid transparent;
+}
+.rs-spell-row.rs-pickable:not(.is-on):hover {
+  background: var(--panel-2);
+}
+.rs-spell-row.rs-pickable:not(.is-on) .rs-spell-icons {
+  opacity: 0.78;
+}
+.rs-spell-row.rs-pickable.is-on {
+  border-color: color-mix(in srgb, var(--rs-frame-hi) 45%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--rs-frame-hi) 13%, transparent), transparent 85%);
+}
+.rs-spell-row.rs-pickable.is-on::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 7px;
+  bottom: 7px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--rs-frame-hi);
+}
+.rs-spell-row.rs-pickable:focus-visible {
+  outline: 2px solid var(--focus, var(--accent));
+  outline-offset: 1px;
+}
+/* Narrow rune block: tabs drop the "Page n" label row to stay on one line. */
+@container (max-width: 300px) {
+  .rs-tab-label {
+    display: none;
+  }
+}
+.rs-block {
+  container-type: inline-size;
+}
+.rs-title > .tip-anchor {
+  margin-left: 6px;
+  vertical-align: 1px;
+}
