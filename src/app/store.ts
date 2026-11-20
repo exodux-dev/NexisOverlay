@@ -467,14 +467,6 @@ export function webKey(mode: GameModeKind, championId: string, position?: string
   return mode === "sr" ? `sr:${championId}:${position || "main"}` : `${mode}:${championId}`;
 }
 
-/** Web stats provider a source id fetches from for a mode (undefined: not a web source there). */
-export type WebProvider = "hexmayhem" | "opgg";
-
-/** Key for a web provider's champion stats: the mode's default provider keeps `webKey`. */
-export function webSourceKey(mode: GameModeKind, championId: string, position: string | undefined, provider: WebProvider): string {
-  return provider === defaultWebSource(mode) ? webKey(mode, championId, position) : `${mode}-${provider}:${championId}`;
-}
-
 export function currentGame(s: State): GameSnapshot | null {
   if (s.live) return s.live;
   if (!s.data) return null;
@@ -609,19 +601,16 @@ function useDerivedCompute(): Derived {
   const modeDataset = stats && datasetMode(stats) === gameMode ? stats : undefined;
 
   const pickedSource = selectedSource(gameMode, settings.dataSources?.[gameMode], !!modeDataset);
-  const webPick: WebProvider | undefined = pickedSource === "hexmayhem" || pickedSource === "opgg" ? pickedSource : undefined;
   useEffect(() => {
-    if (!baseChampion || !settings.webStats) return;
-    void ensureChampionStats(gameMode, baseChampion.id);
-    if (webPick && webPick !== defaultWebSource(gameMode)) void ensureChampionStats(gameMode, baseChampion.id, false, webPick);
-  }, [baseChampion, settings.webStats, gameMode, lastPosition, webPick]);
+    if (baseChampion && settings.webStats) void ensureChampionStats(gameMode, baseChampion.id);
+  }, [baseChampion, settings.webStats, gameMode, lastPosition]);
 
   const source = useMemo((): DataSourceInfo | undefined => {
     if (!champion) return undefined;
-    const webOf = (p: WebProvider) => web.champions[webSourceKey(gameMode, champion.id, lastPosition, p)];
+    // One web provider per mode (HexMayhem for Mayhem, OP.GG otherwise), cached under webKey.
     const r = resolveSource(gameMode, pickedSource, {
       riot: modeDataset?.champions[champion.id],
-      web: { hexmayhem: gameMode === "mayhem" ? webOf("hexmayhem") : undefined, opgg: webOf("opgg") },
+      web: { [defaultWebSource(gameMode)]: web.champions[webKey(gameMode, champion.id, lastPosition)] },
       personal: personalChampionStats(modeHistory, champion.id),
       webEnabled: settings.webStats,
     });
@@ -758,13 +747,7 @@ export const actions = {
     set((s) => ({ web: { ...s.web, champions: {} } }));
     await Promise.all([loadWebGlobal(true), loadCombos(true)]);
     const c = currentGame(state)?.me.champion;
-    if (!c) return;
-    const m = effectiveMode(state);
-    const pick = state.settings.dataSources?.[m];
-    await Promise.all([
-      ensureChampionStats(m, c.id, true),
-      pick === "opgg" && defaultWebSource(m) !== "opgg" ? ensureChampionStats(m, c.id, true, "opgg") : undefined,
-    ]);
+    if (c) await ensureChampionStats(effectiveMode(state), c.id, true);
   },
   /** Load (or refresh) the champion tier list for a mode. Cached 3 h. */
   async loadTierList(mode: GameModeKind, force = false) {
@@ -1261,10 +1244,6 @@ const opggProvider =
 providers.aram = opggProvider("aram");
 providers.sr = opggProvider("ranked");
 providers.arena = arenaStatsProvider(bridge.fetchText, bridge.fetchJson, registerArenaAugments);
-/** Non-default web providers a mode can be switched to (Data source picker). */
-const altProviders: Partial<Record<GameModeKind, Partial<Record<WebProvider, ChampionStatsProvider>>>> = {
-  mayhem: { opgg: opggProvider("aram-mayhem") },
-};
 
 export function registerStatsProvider(mode: GameModeKind, provider: ChampionStatsProvider) {
   providers[mode] = provider;
@@ -1273,14 +1252,13 @@ export function registerStatsProvider(mode: GameModeKind, provider: ChampionStat
 /** Stats are refreshed at most this often (hours) unless the user forces a refresh. */
 const STATS_MAX_AGE_H = 3;
 
-async function ensureChampionStats(mode: GameModeKind, id: string, force = false, via?: WebProvider) {
-  const alt = via && via !== defaultWebSource(mode);
-  const key = alt ? webSourceKey(mode, id, state.lastPosition, via) : webKey(mode, id, state.lastPosition);
+async function ensureChampionStats(mode: GameModeKind, id: string, force = false) {
+  const key = webKey(mode, id, state.lastPosition);
   const prev = state.web.champions[key];
   // 10: failed fetches are retried after 2 minutes instead of never.
   const retryable = prev === "error" && Date.now() - (webErrorAt.get(key) ?? 0) > 120_000;
   if (!state.data || (!force && prev && !retryable)) return;
-  const provider = alt ? altProviders[mode]?.[via] : providers[mode];
+  const provider = providers[mode];
   if (!provider) return;
   set((s) => ({ web: { ...s.web, champions: { ...s.web.champions, [key]: "loading" } } }));
   try {

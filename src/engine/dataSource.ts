@@ -22,8 +22,8 @@ export const PERSONAL_MIN_GAMES = 3;
 /** Sources that exist for a mode ("riot" only when your stats dataset (settings.statsUrl) loaded for that mode). */
 export function sourcesForMode(mode: GameModeKind, hasDataset: boolean): DataSourceId[] {
   const out: DataSourceId[] = ["auto"];
-  if (mode === "mayhem") out.push("hexmayhem");
-  out.push("opgg");
+  // OP.GG's ARAM: Mayhem pages list builds without games / win rates, so Mayhem uses HexMayhem only.
+  out.push(mode === "mayhem" ? "hexmayhem" : "opgg");
   if (hasDataset) out.push("riot");
   out.push("personal", "baseline");
   return out;

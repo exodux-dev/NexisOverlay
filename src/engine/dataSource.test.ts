@@ -11,7 +11,7 @@ const all: SourceCandidates = { riot, web: { hexmayhem: hex, opgg }, personal: m
 
 describe("sourcesForMode", () => {
   it("offers only the sources each mode has", () => {
-    expect(sourcesForMode("mayhem", false)).toEqual(["auto", "hexmayhem", "opgg", "personal", "baseline"]);
+    expect(sourcesForMode("mayhem", false)).toEqual(["auto", "hexmayhem", "personal", "baseline"]);
     expect(sourcesForMode("mayhem", true)).toContain("riot");
     expect(sourcesForMode("aram", false)).toEqual(["auto", "opgg", "personal", "baseline"]);
     expect(sourcesForMode("sr", false)).toEqual(["auto", "opgg", "personal", "baseline"]);
@@ -19,6 +19,7 @@ describe("sourcesForMode", () => {
   });
   it("sanitizes stored picks per mode", () => {
     expect(selectedSource("aram", "hexmayhem", false)).toBe("auto");
+    expect(selectedSource("mayhem", "opgg", false)).toBe("auto");
     expect(selectedSource("mayhem", "riot", false)).toBe("auto");
     expect(selectedSource("mayhem", "riot", true)).toBe("riot");
     expect(selectedSource("sr", 42, false)).toBe("auto");
@@ -38,16 +39,16 @@ describe("resolveSource", () => {
     expect(base.fallback).toBeUndefined();
   });
   it("uses the picked source when it has data", () => {
-    expect(resolveSource("mayhem", "opgg", all)).toMatchObject({ selected: "opgg", active: "opgg", stats: opgg, statsSource: "global" });
+    expect(resolveSource("aram", "opgg", all)).toMatchObject({ selected: "opgg", active: "opgg", stats: opgg, statsSource: "global" });
     expect(resolveSource("mayhem", "personal", all)).toMatchObject({ active: "personal", stats: mine, statsSource: "personal" });
     expect(resolveSource("mayhem", "baseline", all)).toMatchObject({ active: "none", statsSource: "none" });
     expect(resolveSource("mayhem", "riot", all).active).toBe("riot");
   });
   it("falls back to Auto (never empty) with a reason", () => {
-    const loading = resolveSource("mayhem", "opgg", { ...all, riot: undefined, web: { hexmayhem: hex, opgg: "loading" } });
-    expect(loading).toMatchObject({ selected: "opgg", active: "hexmayhem", fallback: { reason: "loading" } });
+    const loading = resolveSource("aram", "opgg", { ...all, riot: undefined, web: { opgg: "loading" } });
+    expect(loading).toMatchObject({ selected: "opgg", active: "personal", fallback: { reason: "loading" } });
     expect(fallbackNotice(loading, "Ahri")).toMatch(/Loading OP.GG/);
-    const err = resolveSource("mayhem", "opgg", { ...all, riot: undefined, web: { hexmayhem: hex, opgg: "error" } });
+    const err = resolveSource("mayhem", "hexmayhem", { ...all, riot: undefined, web: { hexmayhem: "error" } });
     expect(err.fallback?.reason).toBe("error");
     const none = resolveSource("aram", "personal", { ...all, personal: st(2) });
     expect(none).toMatchObject({ active: "riot", fallback: { reason: "nodata" } });
