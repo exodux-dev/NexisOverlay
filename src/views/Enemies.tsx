@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { RolesCard } from "../ui/RoleEditor";
 import { actions, useApp, type Derived } from "../app/store";
 import { powerSpikes, teamGold, type IntelEvent, type PlayerValue, type PowerSpike, type SpikeKind } from "../engine/intel";
 import { ScoutPanel, type ScoutPlayer } from "./Scout";
@@ -327,6 +328,7 @@ export function EnemiesView({ d }: { d: Derived }) {
   return (
     <div className="view view-enemies">
       {/* Loading screen: scouting first. Once the game runs, scoreboard intel leads. */}
+      {(d.mode === "live" || d.mode === "demo") && d.game && <RolesCard d={d} />}
       {(d.mode === "live" || d.mode === "demo") && d.game && !d.game.loading && d.power && <TeamPowerCard power={d.power} />}
       {(d.mode === "live" || d.mode === "demo") && d.game && <TeamComps d={d} />}
       {(d.mode === "live" || d.mode === "demo") && d.game && !d.game.loading && <IntelRow d={d} data={data} />}

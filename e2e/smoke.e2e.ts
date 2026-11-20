@@ -219,3 +219,38 @@ test("browser right-click menu is hidden outside text fields", async ({ start })
   expect(await blocked(".nav")).toBe(true);
   expect(await blocked('input[role="combobox"]')).toBe(false);
 });
+
+test("SR role editor swaps lanes, Team power follows, Reset restores", async ({ start }) => {
+  const POS: Record<string, string> = {
+    Ahri: "MIDDLE", Jinx: "BOTTOM", Leona: "UTILITY", Lux: "JUNGLE", Darius: "TOP",
+    Soraka: "UTILITY", Aatrox: "TOP", Vladimir: "JUNGLE", Zed: "MIDDLE", Malphite: "BOTTOM",
+  };
+  const game = liveGame() as ReturnType<typeof liveGame> & { allPlayers: Array<{ championName: string; position?: string }> };
+  game.gameData.gameMode = "CLASSIC";
+  for (const p of game.allPlayers) p.position = POS[p.championName];
+  const page = await start();
+  await emit(page, "live-game", game);
+  // Build row: a role dropdown under each champion.
+  await expect(page.locator(".context-bar .role-select")).toHaveCount(10);
+  await tab(page, "enemies").click();
+  const roles = page.locator(".roles-card");
+  await expect(roles).toBeVisible();
+  await roles.getByRole("combobox", { name: "Vladimir role" }).selectOption("MIDDLE");
+  await expect(roles.getByRole("combobox", { name: "Zed role" })).toHaveValue("JUNGLE");
+  // Lane rows are in LANES order (Top, Jungle, Mid, ...): Mid is now Ahri vs Vladimir.
+  await expect(page.locator(".tp-lanes > li").nth(2)).toContainText("Vladimir");
+  await expect(page.locator(".tp-lanes > li").nth(1)).toContainText("Zed");
+  expect(await storeValue<string>(page, "(s) => s.settings.roleOverrides.roles['CHAOS:Vladimir']")).toBe("MIDDLE");
+  await roles.getByRole("button", { name: "Reset roles" }).click();
+  await expect(roles.getByRole("combobox", { name: "Vladimir role" })).toHaveValue("JUNGLE");
+  expect(await storeValue<unknown>(page, "(s) => s.settings.roleOverrides")).toBeNull();
+});
+
+test("role editor is hidden outside Summoner's Rift", async ({ start }) => {
+  const page = await start();
+  await emit(page, "live-game", liveGame());
+  await expect(page.locator(".context-bar")).toBeVisible();
+  await expect(page.locator(".role-select")).toHaveCount(0);
+  await tab(page, "enemies").click();
+  await expect(page.locator(".roles-card")).toHaveCount(0);
+});

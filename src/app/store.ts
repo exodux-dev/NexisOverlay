@@ -811,8 +811,13 @@ export const actions = {
     return actions.updateSettings({ buildChoices: next });
   },
   /** Move a player to a lane in the current SR game (a teammate in that lane swaps). */
-  setRole(game: GameSnapshot, gameKey: string, player: PlayerState, lane: Lane) {
-    const roles = assignRole(game, activeRoles(state.settings.roleOverrides, gameKey), player, lane);
+  setRole(gameKey: string, player: Pick<PlayerState, "team" | "championName">, lane: Lane) {
+    // Compare against the API's roles: the raw snapshot, not the overridden one.
+    const game = currentGame(state);
+    if (!game || roleGameKey(game) !== gameKey) return;
+    const raw = [game.me, ...game.allies, ...game.enemies].find((p) => playerKey(p) === playerKey(player));
+    if (!raw) return;
+    const roles = assignRole(game, activeRoles(state.settings.roleOverrides, gameKey), raw, lane);
     return actions.updateSettings({ roleOverrides: Object.keys(roles).length ? { game: gameKey, roles } : null });
   },
   resetRoles() {
