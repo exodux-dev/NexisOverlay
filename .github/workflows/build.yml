@@ -1,0 +1,64 @@
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npx vite build
+
+  windows:
+    needs: check
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: src-tauri }
+      - run: npm ci
+      - run: npx tauri build --no-bundle
+      - name: Package portable build
+        shell: pwsh
+        run: |
+          $dir = "NexisOverlay-portable"
+          New-Item -ItemType Directory -Force -Path $dir | Out-Null
+          Copy-Item "src-tauri/target/release/nexis-overlay.exe" "$dir/Nexis Overlay.exe"
+          @"
+          Nexis Overlay - portable build
+
+          Run "Nexis Overlay.exe". Everything (settings, match history, caches) is saved in the
+          "data" folder created next to it - nothing is written to AppData.
+          To uninstall, close Nexis from the tray and delete this folder.
+
+          Requires the Microsoft Edge WebView2 Runtime (preinstalled on Windows 10/11).
+          Set League to Borderless (Settings > Video > Window Mode). Open the overlay with Ctrl+Shift+Space.
+          "@ | Set-Content -Path "$dir/README.txt" -Encoding utf8
+          Compress-Archive -Path "$dir/*" -DestinationPath "NexisOverlay-portable.zip" -Force
+      - name: Upload portable build
+        uses: actions/upload-artifact@v4
+        with:
+          name: NexisOverlay-portable
+          path: NexisOverlay-portable/
+          if-no-files-found: error
+      - name: Attach to release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: NexisOverlay-portable.zip
