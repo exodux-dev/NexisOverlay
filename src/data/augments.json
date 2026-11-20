@@ -1,0 +1,1202 @@
+[
+ {
+  "name": "Back To Basics",
+  "rarity": "prismatic",
+  "desc": "Gain increased Ability Damage, Healing, Shielding, and Ability Haste, but you cannot use your Ultimate Ability."
+ },
+ {
+  "name": "Clown College",
+  "rarity": "prismatic",
+  "desc": "Gain Deceive Summoner Spell. Gain Backstab Passive. When you die, deal a large amount of true damage and Fear nearby enemies."
+ },
+ {
+  "name": "Draw Your Sword",
+  "rarity": "prismatic",
+  "desc": "Become melee and gain Attack Damage, Health, Attack Speed, Lifesteal, and Movement Speed (scaling with the range you give up)."
+ },
+ {
+  "name": "Dual Wield",
+  "rarity": "prismatic",
+  "desc": "Attacks fire a bolt that applies On-Hit effects at reduced strength. Gain 10% total Attack Speed."
+ },
+ {
+  "name": "Eureka",
+  "rarity": "prismatic",
+  "desc": "Gain Ability Haste equal to 30% Ability Power."
+ },
+ {
+  "name": "Giant Slayer",
+  "rarity": "prismatic",
+  "desc": "Become tiny, gain Movement Speed, and gain bonus damage to champions based on how much larger they are than you."
+ },
+ {
+  "name": "Goliath",
+  "rarity": "prismatic",
+  "desc": "Become large, gaining 35% Health and 15% Adaptive Force."
+ },
+ {
+  "name": "Icathia's Fall",
+  "rarity": "prismatic",
+  "desc": "Immediately: Gain a Bami's Cinder. QUEST: Possess Sunfire Aegis and Hollow Radiance. REWARD: These Items combine into Void Immolation."
+ },
+ {
+  "name": "Infinite Recursion",
+  "rarity": "prismatic",
+  "desc": "Gain 60 Ability Haste, plus 3 Ability Haste per takedown."
+ },
+ {
+  "name": "Jeweled Gauntlet",
+  "rarity": "prismatic",
+  "desc": "Your Abilities can Critically Strike. Gain 25% (+0.045%) Crit Chance."
+ },
+ {
+  "name": "Mad Scientist",
+  "rarity": "prismatic",
+  "desc": "On each Revive, you grow large (gaining Adaptive Force and Health) or tiny (gaining Ability Haste and Movement Speed)."
+ },
+ {
+  "name": "Ultra Hydra",
+  "rarity": "prismatic",
+  "desc": "Gain a Tiamat when completing a Hydra Item. QUEST: Gain Ravenous Hydra, Profane Hydra and Titanic Hydra. REWARD: Gain Ultra Hydra."
+ },
+ {
+  "name": "Windspeaker's Blessing",
+  "rarity": "prismatic",
+  "desc": "Your Healing and Shielding also increases the target's Armor and Magic Resist for 3 seconds."
+ },
+ {
+  "name": "Wooglet's Witchcap",
+  "rarity": "prismatic",
+  "desc": "Immediately gain a Needlessly Large Rod. QUEST: Possess Rabadon's Deathcap and Zhonya's Hourglass. REWARD: Gain Wooglet's Witchcap."
+ },
+ {
+  "name": "Archmage",
+  "rarity": "prismatic",
+  "desc": "Casting a spell refunds another random spell's cost by 30% of the original spell's Cooldown."
+ },
+ {
+  "name": "Big Shot",
+  "rarity": "prismatic",
+  "desc": "Gain 35% Critical Strike Damage and 25% bonus Attack Damage. 75% of your Attack Speed is converted into Critical Strike Damage."
+ },
+ {
+  "name": "Biggest Snowball Ever",
+  "rarity": "prismatic",
+  "desc": "Gain 100 Ability Haste on Snowball. Your snowball is BIG and will pass through minions. It Slows, Knocks Up champions, and deals additional damage. If you don't have one, gain a Snowball."
+ },
+ {
+  "name": "Bouncing Bees",
+  "rarity": "prismatic",
+  "desc": "After casting an ability, your next Attack bounces to the nearest enemy QUEST: Bounce Attacks onto enemy Champions REWARD: Gain + 30 Attack Damage and an extra bounce per Quest Level"
+ },
+ {
+  "name": "Final Form",
+  "rarity": "prismatic",
+  "desc": "After casting your Ultimate, gain a max Health Shield, Omnivamp and Movement Speed for 10 seconds."
+ },
+ {
+  "name": "Hand of Baron",
+  "rarity": "prismatic",
+  "desc": "Gain 25% Adaptive Force. Nearby allied minions are greatly empowered."
+ },
+ {
+  "name": "Infernal Conduit",
+  "rarity": "prismatic",
+  "desc": "Your Abilities apply stacking Burn that deals damage over time. Your Burn effects reduce your basic Ability Cooldowns."
+ },
+ {
+  "name": "Mystic Punch",
+  "rarity": "prismatic",
+  "desc": "On-Hit reduce the cooldown of your abilities by 1.25 seconds."
+ },
+ {
+  "name": "Scopiest Weapons",
+  "rarity": "prismatic",
+  "desc": "Gain 250 / 150 Attack Range."
+ },
+ {
+  "name": "Transmute: Chaos",
+  "rarity": "prismatic",
+  "desc": "Gain 2 random Augments."
+ },
+ {
+  "name": "Circle of Death",
+  "rarity": "prismatic",
+  "desc": "Healing and Health Regen also deals magic damage to the nearest enemy champion."
+ },
+ {
+  "name": "Courage of the Colossus",
+  "rarity": "prismatic",
+  "desc": "Gain 150–450 (+4%) Shield after Immobilizing or Grounding an enemy champion."
+ },
+ {
+  "name": "Omni Soul",
+  "rarity": "prismatic",
+  "desc": "Gain 3 random Dragon Souls."
+ },
+ {
+  "name": "Protein Shake",
+  "rarity": "prismatic",
+  "desc": "Gain 25% (+35%) (+35%) Heal and Shield Power based on bonus Armor and Magic Resist."
+ },
+ {
+  "name": "Spirit Bomb",
+  "rarity": "prismatic",
+  "desc": "Healing and Shielding allied champions builds up a Spirit Bomb. At max stacks, toss the bomb onto lowest Health ally to heal and shield them and nearby allies."
+ },
+ {
+  "name": "Symphony of War",
+  "rarity": "prismatic",
+  "desc": "Gain the Lethal Tempo and Conqueror Keystone Runes."
+ },
+ {
+  "name": "Tap Dancer",
+  "rarity": "prismatic",
+  "desc": "Your Attacks grant you Movement Speed. Gain Attack Speed based on your Movement Speed."
+ },
+ {
+  "name": "Titan's Resolve",
+  "rarity": "prismatic",
+  "desc": "Gain stacks when taking or dealing damage. For every 7 stacks, gain Adaptive Force, Armor, Magic Resist, Size, and Tenacity."
+ },
+ {
+  "name": "Ultimate Awakening",
+  "rarity": "prismatic",
+  "desc": "Gain 30 Ultimate Ability Haste. After using your Ultimate, refresh your basic abilities and gain 300 basic ability haste for 15s. (20s Cooldown)"
+ },
+ {
+  "name": "Ultimate Revolution",
+  "rarity": "prismatic",
+  "desc": "Refresh your Ultimate after casting it (75 seconds Cooldown or reset on death)."
+ },
+ {
+  "name": "Urf's Champion",
+  "rarity": "prismatic",
+  "desc": "QUEST: Score ? takedowns. REWARD: Golden Spatula"
+ },
+ {
+  "name": "Blade Waltz",
+  "rarity": "prismatic",
+  "desc": "Gain Blade Waltz as a Summoner Spell: dash between nearby enemies, becoming untargetable and striking each of them."
+ },
+ {
+  "name": "Can't Touch This",
+  "rarity": "prismatic",
+  "desc": "Casting your Ultimate makes you Invulnerable for a short duration."
+ },
+ {
+  "name": "Cruelty",
+  "rarity": "prismatic",
+  "desc": "On Immobilizing or Grounding a champion, summon a comet that lands after a delay, dealing magic damage to nearby enemies."
+ },
+ {
+  "name": "Dashing",
+  "rarity": "prismatic",
+  "desc": "Your dash, leap, blink, or teleport Abilities gain 175 Ability Haste."
+ },
+ {
+  "name": "Double Tap",
+  "rarity": "prismatic",
+  "desc": "Your Critical Strikes apply On-Hit effects an additional time. Gain 25% Crit chance."
+ },
+ {
+  "name": "Echo Cast",
+  "rarity": "prismatic",
+  "desc": "Casting your [Spell] sends a clone toward your mouse position and recasts it."
+ },
+ {
+  "name": "Empowered By The Faithful",
+  "rarity": "prismatic",
+  "desc": "Healing or Shielding allies blesses them, causing their damage to fill you with devotion. When you have enough devotion, unleash a shockwave dealing magic damage and executes low health enemies."
+ },
+ {
+  "name": "Empyrean Promise",
+  "rarity": "prismatic",
+  "desc": "Gain 15% Heal and Shield Power. Gain Empyrean Promise as a Summoner Spell: teleport to an ally and shield them on landing."
+ },
+ {
+  "name": "En Passant",
+  "rarity": "prismatic",
+  "desc": "Periodically identify Vitals on enemy champions. Hitting them with Attacks or Abilities deals max Health true damage, restores Health, and grants Movement Speed. These effects can stack."
+ },
+ {
+  "name": "Goldrend",
+  "rarity": "prismatic",
+  "desc": "Damaging a champion with Attacks or Abilities deals additional magic damage, and grants you Gold and Movement Speed."
+ },
+ {
+  "name": "Group Hug",
+  "rarity": "prismatic",
+  "desc": "Healing or Shielding an allied champion with [Spell] casts that spell again on 2 other nearby allied champions."
+ },
+ {
+  "name": "Master of Duality",
+  "rarity": "prismatic",
+  "desc": "Your Attacks grant you stacking Ability Power and your Abilities that damage enemies grant you Attack Damage."
+ },
+ {
+  "name": "Ominous Pact",
+  "rarity": "prismatic",
+  "desc": "Gain Ability Power, Movement Speed, and Omnivamp based on missing Health, taking damage each time you cast."
+ },
+ {
+  "name": "Overloaded",
+  "rarity": "prismatic",
+  "desc": "Using another Ability resets the cooldown of [Spell]."
+ },
+ {
+  "name": "Spell Split",
+  "rarity": "prismatic",
+  "desc": "Your [Spell] missile splits into two on hit, at max Range, or when Recast."
+ },
+ {
+  "name": "Stats on Stats on Stats!",
+  "rarity": "prismatic",
+  "desc": "Gain 4 Stat Anvils, with a higher chance of Gold and Prismatic Anvils! On your next Augment selection, gain one additional reroll per slot."
+ },
+ {
+  "name": "Triggered Inferno",
+  "rarity": "prismatic",
+  "desc": "Gain Daredevil Impulse. When you reach S Style, automatically use Inferno Trigger."
+ },
+ {
+  "name": "Tripleshot",
+  "rarity": "prismatic",
+  "desc": "Your [Spell] targets 2 additional enemies in front of you."
+ },
+ {
+  "name": "Upgrade Sword of Blossoming Dawn",
+  "rarity": "prismatic",
+  "desc": "Gain 100% Attack Speed. Increase Sword of Blossoming Dawn's healing to 250% when you attack enemy champions."
+ },
+ {
+  "name": "Earthwake",
+  "rarity": "prismatic",
+  "desc": "Your dash, blink, or teleport Abilities leave behind a trail that detonates after 0.75 second."
+ },
+ {
+  "name": "Fey Magic",
+  "rarity": "prismatic",
+  "desc": "Damaging with your Ultimate Polymorphs enemies for a few seconds."
+ },
+ {
+  "name": "Glass Cannon",
+  "rarity": "prismatic",
+  "desc": "Reduce max Health by 30%. Deal an extra 25% / 15% damage as true damage."
+ },
+ {
+  "name": "Hellbent",
+  "rarity": "prismatic",
+  "desc": "Damaging enemy champions with Attacks or Abilities grants stacks. At max stacks, you revive empowered upon death."
+ },
+ {
+  "name": "Holy Snowball",
+  "rarity": "prismatic",
+  "desc": "Gain 100 Ability Haste on Snowball. You are briefly Invulnerable when you dash with Snowball. If you don't have one, gain a Snowball."
+ },
+ {
+  "name": "King Me",
+  "rarity": "prismatic",
+  "desc": "The first time you take the enemy transport with a Legendary Item you become Kinged, upgrading your item and gaining a random Prismatic Augment."
+ },
+ {
+  "name": "Mosh Monster",
+  "rarity": "prismatic",
+  "desc": "Casting [Spell] grants 300–750 bonus Health and Slows nearby enemies for the duration of [Spell] Getting a takedown permanently increases this effect."
+ },
+ {
+  "name": "Multishot",
+  "rarity": "prismatic",
+  "desc": "QUEST: Hit enemy Champions with [Spell] ? times. REWARD: Fire additional missiles per Quest Level."
+ },
+ {
+  "name": "Pandora's Box",
+  "rarity": "prismatic",
+  "desc": "Transmute all of your augments into random Prismatic Augments."
+ },
+ {
+  "name": "Pin Cushion",
+  "rarity": "prismatic",
+  "desc": "Attacks during [Spell] gouge your target with Nails. Nails accumulate damage, execute, and grant Movement Speed upon expiration."
+ },
+ {
+  "name": "Prom Queen",
+  "rarity": "prismatic",
+  "desc": "Every 35 seconds, Autocast a sparkly tiara descends upon you. When it lands, gain Rakan's Ultimate, charming enemies you touch."
+ },
+ {
+  "name": "RISE",
+  "rarity": "prismatic",
+  "desc": "If you use [Spell] to kill an enemy champion, you may Recast it. Each subsequent Recast deals additional damage."
+ },
+ {
+  "name": "Rite of Ascension",
+  "rarity": "prismatic",
+  "desc": "On takedown, enemy champions leave behind their Essence. Attacking the Essence grants movement speed and resets basic ability cooldowns."
+ },
+ {
+  "name": "Squishy Slappy Grab",
+  "rarity": "prismatic",
+  "desc": "Occasionally send out squishy, slappy hands towards all nearby enemy champions, tethering them. Your next attack will pull in all tethered enemies."
+ },
+ {
+  "name": "Stuck In Here With Me",
+  "rarity": "prismatic",
+  "desc": "Using your Ultimate Taunts nearby enemies and grants you damage reduction. Gain 30 Ultimate Ability Haste."
+ },
+ {
+  "name": "Third Times the Harm",
+  "rarity": "prismatic",
+  "desc": "Every third consecutive Attack against an enemy champion deals true damage and permanently increases the damage dealt by this effect."
+ },
+ {
+  "name": "Totentanz",
+  "rarity": "prismatic",
+  "desc": "Replace a Summoner Spell with A Dance with Death. A Dance with Death : Blink forward and become Unkillable. Get a takedown within 5 seconds or else YOU DIE."
+ },
+ {
+  "name": "Armored Impact",
+  "rarity": "gold",
+  "desc": "After casting an Ability, your next Attack deals 25–125 (+220%) bonus physical damage to nearby enemies."
+ },
+ {
+  "name": "BEES!!!",
+  "rarity": "gold",
+  "desc": "Periodically, your next Ability hit against an enemy champion launches a hive of Bees that explodes, Slowing and dealing magic damage over a short duration. Bees apply On-Hit effects."
+ },
+ {
+  "name": "Ethereal Weapon",
+  "rarity": "gold",
+  "desc": "Your Abilities apply On-Hit effects. 1 second Cooldown per target."
+ },
+ {
+  "name": "HEAVY",
+  "rarity": "gold",
+  "desc": "Empower Q ! Empowered Q gains 20 Ability Haste, 10% increased damage, and 10% increased healing and shielding."
+ },
+ {
+  "name": "Phenomenal Evil",
+  "rarity": "gold",
+  "desc": "Permanently gain 1 Ability Power when you damage enemy champions with Abilities. If taken as your second Augment, starts with 40 Ability Power."
+ },
+ {
+  "name": "POWER",
+  "rarity": "gold",
+  "desc": "Empower W ! Empowered W gains 20 Ability Haste, 10% increased damage, and 10% increased healing and shielding."
+ },
+ {
+  "name": "Recursion",
+  "rarity": "gold",
+  "desc": "Gain 60 Ability Haste."
+ },
+ {
+  "name": "Scopier Weapons",
+  "rarity": "gold",
+  "desc": "Gain 150 / 100 Attack Range."
+ },
+ {
+  "name": "Shrink Engine",
+  "rarity": "gold",
+  "desc": "Takedowns makes you smaller and grant Ability Haste and Movement Speed. Lose 65% stacks on death."
+ },
+ {
+  "name": "Soul Siphon",
+  "rarity": "gold",
+  "desc": "Heal for 12% of damage done by Critical Strikes. Gain 25% Crit chance."
+ },
+ {
+  "name": "Steel Your Heart",
+  "rarity": "gold",
+  "desc": "QUEST: Possess Heartsteel with 300+ stacks. REWARD: Multiply your Heartsteel stacks by 3."
+ },
+ {
+  "name": "Still Here",
+  "rarity": "gold",
+  "desc": "Gain Attack Speed and Lifesteal based on your missing Health."
+ },
+ {
+  "name": "Take'em Down Down Down",
+  "rarity": "gold",
+  "desc": "Attacks and Abilities deal bonus magic damage and apply stacks to enemy champions. At max stacks, consume them to deal missing Health magic damage and you restore Health based on the damage dealt."
+ },
+ {
+  "name": "Tank Engine",
+  "rarity": "gold",
+  "desc": "On takedown, gain a stack that increases your size and max Health. Lose stacks on death."
+ },
+ {
+  "name": "The Boom and the Bass",
+  "rarity": "gold",
+  "desc": "After casting an Ability, your next Attack is faster, deals bonus magic damage, and grants you decaying Move Speed."
+ },
+ {
+  "name": "THRASH",
+  "rarity": "gold",
+  "desc": "Empower E ! Empowered E gains 20 Ability Haste, 10% increased damage, and 10% increased healing and shielding."
+ },
+ {
+  "name": "Tooth Fairy",
+  "rarity": "gold",
+  "desc": "Bursting enemies drops Teeth. Picking up Teeth grants you permanent Lethality and Magic Penetration."
+ },
+ {
+  "name": "Transmute: Prismatic",
+  "rarity": "gold",
+  "desc": "Gain a random Prismatic Augment."
+ },
+ {
+  "name": "Upgrade Infinity Edge",
+  "rarity": "gold",
+  "desc": "Gain 500 Gold. Having Infinity Edge allows your Critical Strike Chance to grant random Critical Strike Damage each Attack."
+ },
+ {
+  "name": "Upgrade Stormsurge",
+  "rarity": "gold",
+  "desc": "Stormsurge's Squall now always detonates in an area, dealing max Health magic damage. Enemy champions caught in the initial blast are marked by Squall. Gain 500 Gold."
+ },
+ {
+  "name": "Warlock Juicebox",
+  "rarity": "gold",
+  "desc": "Gain 10% (+0.035%) Omnivamp."
+ },
+ {
+  "name": "Weapon of Destiny",
+  "rarity": "gold",
+  "desc": "Your first Legendary Item becomes the Weapon of Destiny, gaining bonus stats as you score takedowns."
+ },
+ {
+  "name": "Bread And Butter",
+  "rarity": "gold",
+  "desc": "Your Q gains 100 Ability Haste."
+ },
+ {
+  "name": "Celestial Body",
+  "rarity": "gold",
+  "desc": "Gain 1500 Health, but you deal 10% less damage."
+ },
+ {
+  "name": "CRIMSON COBALT",
+  "rarity": "gold",
+  "desc": "Enemy champions damaged by [Spell] are marked. Attacking a marked enemy deals bonus magic damage and reduces the cooldown of [Spell]."
+ },
+ {
+  "name": "Critical Rhythm",
+  "rarity": "gold",
+  "desc": "Your basic Attack stacks Attack Speed on Critical Strikes. Gain 25% Crit chance."
+ },
+ {
+  "name": "Dawnbringer's Resolve",
+  "rarity": "gold",
+  "desc": "When dropping below 50% Health, heal for 35% max Health over 3 seconds. Resets on death or every 45 seconds."
+ },
+ {
+  "name": "DOOM",
+  "rarity": "gold",
+  "desc": "Empower R ! Empowered R gains 20 Ability Haste, 10% increased damage, and 10% increased healing and shielding."
+ },
+ {
+  "name": "Enchanting Butterflies",
+  "rarity": "gold",
+  "desc": "Healing or Shielding allied champions gathers Butterflies. After collecting 7 Butterflies, damaging an enemy champion fires all of them to deal Magic damage."
+ },
+ {
+  "name": "From Beginning To End",
+  "rarity": "gold",
+  "desc": "Gain the First Strike and Dark Harvest Keystone Runes."
+ },
+ {
+  "name": "Jeweled Bracelet",
+  "rarity": "gold",
+  "desc": "[Spell] can Critically Strike. Gain 25% Critical Strike Chance."
+ },
+ {
+  "name": "Magic Missile",
+  "rarity": "gold",
+  "desc": "Dealing Ability damage fires 3 missiles, each dealing percent max Health true damage based on distance traveled."
+ },
+ {
+  "name": "Marksmage",
+  "rarity": "gold",
+  "desc": "Your Attacks deal additional physical damage equal to 75% Ability Power."
+ },
+ {
+  "name": "Ravenous Bind",
+  "rarity": "gold",
+  "desc": "Immobilizing or Grounding enemy champions with [Spell] deals extra damage and heals you."
+ },
+ {
+  "name": "Salvation",
+  "rarity": "gold",
+  "desc": "Taking damage that would reduce your Health below 50% releases a shockwave which damages and Knocks Back nearby enemies and restores health to all allied champions in a large area around you."
+ },
+ {
+  "name": "Sap Magic",
+  "rarity": "gold",
+  "desc": "Every 20 seconds, your next Attack deals bonus physical damage and restores Health On-Hit. Casting an Ability reduces this effect's cooldown."
+ },
+ {
+  "name": "Skilled Sniper",
+  "rarity": "gold",
+  "desc": "Snipe an enemy with a non-Ultimate Ability refunds 80% Cooldown (65% for periodic Abilities)."
+ },
+ {
+  "name": "Soul Eater",
+  "rarity": "gold",
+  "desc": "Immobilizing an enemy champion grants 30 max Health. If taken as your second Augment, starts with 300 Health."
+ },
+ {
+  "name": "Steadfaster Presence",
+  "rarity": "gold",
+  "desc": "Gain bonus Armor, Magic Resist, and Tenacity. This bonus increases when you're below 40% maximum Health."
+ },
+ {
+  "name": "Thread the Needle",
+  "rarity": "gold",
+  "desc": "Gain 18% Armor Penetration and Magic Penetration."
+ },
+ {
+  "name": "Vulnerability",
+  "rarity": "gold",
+  "desc": "Your Item and damage over time effects can Critically Strike. Gain 25% Crit chance."
+ },
+ {
+  "name": "Wee Woo Wee Woo",
+  "rarity": "gold",
+  "desc": "When moving towards allies with low Health, gain Movement Speed. Your Healing and Shielding are greater based on how low your target's Health is."
+ },
+ {
+  "name": "All For You",
+  "rarity": "gold",
+  "desc": "Your Heals and Shields are stronger when used on an ally."
+ },
+ {
+  "name": "Arcane Axiom",
+  "rarity": "gold",
+  "desc": "When a champion that you damaged within 3 seconds dies, refund a portion of your Ultimate Ability's total cooldown."
+ },
+ {
+  "name": "Big Brain",
+  "rarity": "gold",
+  "desc": "Gain 3 Shield for every 1 Ability Power. Resets on death or 70 seconds after depletion."
+ },
+ {
+  "name": "BONK!",
+  "rarity": "gold",
+  "desc": "Attacks and Abilities empowered by [Spell] deal additional damage to the target and nearby enemies."
+ },
+ {
+  "name": "Bread and Cheese",
+  "rarity": "gold",
+  "desc": "Your E gains 100 Ability Haste."
+ },
+ {
+  "name": "Donation",
+  "rarity": "gold",
+  "desc": "Get 1750 Gold. No questions asked."
+ },
+ {
+  "name": "Endless Decimation",
+  "rarity": "gold",
+  "desc": "While in combat, Autocast a circular axe that deals physical damage. Enemies on the outer edge take additional damage and heal you."
+ },
+ {
+  "name": "From Downtown",
+  "rarity": "gold",
+  "desc": "QUEST: Snipe ? enemy champions with abilities REWARD: Send a meteor at Sniped enemy champions, dealing Magic damage in an area around them"
+ },
+ {
+  "name": "Get Excited!",
+  "rarity": "gold",
+  "desc": "Increase Movement Speed and Attack Speed for 4 seconds on takedown."
+ },
+ {
+  "name": "Get Jinxed",
+  "rarity": "gold",
+  "desc": "Replace a Summoner Spell with Get Jinxed! Get Jinxed! : Ride a rocket that explodes after hitting an enemy champion, structure, or wall. Enemies within the blast radius take physical damage."
+ },
+ {
+  "name": "Growth Spurt",
+  "rarity": "gold",
+  "desc": "Grow larger over time, gaining permanent Health and Adaptive Force."
+ },
+ {
+  "name": "Heavy Is The Crown",
+  "rarity": "gold",
+  "desc": "Gain Attack Damage, Ability Power, and Attack Speed but decreased Move Speed. Getting a takedown grants you a stack of Burden that increases this effect. Lose half your stacks on death"
+ },
+ {
+  "name": "It's Killing Time",
+  "rarity": "gold",
+  "desc": "After casting your Ultimate, mark all enemies and store up damage you deal to them. When it ends, detonate the damage."
+ },
+ {
+  "name": "Lil' Extra Help",
+  "rarity": "gold",
+  "desc": "Gain 150 / 100 Attack Range and 75% / 40% Attack Speed during your [Spell] duration."
+ },
+ {
+  "name": "One Hit Wonder",
+  "rarity": "gold",
+  "desc": "[Spell] 's damage is increased by 75% per 100 Ability Haste, but no longer benefits from Ability Haste."
+ },
+ {
+  "name": "Outlaw's Grit",
+  "rarity": "gold",
+  "desc": "After using a Dash, Blink, or Teleport Ability you gain 12 Armor and Magic Resist up to 5 stacks."
+ },
+ {
+  "name": "Overflow",
+  "rarity": "gold",
+  "desc": "Your Mana costs are doubled. Your Ability Heals, Shields, and damage are increased based on your max Mana."
+ },
+ {
+  "name": "Pursuit of Haste",
+  "rarity": "gold",
+  "desc": "QUEST: Hit enemy champions with [Spell] ? times. REWARD: Gain Ability Haste on [Spell] per Quest Level up to 160."
+ },
+ {
+  "name": "Pursuit of Power",
+  "rarity": "gold",
+  "desc": "QUEST: Hit enemy champions with [Spell] ? times. REWARD: Permanently increase [Spell] damage."
+ },
+ {
+  "name": "Recoil",
+  "rarity": "gold",
+  "desc": "Your [Spell] deals increased damage and knocks you backward."
+ },
+ {
+  "name": "Sonata",
+  "rarity": "gold",
+  "desc": "Every 10 seconds, automatically cast the Aria of Perseverence and Song of Celerity in an alternating melody. Aria of Perseverence heals nearby allies and grants a temporary shielding aura. Song of Celerity grants a temporary aura that provides bonus Movement Speed."
+ },
+ {
+  "name": "Stats on Stats!",
+  "rarity": "gold",
+  "desc": "Gain 3 Stat Anvils, with a higher chance of Gold and Prismatic Anvils!"
+ },
+ {
+  "name": "Upgrade Sheen",
+  "rarity": "gold",
+  "desc": "Your Spellblade effects deal additional damage and heal you for a percent of the target's health. Additionally, gain 250 Gold."
+ },
+ {
+  "name": "With Haste",
+  "rarity": "gold",
+  "desc": "Gain Move Speed equal to 70% of your Ability Haste."
+ },
+ {
+  "name": "Bread And Jam",
+  "rarity": "gold",
+  "desc": "Your W gains 100 Ability Haste."
+ },
+ {
+  "name": "Critical Healing",
+  "rarity": "gold",
+  "desc": "Your healing and Shields can Critically Strike for 40% bonus amount. Gain 25% Crit Chance."
+ },
+ {
+  "name": "Double Time",
+  "rarity": "gold",
+  "desc": "Damaging an enemy champion with 2 separate Abilities in quick succession deals magic damage and grants max Mana."
+ },
+ {
+  "name": "Firebrand",
+  "rarity": "gold",
+  "desc": "Your Attacks apply an infinitely stacking Burn On-Hit, dealing damage over time."
+ },
+ {
+  "name": "Flashy",
+  "rarity": "gold",
+  "desc": "Your Flash has 3 charges. After 120 seconds, regain all charges."
+ },
+ {
+  "name": "Impassable",
+  "rarity": "gold",
+  "desc": "Gain the Aftershock and Glacial Augment Keystone Runes."
+ },
+ {
+  "name": "It's Critical",
+  "rarity": "gold",
+  "desc": "Gain 50% Crit chance."
+ },
+ {
+  "name": "Mercy's Strike",
+  "rarity": "gold",
+  "desc": "After healing or shielding your ally with [Spell], your next basic attack gains attack range, attack speed and deals bonus max Health magic damage."
+ },
+ {
+  "name": "Minionmancer",
+  "rarity": "gold",
+  "desc": "Your summons gain 40% increased size, health, and damage."
+ },
+ {
+  "name": "Nightstalking",
+  "rarity": "gold",
+  "desc": "Takedowns against enemy champions within 3 seconds of damaging them grants you Movement Speed and renders you invisible."
+ },
+ {
+  "name": "Ok Boomerang",
+  "rarity": "gold",
+  "desc": "Autocast throw a boomerang at a nearby enemy every 7 seconds."
+ },
+ {
+  "name": "Overextender",
+  "rarity": "gold",
+  "desc": "Recall to enter your Cannon Launcher. It has significantly increased range, travel speed, and damage."
+ },
+ {
+  "name": "Pinball",
+  "rarity": "gold",
+  "desc": "Your Snowball gains Ability Haste and deals extra True Damage. When the Snowball bounces off walls, it increases in size and damage and has a reduced Cooldown."
+ },
+ {
+  "name": "Porcupine",
+  "rarity": "gold",
+  "desc": "Taking damage from champions builds up a burst of needles that fly out of you, dealing damage and slowing nearby enemies."
+ },
+ {
+  "name": "Pressure Cooker",
+  "rarity": "gold",
+  "desc": "Every second, apply a stacking Burn to nearby enemy champions, scaling with your max Health. QUEST: Deal Burn damage to enemy Champions. REWARD : Size and damage increase per Quest Level."
+ },
+ {
+  "name": "Rejuvenation",
+  "rarity": "gold",
+  "desc": "Using [Spell] restores Health."
+ },
+ {
+  "name": "Upgrade Ravenous Hydra",
+  "rarity": "gold",
+  "desc": "Your spell hits trigger Cleave against enemies. Increase Ravenous Hydra's Life Steal to 20% Gain 500 Gold."
+ },
+ {
+  "name": "Apex Inventor",
+  "rarity": "gold",
+  "desc": "Gain 100 Item Haste (equivalent to 50% Item CDR). Item Haste reduces the cooldown of all Item Abilities."
+ },
+ {
+  "name": "Brass Blast",
+  "rarity": "gold",
+  "desc": "Replace a Summoner Spell with Brass Blast, a long-range cannon shot that damages and knocks back enemies."
+ },
+ {
+  "name": "Chain Reaction",
+  "rarity": "gold",
+  "desc": "If a target Knocked Back by [Spell] hits another champion, they are Knocked Up and dealt damage. When colliding with terrain, the Knock Up duration is extended and they are dealt bonus damage."
+ },
+ {
+  "name": "Divine Intervention",
+  "rarity": "gold",
+  "desc": "Every 35 seconds, Autocast a protective star. Upon its landing, you and nearby allies become Invulnerable for a few seconds."
+ },
+ {
+  "name": "Nature is Healing",
+  "rarity": "gold",
+  "desc": "Entering Brush regenerates a large amount of Health."
+ },
+ {
+  "name": "Quickstep",
+  "rarity": "gold",
+  "desc": "When you use [Spell], dash towards your cursor."
+ },
+ {
+  "name": "Searing Dawn",
+  "rarity": "gold",
+  "desc": "Your Abilities mark enemies, causing them to take additional magic damage from your ally's next Attack or Ability."
+ },
+ {
+  "name": "Shark Bait",
+  "rarity": "gold",
+  "desc": "A few seconds after death, a shark chomps all nearby enemies. You can move after death to aim the shark attack."
+ },
+ {
+  "name": "Shrink Ray",
+  "rarity": "gold",
+  "desc": "Your Attacks reduce the target's damage and size by 15% On-Hit."
+ },
+ {
+  "name": "Terrain'd",
+  "rarity": "gold",
+  "desc": "Your [Spell] deals damage in an area around it."
+ },
+ {
+  "name": "Terror",
+  "rarity": "gold",
+  "desc": "Whenever you cast [Spell], Fear enemies around you."
+ },
+ {
+  "name": "Tickle Monster",
+  "rarity": "gold",
+  "desc": "Attack Damage is converted into Attack Speed. Attacks deal bonus magic damage On-Hit."
+ },
+ {
+  "name": "Upgrade Sundered Sky",
+  "rarity": "gold",
+  "desc": "Reduce Sundered Sky's per target cooldown to 5 seconds and heal you for 9% of missing health. Gain 500 Gold."
+ },
+ {
+  "name": "Reload",
+  "rarity": "gold",
+  "desc": "Basic Attacks On-Hit during [Spell] reduce its cooldown."
+ },
+ {
+  "name": "Snowblast",
+  "rarity": "gold",
+  "desc": "Recasting Snowball deals increased damage, Knocks Up the target, and Knocks Back nearby enemies."
+ },
+ {
+  "name": "Blunt Force",
+  "rarity": "silver",
+  "desc": "Gain 20% Attack Damage."
+ },
+ {
+  "name": "Escape Plan",
+  "rarity": "silver",
+  "desc": "Gain a massive decaying Shield, decaying Movement Speed, and a decaying shrink effect upon reaching 35% Health."
+ },
+ {
+  "name": "Heavy Hitter",
+  "rarity": "silver",
+  "desc": "Your Attacks deal additional physical damage equal to 3.5% of your max Health."
+ },
+ {
+  "name": "Homeguard",
+  "rarity": "silver",
+  "desc": "Gain 100% Movement Speed, disabled for 6 seconds after taking damage."
+ },
+ {
+  "name": "Transmute: Gold",
+  "rarity": "silver",
+  "desc": "Gain a random Gold Augment."
+ },
+ {
+  "name": "Twin Fire",
+  "rarity": "silver",
+  "desc": "On ability damage, fire 1 plus 300% missiles that deal 10–30 (+7%) (+7%) magic damage each. Gain 25% Critical Strike Chance."
+ },
+ {
+  "name": "ADAPt",
+  "rarity": "silver",
+  "desc": "Convert Bonus Attack Damage to Ability Power. Gain 15% Ability Power."
+ },
+ {
+  "name": "Blue Barrier",
+  "rarity": "silver",
+  "desc": "Gain 200%–450% of the Mana you spend as a Shield for 1.5 seconds."
+ },
+ {
+  "name": "Deft",
+  "rarity": "silver",
+  "desc": "Gain 60% Attack Speed."
+ },
+ {
+  "name": "Erosion",
+  "rarity": "silver",
+  "desc": "Damaging enemies adds a stacking Armor and Magic Resist shred for 4s."
+ },
+ {
+  "name": "Forged By The Master",
+  "rarity": "silver",
+  "desc": "Increase your Item and Augment damage by 45%."
+ },
+ {
+  "name": "Goredrink",
+  "rarity": "silver",
+  "desc": "Gain 15% Omnivamp."
+ },
+ {
+  "name": "Leg Day",
+  "rarity": "silver",
+  "desc": "Gain 50 Movement Speed and 50% Slow Resist."
+ },
+ {
+  "name": "Lich Brain",
+  "rarity": "silver",
+  "desc": "Gain 30 (+4%) Ability Power."
+ },
+ {
+  "name": "Mind to Matter",
+  "rarity": "silver",
+  "desc": "Increase max Health by half of your Mana."
+ },
+ {
+  "name": "Purist - Caster",
+  "rarity": "silver",
+  "desc": "Gain percent cooldown reduction and convert all of your Attack Speed into Ability Haste."
+ },
+ {
+  "name": "Shadow Runner",
+  "rarity": "silver",
+  "desc": "After using a Dash, Blink, or Teleport Ability or exiting Stealth, gain Movement Speed."
+ },
+ {
+  "name": "Slime Time",
+  "rarity": "silver",
+  "desc": "Every few seconds, Autocast a burst of slime from your body, dealing magic damage to nearby enemies. If you hit a champion, secrete a blob that heals you when walked over."
+ },
+ {
+  "name": "Stackosaurus Rex",
+  "rarity": "silver",
+  "desc": "When you gain permanent Stacks of an Ability, gain 100% more!"
+ },
+ {
+  "name": "Tank It Or Leave It",
+  "rarity": "silver",
+  "desc": "You can Critically Defend using your Crit Chance (max 50% chance), giving you a chance to reduce damage. Gain 25% Crit Chance."
+ },
+ {
+  "name": "Ultimate Recursion",
+  "rarity": "silver",
+  "desc": "Gain 50 Ultimate Ability Haste."
+ },
+ {
+  "name": "Upgrade Immolate",
+  "rarity": "silver",
+  "desc": "Hollow Radiance and Sunfire Aegis grant 12 Gold per target affected with Immolate. Gain 250 Gold."
+ },
+ {
+  "name": "Witchful Thinking",
+  "rarity": "silver",
+  "desc": "Gain 20–80 Ability Power."
+ },
+ {
+  "name": "Zealot",
+  "rarity": "silver",
+  "desc": "Gain 25% (+0.05%) Critical Strike Chance and 35% (+0.05%) Attack Speed."
+ },
+ {
+  "name": "escAPADe",
+  "rarity": "silver",
+  "desc": "Convert Ability Power to Bonus Attack Damage. Gain 15% Attack Damage."
+ },
+ {
+  "name": "FireFox",
+  "rarity": "silver",
+  "desc": "Autocast Gain Movement Speed and conjure three flames that orbit you, targetting the closest visible enemy in range and dealing magic damage."
+ },
+ {
+  "name": "First-Aid Kit",
+  "rarity": "silver",
+  "desc": "Gain 20% Heal and Shield Power."
+ },
+ {
+  "name": "Flow of Spirit",
+  "rarity": "silver",
+  "desc": "Casting [Spell] grants you Attack Speed for a duration."
+ },
+ {
+  "name": "Fortified",
+  "rarity": "silver",
+  "desc": "Gain 20 Armor, then increase your bonus Armor by 25%."
+ },
+ {
+  "name": "Fruitify",
+  "rarity": "silver",
+  "desc": "Takedowns create explosions of Fruit. Fruit restores Health and Mana."
+ },
+ {
+  "name": "Hextech Soul",
+  "rarity": "silver",
+  "desc": "Periodically your next damaging Ability or Attack triggers a lightning blast, chaining through enemies to deal damage and Slow."
+ },
+ {
+  "name": "Lonely Warrior",
+  "rarity": "silver",
+  "desc": "Gain Attack Speed, Armor, and Magic Resist for each nearby enemy champion."
+ },
+ {
+  "name": "Mystic Guard",
+  "rarity": "silver",
+  "desc": "Gain 20 Magic Resist, then increase your bonus Magic Resist by 25%."
+ },
+ {
+  "name": "No Mana, No Problem",
+  "rarity": "silver",
+  "desc": "Mana from your items is converted into Ability Power. Increase your total Ability Power by 15%."
+ },
+ {
+  "name": "Ocean Soul",
+  "rarity": "silver",
+  "desc": "Gain the Ocean Soul, granting high Health and Mana regen after damaging enemies."
+ },
+ {
+  "name": "Scoped Weapons",
+  "rarity": "silver",
+  "desc": "Gain 75 / 50 Attack Range."
+ },
+ {
+  "name": "Siphon",
+  "rarity": "silver",
+  "desc": "Damaging enemy champions with [Spell] heals you."
+ },
+ {
+  "name": "Spin To Win",
+  "rarity": "silver",
+  "desc": "Your spin Abilities gain 30 Ability Haste and deal 30% more damage, increase to 50% for Ultimates"
+ },
+ {
+  "name": "Stay Resolute",
+  "rarity": "silver",
+  "desc": "When [Spell] damages enemy champions, gain 2–3 Armor and Magic Resistance."
+ },
+ {
+  "name": "Swift and Safe",
+  "rarity": "silver",
+  "desc": "Gain a Shield after a Dash or Blink."
+ },
+ {
+  "name": "Typhoon",
+  "rarity": "silver",
+  "desc": "Your Attacks shoot a missile at an additional target, dealing reduced damage and applying On-Hit effects."
+ },
+ {
+  "name": "Upgrade Collector",
+  "rarity": "silver",
+  "desc": "Executing enemies with The Collector's Passive increases its execute threshold and grants bonus Gold. Gain 250 Gold."
+ },
+ {
+  "name": "Upgrade Death's Dance",
+  "rarity": "silver",
+  "desc": "Gain 250. Death's Dance's Ignore Pain is increased to 40% / 15% of damage received, and heals for more instantly when scoring a takedown."
+ },
+ {
+  "name": "Upgrade Zhonya's",
+  "rarity": "silver",
+  "desc": "Reduce Zhonya's Hourglass Cooldown to 45 seconds. You can now move and gain Movement Speed when in Zhonya's Hourglass, Seeker's Armguard, or"
+ },
+ {
+  "name": "Bolstered",
+  "rarity": "silver",
+  "desc": "Shields granted from [Spell] are stronger and scaling with target's missing Health."
+ },
+ {
+  "name": "Dive Bomber",
+  "rarity": "silver",
+  "desc": "Explodes when you die, dealing massive true damage."
+ },
+ {
+  "name": "Don't Blink",
+  "rarity": "silver",
+  "desc": "Gain 1% bonus damage per 10 Move Speed you have more than the target."
+ },
+ {
+  "name": "Don't Change the Channel",
+  "rarity": "silver",
+  "desc": "Gain a Shield for every second you spend Channeling."
+ },
+ {
+  "name": "Ice Cold",
+  "rarity": "silver",
+  "desc": "Your Slowing effects reduce Movement Speed by an extra 75."
+ },
+ {
+  "name": "Infernal Soul",
+  "rarity": "silver",
+  "desc": "You gain the Infernal Dragon Soul, dealing bonus damage when you hit enemies with Abilities or Attacks."
+ },
+ {
+  "name": "It's Go Time",
+  "rarity": "silver",
+  "desc": "Activating [Spell] grants you Movement Speed for its duration."
+ },
+ {
+  "name": "Juiced",
+  "rarity": "silver",
+  "desc": "On-Hit deal 7% / 5.6% magic damage, this damage can Critically Strike."
+ },
+ {
+  "name": "Kill Secured",
+  "rarity": "silver",
+  "desc": "Gain increased Movement Speed towards enemies at low Health."
+ },
+ {
+  "name": "Light 'Em Up!",
+  "rarity": "silver",
+  "desc": "Every 4th Attack shoots 4 missiles dealing magic damage On-Hit."
+ },
+ {
+  "name": "Slap Around",
+  "rarity": "silver",
+  "desc": "Gain 10 Adaptive Force when you Immobilize or Ground an enemy. Lose 50% on death."
+ },
+ {
+  "name": "Sonic Boom",
+  "rarity": "silver",
+  "desc": "Buffing, Healing, or Shielding your ally deals damage and Slows enemies surrounding them."
+ },
+ {
+  "name": "Sound Barrier",
+  "rarity": "silver",
+  "desc": "Shielding an ally grants Move Speed and Ghost decaying over 1.5 seconds."
+ },
+ {
+  "name": "Ultimate Unstoppable",
+  "rarity": "silver",
+  "desc": "After using your Ultimate, you become immune to crowd control for 3 seconds. (8 second Cooldown)."
+ },
+ {
+  "name": "Veil of Warding",
+  "rarity": "silver",
+  "desc": "Gain a Spell Shield every 30 seconds that blocks the next enemy Ability."
+ },
+ {
+  "name": "Adaptive Ward",
+  "rarity": "silver",
+  "desc": "Striking an enemy champion with [Spell] grants you 7–12 Armor or Magic Resist based on their damage type for 6 seconds. This effect can stack."
+ },
+ {
+  "name": "Flash 2",
+  "rarity": "silver",
+  "desc": "Gain a second Flash Summoner Spell and 70 Summoner Haste."
+ },
+ {
+  "name": "Flashbang",
+  "rarity": "silver",
+  "desc": "Your Flash causes an explosion that damages and Slows (resets on death)."
+ },
+ {
+  "name": "Gift of the Drowned",
+  "rarity": "silver",
+  "desc": "Bonus Health is converted into Lethality. Gain 10–25 Lethality."
+ },
+ {
+  "name": "Hands off the Talent",
+  "rarity": "silver",
+  "desc": "Attacks fired close to your max Attack Range deal bonus physical damage On-Hit."
+ },
+ {
+  "name": "Mighty Shield",
+  "rarity": "silver",
+  "desc": "Gain 40–100 Adaptive Force for 3 seconds when you gain a Shield (5 seconds Cooldown)."
+ },
+ {
+  "name": "Mountain Soul",
+  "rarity": "silver",
+  "desc": "You gain the Mountain Soul, gaining a Shield after being out of combat for a short time."
+ },
+ {
+  "name": "Poltergeist",
+  "rarity": "silver",
+  "desc": "Gain Poltergeist as a Summoner Spell. Poltergeist casts both Barrier and Ghost."
+ },
+ {
+  "name": "Snowday",
+  "rarity": "silver",
+  "desc": "Gain 100 Ability Haste on your Snowball. It deals additional magic damage when hitting an enemy. If you don't have one, gain a Snowball."
+ },
+ {
+  "name": "Spin Me Right Round",
+  "rarity": "silver",
+  "desc": "Replace a Summoner Spell with Heroic Swing. Heroic Swing fires a grappling hook, sticking into terrain, after which you can Recast to swing around it. While swinging, automatically Attack the nearest enemy. Colliding with an enemy champion or Recasting ends the swing."
+ },
+ {
+  "name": "Stats!",
+  "rarity": "silver",
+  "desc": "Gain 2 Stat Anvils!"
+ },
+ {
+  "name": "Trusty Weapon",
+  "rarity": "silver",
+  "desc": "Striking enemy champions with [Spell] forges a bond of Friendship. [Spell] gains temporarily increased damage based on your level of Friendship. Download Blitz Company About Us Partnerships Careers Contact Support Privacy Policy Socials X/Twitter Discord Facebook Instagram TikTok Games League of Legends Teamfight Tactics VALORANT Counter-Strike 2 Deadlock Fortnite Apex Legends Marvel Rivals Made with Lots of Love and Tilt in"
+ }
+]
