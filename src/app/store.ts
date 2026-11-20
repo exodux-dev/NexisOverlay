@@ -22,6 +22,7 @@ import { mergeChoice, migrateChoice, needsMigration, runeKey, runeOptions, spell
 import { personalChampionStats } from "../engine/history";
 import { stepTimeline, type TimelineRecorder } from "../engine/timeline";
 import { datasetMode, historyForMode, modeFromGameMode, type GameModeKind } from "../engine/mode";
+import { defaultWebSource, fallbackNotice, resolveSource, selectedSource, sourcesForMode, type DataSourceId, type SourceResolution } from "../engine/dataSource";
 import { parseLiveGame, type AllGameDataRaw } from "../engine/live";
 import { stabilizeSnapshot } from "../engine/liveStable";
 import { matchAugments, type OcrLine, type OcrMatch } from "../engine/ocrMatch";
@@ -162,6 +163,8 @@ export interface Settings {
   favorites: string[];
   /** Picked rune page / spells / core / starter / boots option per champion + mode (key: webKey). */
   buildChoices: Record<string, BuildChoice>;
+  /** Picked recommendation data source per mode ("auto" when missing). */
+  dataSources: Partial<Record<GameModeKind, DataSourceId>>;
 }
 
 export interface LeagueImportSettings {
@@ -206,6 +209,7 @@ export const DEFAULT_SETTINGS: Settings = {
   windowLocked: false,
   favorites: [],
   buildChoices: {},
+  dataSources: {},
 };
 
 /** Merge stored settings with defaults and migrate old values. */
@@ -227,6 +231,8 @@ function finishNormalize(s: Settings): Settings {
   s.leagueImport = { ...DEFAULT_LEAGUE_IMPORT, ...(s.leagueImport ?? {}) };
   // Additive: only fills the key in (bad entries are ignored when read, see engine/options).
   if (!s.buildChoices || typeof s.buildChoices !== "object" || Array.isArray(s.buildChoices)) s.buildChoices = {};
+  // Additive: only fills the key in (unknown values are read as "auto", see engine/dataSource).
+  if (!s.dataSources || typeof s.dataSources !== "object" || Array.isArray(s.dataSources)) s.dataSources = {};
   if (!Array.isArray(s.favorites)) s.favorites = [];
   else if (s.favorites.some((f) => typeof f !== "string")) s.favorites = s.favorites.filter((f): f is string => typeof f === "string");
   // The project moved to exodux-dev: an untouched old default stats URL follows it (custom URLs are kept).
@@ -461,6 +467,14 @@ export function webKey(mode: GameModeKind, championId: string, position?: string
   return mode === "sr" ? `sr:${championId}:${position || "main"}` : `${mode}:${championId}`;
 }
 
+/** Web stats provider a source id fetches from for a mode (undefined: not a web source there). */
+export type WebProvider = "hexmayhem" | "opgg";
+
+/** Key for a web provider's champion stats: the mode's default provider keeps `webKey`. */
+export function webSourceKey(mode: GameModeKind, championId: string, position: string | undefined, provider: WebProvider): string {
+  return provider === defaultWebSource(mode) ? webKey(mode, championId, position) : `${mode}-${provider}:${championId}`;
+}
+
 export function currentGame(s: State): GameSnapshot | null {
   if (s.live) return s.live;
   if (!s.data) return null;
@@ -499,6 +513,11 @@ export function registerDemo(factory: (data: StaticData) => GameSnapshot) {
   demoFactory = factory;
 }
 
+export interface DataSourceInfo extends SourceResolution {
+  available: DataSourceId[];
+  notice?: string;
+}
+
 export interface Derived {
   game: GameSnapshot | null;
   mode: "live" | "demo" | "champselect" | "explore";
@@ -513,6 +532,8 @@ export interface Derived {
   statsSource: "global" | "personal" | "none";
   /** Which provider the champion stats came from. */
   statsProvider: "riot" | "hexmayhem" | "opgg" | "personal" | "none";
+  /** Picked data source, what's active, sources offered for the mode and any fallback notice. */
+  source?: DataSourceInfo;
   /** Mode used for data (see effectiveMode) and whether it was detected automatically. */
   gameMode: GameModeKind;
   gameModeDetected: boolean;
@@ -587,22 +608,32 @@ function useDerivedCompute(): Derived {
   const modeHistory = useMemo(() => historyForMode(history, gameMode), [history, gameMode]);
   const modeDataset = stats && datasetMode(stats) === gameMode ? stats : undefined;
 
+  const pickedSource = selectedSource(gameMode, settings.dataSources?.[gameMode], !!modeDataset);
+  const webPick: WebProvider | undefined = pickedSource === "hexmayhem" || pickedSource === "opgg" ? pickedSource : undefined;
   useEffect(() => {
-    if (baseChampion && settings.webStats) void ensureChampionStats(gameMode, baseChampion.id);
-  }, [baseChampion, settings.webStats, gameMode, lastPosition]);
+    if (!baseChampion || !settings.webStats) return;
+    void ensureChampionStats(gameMode, baseChampion.id);
+    if (webPick && webPick !== defaultWebSource(gameMode)) void ensureChampionStats(gameMode, baseChampion.id, false, webPick);
+  }, [baseChampion, settings.webStats, gameMode, lastPosition, webPick]);
 
-  const { championStats, statsSource, statsProvider } = useMemo(() => {
-    if (!champion) return { championStats: undefined, statsSource: "none" as const, statsProvider: "none" as const };
-    // Priority: your own Riot API dataset → HexMayhem → your match history.
-    const g = modeDataset?.champions[champion.id];
-    if (g && g.games > 0) return { championStats: g, statsSource: "global" as const, statsProvider: "riot" as const };
-    const w = settings.webStats ? web.champions[webKey(gameMode, champion.id, lastPosition)] : undefined;
-    if (w && typeof w === "object" && w.games > 0)
-      return { championStats: w, statsSource: "global" as const, statsProvider: ((w.source as string) === "opgg" ? "opgg" : "hexmayhem") as "opgg" | "hexmayhem" };
-    const p = personalChampionStats(modeHistory, champion.id);
-    const ok = !!p && p.games >= 3;
-    return { championStats: ok ? p : undefined, statsSource: ok ? ("personal" as const) : ("none" as const), statsProvider: ok ? ("personal" as const) : ("none" as const) };
-  }, [champion, modeDataset, modeHistory, web, settings.webStats, gameMode, lastPosition]);
+  const source = useMemo((): DataSourceInfo | undefined => {
+    if (!champion) return undefined;
+    const webOf = (p: WebProvider) => web.champions[webSourceKey(gameMode, champion.id, lastPosition, p)];
+    const r = resolveSource(gameMode, pickedSource, {
+      riot: modeDataset?.champions[champion.id],
+      web: { hexmayhem: gameMode === "mayhem" ? webOf("hexmayhem") : undefined, opgg: webOf("opgg") },
+      personal: personalChampionStats(modeHistory, champion.id),
+      webEnabled: settings.webStats,
+    });
+    return { ...r, available: sourcesForMode(gameMode, !!modeDataset), notice: fallbackNotice(r, champion.name) };
+  }, [champion, modeDataset, modeHistory, web, settings.webStats, gameMode, lastPosition, pickedSource]);
+  const championStats = source?.stats;
+  const statsSource = source?.statsSource ?? "none";
+  const statsProvider = source?.active ?? "none";
+  // "Baseline" is the plain template: no personal history either. HexMayhem's mode-wide augment
+  // stats and combos only join when HexMayhem (or Auto) drives the recommendation.
+  const sourceHistory = useMemo(() => (source?.active === "none" && source.selected === "baseline" ? [] : modeHistory), [source?.active, source?.selected, modeHistory]);
+  const useHexGlobal = settings.webStats && gameMode !== "arena" && (pickedSource === "auto" || source?.active === "hexmayhem");
 
   const plan = useMemo(() => {
     if (!data || !champion || !game) return undefined;
@@ -616,7 +647,7 @@ function useDerivedCompute(): Derived {
       gold: gameMode === "arena" && game.source !== "live" ? undefined : game.gold,
       playstyle: settings.playstyle,
       stats: statsSource === "global" ? championStats : undefined,
-      history: modeHistory,
+      history: sourceHistory,
       startGold: gameMode === "sr" ? 500 : settings.startGold,
       variant,
       variantIsDefault,
@@ -626,7 +657,7 @@ function useDerivedCompute(): Derived {
     // Only the parts of `game` it reads (live snapshots share unchanged parts, see liveStable.ts):
     // a poll where only the clock moved doesn't rebuild the plan.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, champion, game?.me, game?.gold, game?.source, threat, settings.playstyle, settings.startGold, championStats, statsSource, modeHistory, variant, variantIsDefault, gameMode, choice]);
+  }, [data, champion, game?.me, game?.gold, game?.source, threat, settings.playstyle, settings.startGold, championStats, statsSource, sourceHistory, variant, variantIsDefault, gameMode, choice]);
 
   // Build-change intel: announce when the enemy team's items change your situational recommendations.
   useEffect(() => {
@@ -654,14 +685,14 @@ function useDerivedCompute(): Derived {
       threat,
       owned: myAugments,
       stats: statsSource === "global" ? championStats : undefined,
-      history: modeHistory,
+      history: sourceHistory,
       // HexMayhem's mode-wide augment stats and combos are Mayhem-only data.
-      global: settings.webStats && gameMode !== "arena" ? (web.global ?? undefined) : undefined,
+      global: useHexGlobal ? (web.global ?? undefined) : undefined,
       globalAvgWr: web.globalAvgWr,
-      combos: settings.webStats && gameMode !== "arena" ? web.combos : undefined,
+      combos: useHexGlobal ? web.combos : undefined,
       mode: gameMode === "arena" ? ("arena" as const) : undefined,
     }),
-    [champion, threat, myAugments, championStats, statsSource, modeHistory, web.global, web.globalAvgWr, web.combos, settings.webStats, gameMode],
+    [champion, threat, myAugments, championStats, statsSource, sourceHistory, web.global, web.globalAvgWr, web.combos, useHexGlobal, gameMode],
   );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const allRanked = useMemo(() => rankAugments([...AUGMENTS], ctx), [ctx, web.version]);
@@ -686,7 +717,7 @@ function useDerivedCompute(): Derived {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const power = useMemo(() => scoreboardPower(game, data, { mode: gameMode, myChampion: champion }), [data, game?.me, game?.allies, game?.enemies, game?.gameMode, !game, gameMode, champion]);
   const mode: Derived["mode"] = live ? "live" : demo ? "demo" : champSelect ? "champselect" : "explore";
-  return { game, mode, champion, baseChampion, variants, variant, threat, plan, championStats, statsSource, statsProvider, gameMode, gameModeDetected, offeredRanked, allRanked, skillPlan, levelOrder, guide, advice, shop, power, choiceKey, choice };
+  return { game, mode, champion, baseChampion, variants, variant, threat, plan, championStats, statsSource, statsProvider, source, gameMode, gameModeDetected, offeredRanked, allRanked, skillPlan, levelOrder, guide, advice, shop, power, choiceKey, choice };
 }
 
 /** Passive + Q/W/E/R info (names, icons, descriptions) for a champion; [] while loading. */
@@ -727,7 +758,13 @@ export const actions = {
     set((s) => ({ web: { ...s.web, champions: {} } }));
     await Promise.all([loadWebGlobal(true), loadCombos(true)]);
     const c = currentGame(state)?.me.champion;
-    if (c) await ensureChampionStats(effectiveMode(state), c.id, true);
+    if (!c) return;
+    const m = effectiveMode(state);
+    const pick = state.settings.dataSources?.[m];
+    await Promise.all([
+      ensureChampionStats(m, c.id, true),
+      pick === "opgg" && defaultWebSource(m) !== "opgg" ? ensureChampionStats(m, c.id, true, "opgg") : undefined,
+    ]);
   },
   /** Load (or refresh) the champion tier list for a mode. Cached 3 h. */
   async loadTierList(mode: GameModeKind, force = false) {
@@ -767,6 +804,13 @@ export const actions = {
     if (merged) next[key] = merged;
     else delete next[key];
     return actions.updateSettings({ buildChoices: next });
+  },
+  /** Pick the recommendation data source for a mode ("auto" removes the pick). */
+  setDataSource(mode: GameModeKind, id: DataSourceId) {
+    const next = { ...state.settings.dataSources };
+    if (id === "auto") delete next[mode];
+    else next[mode] = id;
+    return actions.updateSettings({ dataSources: next });
   },
   setBuildStyle(championId: string, variantId: string) {
     return actions.updateSettings({ buildStyles: { ...state.settings.buildStyles, [championId]: variantId } });
@@ -1217,6 +1261,10 @@ const opggProvider =
 providers.aram = opggProvider("aram");
 providers.sr = opggProvider("ranked");
 providers.arena = arenaStatsProvider(bridge.fetchText, bridge.fetchJson, registerArenaAugments);
+/** Non-default web providers a mode can be switched to (Data source picker). */
+const altProviders: Partial<Record<GameModeKind, Partial<Record<WebProvider, ChampionStatsProvider>>>> = {
+  mayhem: { opgg: opggProvider("aram-mayhem") },
+};
 
 export function registerStatsProvider(mode: GameModeKind, provider: ChampionStatsProvider) {
   providers[mode] = provider;
@@ -1225,13 +1273,14 @@ export function registerStatsProvider(mode: GameModeKind, provider: ChampionStat
 /** Stats are refreshed at most this often (hours) unless the user forces a refresh. */
 const STATS_MAX_AGE_H = 3;
 
-async function ensureChampionStats(mode: GameModeKind, id: string, force = false) {
-  const key = webKey(mode, id, state.lastPosition);
+async function ensureChampionStats(mode: GameModeKind, id: string, force = false, via?: WebProvider) {
+  const alt = via && via !== defaultWebSource(mode);
+  const key = alt ? webSourceKey(mode, id, state.lastPosition, via) : webKey(mode, id, state.lastPosition);
   const prev = state.web.champions[key];
   // 10: failed fetches are retried after 2 minutes instead of never.
   const retryable = prev === "error" && Date.now() - (webErrorAt.get(key) ?? 0) > 120_000;
   if (!state.data || (!force && prev && !retryable)) return;
-  const provider = providers[mode];
+  const provider = alt ? altProviders[mode]?.[via] : providers[mode];
   if (!provider) return;
   set((s) => ({ web: { ...s.web, champions: { ...s.web.champions, [key]: "loading" } } }));
   try {

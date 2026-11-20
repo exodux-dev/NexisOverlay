@@ -188,3 +188,26 @@ test("Esc closes palette / clears search first, then hides the overlay", async (
   await page.locator("body").press("Escape");
   await expect.poll(hides).toBe(1);
 });
+
+test("data source picker switches the recommendation and falls back", async ({ start }) => {
+  const page = await start();
+  await act(page, "setExploreChampion", "Ahri");
+  await act(page, "setTab", "build");
+  await modeSelect(page).selectOption("mayhem");
+  const bar = page.locator(".view-build .data-source-bar");
+  await expect(bar.getByRole("radio", { name: "Auto" })).toHaveAttribute("aria-checked", "true");
+  await expect(bar).toContainText("Using HexMayhem");
+  await bar.getByRole("radio", { name: "Baseline" }).click();
+  await expect(bar).toContainText("Using Baseline");
+  await expect(page.locator(".order-card .order .slot-icon").first()).toBeVisible();
+  // No recorded games: "My games" falls back to Auto with a notice, never an empty build.
+  await bar.getByRole("radio", { name: "My games" }).click();
+  await expect(bar).toContainText("My games has no data for Ahri — using Auto");
+  await expect(page.locator(".order-card .order .slot-icon").first()).toBeVisible();
+  if (process.env.SHOT) await page.screenshot({ path: process.env.SHOT });
+  await bar.getByRole("radio", { name: "Auto" }).click();
+  await expect(bar).toContainText("Using HexMayhem");
+  // ARAM has no HexMayhem.
+  await modeSelect(page).selectOption("aram");
+  await expect(bar.getByRole("radio", { name: "HexMayhem" })).toHaveCount(0);
+});

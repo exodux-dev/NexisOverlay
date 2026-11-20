@@ -62,3 +62,13 @@ describe("build option picks (settings.buildChoices)", () => {
     expect(normalizeSettings({ buildChoices: "junk" } as unknown as Record<string, unknown>).buildChoices).toEqual({});
   });
 });
+
+describe("data source picks (settings.dataSources)", () => {
+  it("adds an empty map for old settings and keeps stored picks untouched", () => {
+    expect(normalizeSettings({}).dataSources).toEqual({});
+    expect(DEFAULT_SETTINGS.dataSources).toEqual({});
+    const stored = { mayhem: "opgg", sr: "personal" };
+    expect(normalizeSettings({ dataSources: stored }, true).dataSources).toEqual(stored);
+    expect(normalizeSettings({ dataSources: "bad" } as never).dataSources).toEqual({});
+  });
+});

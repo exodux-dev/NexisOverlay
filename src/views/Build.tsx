@@ -1,4 +1,5 @@
 import { Fragment, useState } from "react";
+import { DataSourceBar } from "../ui/DataSourceBar";
 import { actions, useApp, useChampionSpells, useDerived, webKey, type Derived } from "../app/store";
 import { COUNTER_LABEL, type BuildPlan, type ItemRec } from "../engine/build";
 import { findChampion } from "../engine/staticData";
@@ -574,6 +575,7 @@ export function BuildView({ d }: { d: Derived }) {
           <SkillStrip d={d} />
         </div>
       )}
+      {d.baseChampion && <DataSourceBar d={d} />}
       {!plan ? (
         <Card>
           <Empty title="Pick a champion to see a build" icon="build">

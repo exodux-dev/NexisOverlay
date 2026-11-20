@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { DataSourceBar } from "../ui/DataSourceBar";
 import { MODE_LABEL as GAME_MODE_LABEL, actions, useApp, webKey, type Derived } from "../app/store";
 import { combosFor, rerollAdvice, synergiesFor, type AugmentScore, type AugmentSynergy } from "../engine/augments";
 import { buildLabel, type AugmentCombo } from "../engine/sources/combos";
@@ -474,6 +475,7 @@ export function AugmentsView({ d }: { d: Derived }) {
         </Card>
       )}
       <ChampionBar d={d} />
+      <DataSourceBar d={d} />
       <ScanBanner />
       <Card
         title="Offered now"

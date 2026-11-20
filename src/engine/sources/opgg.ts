@@ -15,6 +15,7 @@
 //     page ∈ build | items | runes | skills | counters; position ∈ top | jungle | mid | adc | support
 //     (no position = the champion's main role; unknown positions such as "bottom" redirect to it).
 //   ARAM:            https://op.gg/lol/modes/aram/<slug>/<page>      (page ∈ build | items | runes | skills)
+//   ARAM: Mayhem:    https://op.gg/lol/modes/aram-mayhem/<slug>/<page>
 //   <slug> is the lowercase Data Dragon id: monkeyking (not wukong), nunu, kogmaw, ksante, belveth.
 // The build page carries spells, skill order (+ level sequence), starters, boots, core builds, the
 // top 2 rune pages, header win/pick/ban rate, tier and (SR main role) counters. The items page adds
@@ -26,7 +27,7 @@ import { decodeRsc, grabJson } from "./hexmayhem";
 
 export const OPGG_SITE = "https://op.gg";
 
-export type OpggMode = "ranked" | "aram";
+export type OpggMode = "ranked" | "aram" | "aram-mayhem";
 export type OpggPosition = "top" | "jungle" | "mid" | "adc" | "support";
 export type OpggPage = "build" | "items" | "runes" | "skills" | "counters";
 
@@ -57,7 +58,7 @@ export function opggSlug(championId: string): string {
 /** Champion page URL. `position` only applies to Summoner's Rift. */
 export function opggChampionUrl(mode: OpggMode, championId: string, position?: string, page: OpggPage = "build"): string {
   const slug = opggSlug(championId);
-  if (mode === "aram") return `${OPGG_SITE}/lol/modes/aram/${slug}/${page}`;
+  if (mode !== "ranked") return `${OPGG_SITE}/lol/modes/${mode}/${slug}/${page}`;
   const pos = opggPosition(position);
   return `${OPGG_SITE}/lol/champions/${slug}/${page}${pos ? `/${pos}` : ""}`;
 }

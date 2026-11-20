@@ -1029,3 +1029,12 @@
 :root[data-theme="light"] {
   --faint: color-mix(in srgb, var(--muted) 88%, rgb(var(--bg-rgb)));
 }
+
+/* Data source picker (Build / Augments) */
+.data-source-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+}
