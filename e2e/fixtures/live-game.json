@@ -1,0 +1,655 @@
+{
+ "activePlayer": {
+  "riotId": "You#NA1",
+  "riotIdGameName": "You",
+  "riotIdTagLine": "NA1",
+  "summonerName": "You#NA1",
+  "currentGold": 1850,
+  "level": 11,
+  "championStats": {},
+  "abilities": {},
+  "fullRunes": {}
+ },
+ "allPlayers": [
+  {
+   "championName": "Ahri",
+   "rawChampionName": "game_character_displayname_Ahri",
+   "riotId": "You#NA1",
+   "riotIdGameName": "You",
+   "riotIdTagLine": "NA1",
+   "summonerName": "You#NA1",
+   "team": "ORDER",
+   "level": 11,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 6655,
+     "displayName": "Luden's Echo",
+     "count": 1,
+     "slot": 0,
+     "price": 700,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_6655_Name"
+    },
+    {
+     "itemID": 3020,
+     "displayName": "Sorcerer's Shoes",
+     "count": 1,
+     "slot": 1,
+     "price": 400,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3020_Name"
+    },
+    {
+     "itemID": 3108,
+     "displayName": "Fiendish Codex",
+     "count": 1,
+     "slot": 2,
+     "price": 500,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3108_Name"
+    }
+   ],
+   "scores": {
+    "kills": 3,
+    "deaths": 2,
+    "assists": 4,
+    "creepScore": 44,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Jinx",
+   "rawChampionName": "game_character_displayname_Jinx",
+   "riotId": "Powder#EUW",
+   "riotIdGameName": "Powder",
+   "riotIdTagLine": "EUW",
+   "summonerName": "Powder#EUW",
+   "team": "ORDER",
+   "level": 11,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 3032,
+     "displayName": "Yun Tal Wildarrows",
+     "count": 1,
+     "slot": 0,
+     "price": 825,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3032_Name"
+    },
+    {
+     "itemID": 3006,
+     "displayName": "Berserker's Greaves",
+     "count": 1,
+     "slot": 1,
+     "price": 300,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3006_Name"
+    },
+    {
+     "itemID": 1037,
+     "displayName": "Pickaxe",
+     "count": 1,
+     "slot": 2,
+     "price": 875,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_1037_Name"
+    }
+   ],
+   "scores": {
+    "kills": 5,
+    "deaths": 3,
+    "assists": 2,
+    "creepScore": 44,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Leona",
+   "rawChampionName": "game_character_displayname_Leona",
+   "riotId": "Dawnbringer#NA1",
+   "riotIdGameName": "Dawnbringer",
+   "riotIdTagLine": "NA1",
+   "summonerName": "Dawnbringer#NA1",
+   "team": "ORDER",
+   "level": 10,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 3068,
+     "displayName": "Sunfire Aegis",
+     "count": 1,
+     "slot": 0,
+     "price": 1000,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3068_Name"
+    },
+    {
+     "itemID": 3047,
+     "displayName": "Plated Steelcaps",
+     "count": 1,
+     "slot": 1,
+     "price": 600,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3047_Name"
+    },
+    {
+     "itemID": 1011,
+     "displayName": "Giant's Belt",
+     "count": 1,
+     "slot": 2,
+     "price": 500,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_1011_Name"
+    }
+   ],
+   "scores": {
+    "kills": 0,
+    "deaths": 4,
+    "assists": 7,
+    "creepScore": 40,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Lux",
+   "rawChampionName": "game_character_displayname_Lux",
+   "riotId": "LadyOfLight#NA1",
+   "riotIdGameName": "LadyOfLight",
+   "riotIdTagLine": "NA1",
+   "summonerName": "LadyOfLight#NA1",
+   "team": "ORDER",
+   "level": 11,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 6655,
+     "displayName": "Luden's Echo",
+     "count": 1,
+     "slot": 0,
+     "price": 700,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_6655_Name"
+    },
+    {
+     "itemID": 3020,
+     "displayName": "Sorcerer's Shoes",
+     "count": 1,
+     "slot": 1,
+     "price": 400,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3020_Name"
+    },
+    {
+     "itemID": 1058,
+     "displayName": "Needlessly Large Rod",
+     "count": 1,
+     "slot": 2,
+     "price": 1200,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_1058_Name"
+    }
+   ],
+   "scores": {
+    "kills": 4,
+    "deaths": 3,
+    "assists": 6,
+    "creepScore": 44,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Darius",
+   "rawChampionName": "game_character_displayname_Darius",
+   "riotId": "Noxus Hand#EUW",
+   "riotIdGameName": "Noxus Hand",
+   "riotIdTagLine": "EUW",
+   "summonerName": "Noxus Hand#EUW",
+   "team": "ORDER",
+   "level": 12,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 3071,
+     "displayName": "Black Cleaver",
+     "count": 1,
+     "slot": 0,
+     "price": 850,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3071_Name"
+    },
+    {
+     "itemID": 3047,
+     "displayName": "Plated Steelcaps",
+     "count": 1,
+     "slot": 1,
+     "price": 600,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3047_Name"
+    }
+   ],
+   "scores": {
+    "kills": 2,
+    "deaths": 4,
+    "assists": 3,
+    "creepScore": 48,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Soraka",
+   "rawChampionName": "game_character_displayname_Soraka",
+   "riotId": "Starchild#KR1",
+   "riotIdGameName": "Starchild",
+   "riotIdTagLine": "KR1",
+   "summonerName": "Starchild#KR1",
+   "team": "CHAOS",
+   "level": 10,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 6617,
+     "displayName": "Moonstone Renewer",
+     "count": 1,
+     "slot": 0,
+     "price": 600,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_6617_Name"
+    },
+    {
+     "itemID": 3158,
+     "displayName": "Ionian Boots of Lucidity",
+     "count": 1,
+     "slot": 1,
+     "price": 600,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3158_Name"
+    },
+    {
+     "itemID": 3114,
+     "displayName": "Forbidden Idol",
+     "count": 1,
+     "slot": 2,
+     "price": 400,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3114_Name"
+    }
+   ],
+   "scores": {
+    "kills": 0,
+    "deaths": 2,
+    "assists": 9,
+    "creepScore": 40,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Aatrox",
+   "rawChampionName": "game_character_displayname_Aatrox",
+   "riotId": "Darkin Blade#NA1",
+   "riotIdGameName": "Darkin Blade",
+   "riotIdTagLine": "NA1",
+   "summonerName": "Darkin Blade#NA1",
+   "team": "CHAOS",
+   "level": 12,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 6610,
+     "displayName": "Sundered Sky",
+     "count": 1,
+     "slot": 0,
+     "price": 950,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_6610_Name"
+    },
+    {
+     "itemID": 3047,
+     "displayName": "Plated Steelcaps",
+     "count": 1,
+     "slot": 1,
+     "price": 600,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3047_Name"
+    },
+    {
+     "itemID": 1037,
+     "displayName": "Pickaxe",
+     "count": 1,
+     "slot": 2,
+     "price": 875,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_1037_Name"
+    }
+   ],
+   "scores": {
+    "kills": 5,
+    "deaths": 3,
+    "assists": 3,
+    "creepScore": 48,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Vladimir",
+   "rawChampionName": "game_character_displayname_Vladimir",
+   "riotId": "Crimson#OCE",
+   "riotIdGameName": "Crimson",
+   "riotIdTagLine": "OCE",
+   "summonerName": "Crimson#OCE",
+   "team": "CHAOS",
+   "level": 12,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 4633,
+     "displayName": "Riftmaker",
+     "count": 1,
+     "slot": 0,
+     "price": 1450,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_4633_Name"
+    },
+    {
+     "itemID": 3020,
+     "displayName": "Sorcerer's Shoes",
+     "count": 1,
+     "slot": 1,
+     "price": 400,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3020_Name"
+    },
+    {
+     "itemID": 1052,
+     "displayName": "Amplifying Tome",
+     "count": 1,
+     "slot": 2,
+     "price": 400,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_1052_Name"
+    }
+   ],
+   "scores": {
+    "kills": 4,
+    "deaths": 2,
+    "assists": 5,
+    "creepScore": 48,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Zed",
+   "rawChampionName": "game_character_displayname_Zed",
+   "riotId": "Shadow Master#NA1",
+   "riotIdGameName": "Shadow Master",
+   "riotIdTagLine": "NA1",
+   "summonerName": "Shadow Master#NA1",
+   "team": "CHAOS",
+   "level": 11,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 3142,
+     "displayName": "Youmuu's Ghostblade",
+     "count": 1,
+     "slot": 0,
+     "price": 650,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3142_Name"
+    },
+    {
+     "itemID": 3158,
+     "displayName": "Ionian Boots of Lucidity",
+     "count": 1,
+     "slot": 1,
+     "price": 600,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3158_Name"
+    },
+    {
+     "itemID": 3134,
+     "displayName": "Serrated Dirk",
+     "count": 1,
+     "slot": 2,
+     "price": 400,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3134_Name"
+    }
+   ],
+   "scores": {
+    "kills": 6,
+    "deaths": 3,
+    "assists": 2,
+    "creepScore": 44,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  },
+  {
+   "championName": "Malphite",
+   "rawChampionName": "game_character_displayname_Malphite",
+   "riotId": "Shard#EUNE",
+   "riotIdGameName": "Shard",
+   "riotIdTagLine": "EUNE",
+   "summonerName": "Shard#EUNE",
+   "team": "CHAOS",
+   "level": 11,
+   "isBot": false,
+   "isDead": false,
+   "respawnTimer": 0,
+   "position": "",
+   "skinID": 0,
+   "items": [
+    {
+     "itemID": 3075,
+     "displayName": "Thornmail",
+     "count": 1,
+     "slot": 0,
+     "price": 750,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3075_Name"
+    },
+    {
+     "itemID": 3047,
+     "displayName": "Plated Steelcaps",
+     "count": 1,
+     "slot": 1,
+     "price": 600,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_3047_Name"
+    },
+    {
+     "itemID": 1011,
+     "displayName": "Giant's Belt",
+     "count": 1,
+     "slot": 2,
+     "price": 500,
+     "canUse": false,
+     "consumable": false,
+     "rawDisplayName": "Item_1011_Name"
+    }
+   ],
+   "scores": {
+    "kills": 1,
+    "deaths": 3,
+    "assists": 8,
+    "creepScore": 44,
+    "wardScore": 0
+   },
+   "summonerSpells": {
+    "summonerSpellOne": {
+     "displayName": "Flash",
+     "rawDisplayName": "SummonerFlash"
+    },
+    "summonerSpellTwo": {
+     "displayName": "Mark",
+     "rawDisplayName": "SummonerSnowball"
+    }
+   }
+  }
+ ],
+ "gameData": {
+  "gameMode": "KIWI",
+  "gameTime": 742,
+  "mapName": "Map12",
+  "mapNumber": 12,
+  "mapTerrain": "Default"
+ },
+ "events": {
+  "Events": []
+ }
+}

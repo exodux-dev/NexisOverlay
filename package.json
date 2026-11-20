@@ -1,0 +1,39 @@
+{
+  "name": "nexis-overlay",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Open-source, lightweight ARAM Mayhem overlay: adaptive builds, augment ranking, enemy threat analysis.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "app:dev": "tauri dev",
+    "app:build": "tauri build --no-bundle",
+    "test": "vitest run",
+    "e2e": "playwright test --trace off",
+    "typecheck": "tsc --noEmit",
+    "stats:aggregate": "tsx scripts/aggregate-stats.ts",
+    "mock:game": "tsx scripts/mock-game.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@tauri-apps/api": "^2.12.5",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@tauri-apps/cli": "^2.12.6",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  }
+}
