@@ -1,6 +1,6 @@
 // Ctrl+K command palette: jump to any champion, tab, mode or setting from the keyboard.
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MODE_LABEL, THEME_PRESETS, actions, useApp, type GameModeKind, type Tab, type ThemePreset } from "../app/store";
 import { norm } from "../engine/text";
 import { GameIcon } from "./GameIcon";
@@ -56,19 +56,22 @@ export function CommandPalette() {
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
+        setQ("");
+        setSel(0);
         setOpen((o) => !o);
+      } else if (e.key === "Escape" && document.querySelector(".cp") && !input.current?.contains(e.target as Node)) {
+        // Open but focus is elsewhere (clicked outside): Esc still closes it.
+        setOpen(false);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  useEffect(() => {
-    if (open) {
-      setQ("");
-      setSel(0);
-      setTimeout(() => input.current?.focus(), 0);
-    }
+  // Focus the search box as it mounts (before the next key event), so keys typed right after
+  // Ctrl+K land in it instead of the page.
+  useLayoutEffect(() => {
+    if (open) input.current?.focus();
   }, [open]);
 
   const commands = useMemo<Command[]>(() => {

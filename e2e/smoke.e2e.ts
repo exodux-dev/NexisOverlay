@@ -256,3 +256,16 @@ test("role editor is hidden outside Summoner's Rift", async ({ start }) => {
   await tab(page, "enemies").click();
   await expect(page.locator(".roles-card")).toHaveCount(0);
 });
+
+test("keys typed right after Ctrl+K land in the palette, even on a slow machine", async ({ start }) => {
+  const page = await start();
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: 20 });
+  await page.keyboard.press("Control+k");
+  await page.keyboard.type("ahri");
+  const palette = page.getByRole("dialog", { name: "Command palette" });
+  await expect(palette.getByRole("textbox", { name: "Search commands" })).toHaveValue("ahri");
+  await page.keyboard.press("Escape");
+  await expect(palette).toBeHidden();
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: 1 });
+});

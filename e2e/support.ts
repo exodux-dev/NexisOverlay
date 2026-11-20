@@ -159,6 +159,8 @@ export const test = base.extend<Fixtures>({
         },
         [settings ?? null, installDiagnosticsMock.toString()] as const,
       );
+      // E2E_SLOW=6: run every test on a throttled CPU to shake out timing races.
+      if (process.env.E2E_SLOW) await (await context.newCDPSession(page)).send("Emulation.setCPUThrottlingRate", { rate: Number(process.env.E2E_SLOW) });
       await page.goto(path);
       if (waitReady) await page.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
       return page;
