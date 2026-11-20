@@ -211,3 +211,11 @@ test("data source picker switches the recommendation and falls back", async ({ s
   await modeSelect(page).selectOption("aram");
   await expect(bar.getByRole("radio", { name: "HexMayhem" })).toHaveCount(0);
 });
+
+test("browser right-click menu is hidden outside text fields", async ({ start }) => {
+  const page = await start();
+  const blocked = (sel: string) =>
+    page.locator(sel).first().evaluate((el) => !el.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true })));
+  expect(await blocked(".nav")).toBe(true);
+  expect(await blocked('input[role="combobox"]')).toBe(false);
+});
