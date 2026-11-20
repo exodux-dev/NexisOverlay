@@ -229,14 +229,23 @@ test("SR role editor swaps lanes, Team power follows, Reset restores", async ({ 
   await tab(page, "enemies").click();
   const roles = page.locator(".roles-card");
   await expect(roles).toBeVisible();
-  await roles.getByRole("combobox", { name: "Vladimir role" }).selectOption("MIDDLE");
-  await expect(roles.getByRole("combobox", { name: "Zed role" })).toHaveValue("JUNGLE");
-  // Lane rows are in LANES order (Top, Jungle, Mid, ...): Mid is now Ahri vs Vladimir.
+  const slot = (team: string, lane: string) => roles.locator(`.lb-slot[data-team="${team}"][data-lane="${lane}"]`);
+  await expect(slot("enemy", "JUNGLE")).toContainText("Vladimir");
+  // Drag Vladimir onto Mid: Zed (Mid) swaps to Jungle.
+  await roles.getByRole("button", { name: /^Vladimir: drag/ }).dragTo(slot("enemy", "MIDDLE"));
+  await expect(slot("enemy", "MIDDLE")).toContainText("Vladimir");
+  await expect(slot("enemy", "JUNGLE")).toContainText("Zed");
   await expect(page.locator(".tp-lanes > li").nth(2)).toContainText("Vladimir");
   await expect(page.locator(".tp-lanes > li").nth(1)).toContainText("Zed");
   expect(await storeValue<string>(page, "(s) => s.settings.roleOverrides.roles['CHAOS:Vladimir']")).toBe("MIDDLE");
+  // Click-to-move works too (your team): Darius → Mid swaps with you.
+  await roles.getByRole("button", { name: /^Darius: drag/ }).click();
+  await slot("ally", "MIDDLE").getByRole("button").click();
+  await expect(slot("ally", "MIDDLE")).toContainText("Darius");
+  await expect(slot("ally", "TOP")).toContainText("Ahri");
   await roles.getByRole("button", { name: "Reset roles" }).click();
-  await expect(roles.getByRole("combobox", { name: "Vladimir role" })).toHaveValue("JUNGLE");
+  await expect(slot("enemy", "JUNGLE")).toContainText("Vladimir");
+  await expect(slot("ally", "MIDDLE")).toContainText("Ahri");
   expect(await storeValue<unknown>(page, "(s) => s.settings.roleOverrides")).toBeNull();
 });
 

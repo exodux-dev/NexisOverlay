@@ -1091,3 +1091,83 @@
   font-size: 11px;
   padding: 1px 2px;
 }
+
+/* Lane board (Players tab): League-style drag-and-drop roles */
+.lane-board {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px 10px;
+  align-items: stretch;
+}
+.lb-lane {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.lb-slot {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  border: 1px dashed rgb(255 255 255 / 0.12);
+  border-radius: 8px;
+  transition: border-color 0.12s, background 0.12s;
+}
+.lb-slot.lb-over,
+.lb-slot.lb-target {
+  border-color: var(--accent);
+  background: rgb(255 255 255 / 0.04);
+  cursor: pointer;
+}
+.lb-chip {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px 3px 3px;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  background: rgba(var(--panel-rgb), 0.9);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 999px;
+  cursor: grab;
+}
+.lb-chip:active {
+  cursor: grabbing;
+}
+.lb-chip.lb-picked {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.lb-chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.lb-me .lb-name {
+  color: var(--accent);
+}
+.lb-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lb-empty {
+  padding-left: 8px;
+  font-size: 12px;
+}
+.lb-unassigned {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+.lb-unassigned .lb-chip {
+  flex: 0 0 auto;
+}
