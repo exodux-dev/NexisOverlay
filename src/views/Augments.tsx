@@ -378,7 +378,7 @@ function ChampionBar({ d }: { d: Derived }) {
   const champions = useApp((s) => s.data?.champions ?? []);
   const explore = useApp((s) => s.explore);
   const webOn = useApp((s) => s.settings.webStats);
-  const webEntry = useApp((s) => (d.baseChampion ? s.web.champions[webKey(d.gameMode, d.baseChampion.id, s.lastPosition)] : undefined));
+  const webEntry = useApp((s) => (d.baseChampion ? s.web.champions[webKey(d.gameMode, d.baseChampion.id, d.position)] : undefined));
   const c = d.baseChampion;
   if (!c) return null;
   const locked = d.mode === "live" || d.mode === "champselect";
@@ -454,7 +454,7 @@ export function AugmentsView({ d }: { d: Derived }) {
   const byName = useMemo(() => new Map(d.allRanked.map((s) => [s.augment.name, s])), [d.allRanked]);
   const combos = useCombos();
   const synCtx = useMemo<SynCtx>(() => ({ combos, owned: mine, champion: d.champion ?? d.baseChampion }), [combos, mine, d.champion, d.baseChampion]);
-  const statsLoading = useApp((s) => (d.baseChampion && s.settings.webStats ? s.web.champions[webKey(d.gameMode, d.baseChampion.id, s.lastPosition)] === "loading" : false));
+  const statsLoading = useApp((s) => (d.baseChampion && s.settings.webStats ? s.web.champions[webKey(d.gameMode, d.baseChampion.id, d.position)] === "loading" : false));
 
   return (
     <div className="view view-augments">

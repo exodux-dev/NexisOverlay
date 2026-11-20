@@ -561,7 +561,7 @@ export function BuildView({ d }: { d: Derived }) {
   const plan = d.plan;
   // While this champion's live stats load (and nothing better is available yet), show placeholders
   // instead of a baseline build that would visibly reshuffle a moment later.
-  const statsLoading = useApp((s) => (d.baseChampion && s.settings.webStats ? s.web.champions[webKey(d.gameMode, d.baseChampion.id, s.lastPosition)] === "loading" : false));
+  const statsLoading = useApp((s) => (d.baseChampion && s.settings.webStats ? s.web.champions[webKey(d.gameMode, d.baseChampion.id, d.position)] === "loading" : false));
   const showSkeleton = statsLoading && (d.statsProvider === "none" || d.statsProvider === "personal");
   return (
     <div className="view view-build">

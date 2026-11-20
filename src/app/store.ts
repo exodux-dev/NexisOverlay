@@ -22,6 +22,8 @@ import { mergeChoice, migrateChoice, needsMigration, runeKey, runeOptions, spell
 import { personalChampionStats } from "../engine/history";
 import { stepTimeline, type TimelineRecorder } from "../engine/timeline";
 import { datasetMode, historyForMode, modeFromGameMode, type GameModeKind } from "../engine/mode";
+import { activeRoles, applyRoles, assignRole, NO_OVERRIDES, playerKey, roleGameKey, type RoleOverrides } from "../engine/roles";
+import type { Lane } from "../engine/power";
 import { defaultWebSource, fallbackNotice, resolveSource, selectedSource, sourcesForMode, type DataSourceId, type SourceResolution } from "../engine/dataSource";
 import { parseLiveGame, type AllGameDataRaw } from "../engine/live";
 import { stabilizeSnapshot } from "../engine/liveStable";
@@ -165,6 +167,8 @@ export interface Settings {
   buildChoices: Record<string, BuildChoice>;
   /** Picked recommendation data source per mode ("auto" when missing). */
   dataSources: Partial<Record<GameModeKind, DataSourceId>>;
+  /** Summoner's Rift role fixes for the current game only (ignored once another game starts). */
+  roleOverrides: RoleOverrides | null;
 }
 
 export interface LeagueImportSettings {
@@ -210,6 +214,7 @@ export const DEFAULT_SETTINGS: Settings = {
   favorites: [],
   buildChoices: {},
   dataSources: {},
+  roleOverrides: null,
 };
 
 /** Merge stored settings with defaults and migrate old values. */
@@ -233,6 +238,7 @@ function finishNormalize(s: Settings): Settings {
   if (!s.buildChoices || typeof s.buildChoices !== "object" || Array.isArray(s.buildChoices)) s.buildChoices = {};
   // Additive: only fills the key in (unknown values are read as "auto", see engine/dataSource).
   if (!s.dataSources || typeof s.dataSources !== "object" || Array.isArray(s.dataSources)) s.dataSources = {};
+  if (s.roleOverrides === undefined) s.roleOverrides = null;
   if (!Array.isArray(s.favorites)) s.favorites = [];
   else if (s.favorites.some((f) => typeof f !== "string")) s.favorites = s.favorites.filter((f): f is string => typeof f === "string");
   // The project moved to exodux-dev: an untouched old default stats URL follows it (custom URLs are kept).
@@ -526,6 +532,11 @@ export interface Derived {
   statsProvider: "riot" | "hexmayhem" | "opgg" | "personal" | "none";
   /** Picked data source, what's active, sources offered for the mode and any fallback notice. */
   source?: DataSourceInfo;
+  /** Your Summoner's Rift role for stats (override → champ select), lowercase. */
+  position?: string;
+  /** Role editor: the game key overrides are stored under (SR live / demo game only). */
+  roleGame?: string;
+  roleOverridden: boolean;
   /** Mode used for data (see effectiveMode) and whether it was detected automatically. */
   gameMode: GameModeKind;
   gameModeDetected: boolean;
@@ -577,7 +588,11 @@ function useDerivedCompute(): Derived {
   // The mode picks the explore starting gold, so a mode switch must rebuild the stand-in game.
   const modeForGame = effectiveMode(state);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const game = useMemo(() => currentGame(state), [data, live, demo, explore, champSelect, settings.startGold, modeForGame]);
+  const rawGame = useMemo(() => currentGame(state), [data, live, demo, explore, champSelect, settings.startGold, modeForGame]);
+  // Summoner's Rift role overrides (Players tab / Build row) apply on top of the API's roles.
+  const roleKey = modeForGame === "sr" && rawGame && (live || demo) ? roleGameKey(rawGame) : undefined;
+  const roles = useMemo(() => activeRoles(settings.roleOverrides, roleKey), [settings.roleOverrides, roleKey]);
+  const game = useMemo(() => applyRoles(rawGame, roles), [rawGame, roles]);
   const baseChampion = game?.me.champion;
   const variants = useMemo(() => (baseChampion ? variantsFor(baseChampion) : []), [baseChampion]);
   const chosenStyle = baseChampion ? settings.buildStyles[baseChampion.id] : undefined;
@@ -589,7 +604,10 @@ function useDerivedCompute(): Derived {
   const threat = useMemo(() => analyzeEnemies(game?.enemies ?? []), [enemiesKey]);
 
   const clientInfo = useApp((s) => s.clientInfo);
-  const lastPosition = useApp((s) => s.lastPosition);
+  const champSelectPosition = useApp((s) => s.lastPosition);
+  // Your role: a manual override wins over champ select's assignment (SR stats are per role).
+  const myOverride = game && roles !== NO_OVERRIDES ? roles[playerKey(game.me)] : undefined;
+  const lastPosition = myOverride ? myOverride.toLowerCase() : champSelectPosition;
   const gameMode = useMemo(() => effectiveMode(state), [live, clientInfo, settings.mode, settings.lastMode]);
   const gameModeDetected = settings.mode === "auto" && !!detectedMode(state);
   const choiceKey = baseChampion ? webKey(gameMode, baseChampion.id, lastPosition) : undefined;
@@ -602,7 +620,7 @@ function useDerivedCompute(): Derived {
 
   const pickedSource = selectedSource(gameMode, settings.dataSources?.[gameMode], !!modeDataset);
   useEffect(() => {
-    if (baseChampion && settings.webStats) void ensureChampionStats(gameMode, baseChampion.id);
+    if (baseChampion && settings.webStats) void ensureChampionStats(gameMode, baseChampion.id, false, lastPosition);
   }, [baseChampion, settings.webStats, gameMode, lastPosition]);
 
   const source = useMemo((): DataSourceInfo | undefined => {
@@ -706,7 +724,7 @@ function useDerivedCompute(): Derived {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const power = useMemo(() => scoreboardPower(game, data, { mode: gameMode, myChampion: champion }), [data, game?.me, game?.allies, game?.enemies, game?.gameMode, !game, gameMode, champion]);
   const mode: Derived["mode"] = live ? "live" : demo ? "demo" : champSelect ? "champselect" : "explore";
-  return { game, mode, champion, baseChampion, variants, variant, threat, plan, championStats, statsSource, statsProvider, source, gameMode, gameModeDetected, offeredRanked, allRanked, skillPlan, levelOrder, guide, advice, shop, power, choiceKey, choice };
+  return { game, mode, champion, baseChampion, variants, variant, threat, plan, championStats, statsSource, statsProvider, source, position: lastPosition, roleGame: roleKey, roleOverridden: roles !== NO_OVERRIDES, gameMode, gameModeDetected, offeredRanked, allRanked, skillPlan, levelOrder, guide, advice, shop, power, choiceKey, choice };
 }
 
 /** Passive + Q/W/E/R info (names, icons, descriptions) for a champion; [] while loading. */
@@ -746,8 +764,12 @@ export const actions = {
   async refreshData() {
     set((s) => ({ web: { ...s.web, champions: {} } }));
     await Promise.all([loadWebGlobal(true), loadCombos(true)]);
-    const c = currentGame(state)?.me.champion;
-    if (c) await ensureChampionStats(effectiveMode(state), c.id, true);
+    const g = currentGame(state);
+    const c = g?.me.champion;
+    if (!c) return;
+    const mode = effectiveMode(state);
+    const mine = mode === "sr" && (state.live || state.demo) ? activeRoles(state.settings.roleOverrides, roleGameKey(g))[playerKey(g.me)] : undefined;
+    await ensureChampionStats(mode, c.id, true, mine ? mine.toLowerCase() : state.lastPosition);
   },
   /** Load (or refresh) the champion tier list for a mode. Cached 3 h. */
   async loadTierList(mode: GameModeKind, force = false) {
@@ -787,6 +809,14 @@ export const actions = {
     if (merged) next[key] = merged;
     else delete next[key];
     return actions.updateSettings({ buildChoices: next });
+  },
+  /** Move a player to a lane in the current SR game (a teammate in that lane swaps). */
+  setRole(game: GameSnapshot, gameKey: string, player: PlayerState, lane: Lane) {
+    const roles = assignRole(game, activeRoles(state.settings.roleOverrides, gameKey), player, lane);
+    return actions.updateSettings({ roleOverrides: Object.keys(roles).length ? { game: gameKey, roles } : null });
+  },
+  resetRoles() {
+    return actions.updateSettings({ roleOverrides: null });
   },
   /** Pick the recommendation data source for a mode ("auto" removes the pick). */
   setDataSource(mode: GameModeKind, id: DataSourceId) {
@@ -1001,7 +1031,7 @@ export function useMigrateBuildChoice(d: Derived) {
 export function useLeagueAutoImport(d: Derived) {
   const champSelect = useApp((s) => s.champSelect);
   const li = useApp((s) => s.settings.leagueImport);
-  const statsEntry = useApp((s) => (d.champion ? s.web.champions[webKey(d.gameMode, d.champion.id, s.lastPosition)] : undefined));
+  const statsEntry = useApp((s) => (d.champion ? s.web.champions[webKey(d.gameMode, d.champion.id, d.position)] : undefined));
   const input = useMemo(() => importInputFrom(d), [d.champion, d.championStats, d.plan, d.game, d.gameMode, d.choice]);
   useEffect(() => {
     leagueImportInput = input;
@@ -1219,7 +1249,7 @@ async function loadWebGlobal(force = false) {
 }
 
 /** Loads per-champion stats for a mode. Providers register per mode (HexMayhem for Mayhem, OP.GG for ARAM / SR). */
-export type ChampionStatsProvider = (championId: string, data: StaticData, maxAgeHours: number) => Promise<ChampionStats | undefined>;
+export type ChampionStatsProvider = (championId: string, data: StaticData, maxAgeHours: number, position?: string) => Promise<ChampionStats | undefined>;
 const providers: Partial<Record<GameModeKind, ChampionStatsProvider>> = {
   mayhem: async (id, data, maxAge) => {
     const html = await bridge.fetchText(championUrl(id), `hexmayhem-${id.toLowerCase()}.html`, maxAge);
@@ -1231,8 +1261,8 @@ const providers: Partial<Record<GameModeKind, ChampionStatsProvider>> = {
 };
 const opggProvider =
   (mode: OpggMode): ChampionStatsProvider =>
-  async (id, data, maxAge) => {
-    const position = mode === "ranked" ? state.lastPosition : undefined;
+  async (id, data, maxAge, pos) => {
+    const position = mode === "ranked" ? pos : undefined;
     const get = (page: "build" | "items" | "runes") =>
       bridge
         .fetchText(opggChampionUrl(mode, id, position, page), `opgg-${mode}-${id.toLowerCase()}-${position ?? "main"}-${page}.html`, maxAge)
@@ -1252,8 +1282,8 @@ export function registerStatsProvider(mode: GameModeKind, provider: ChampionStat
 /** Stats are refreshed at most this often (hours) unless the user forces a refresh. */
 const STATS_MAX_AGE_H = 3;
 
-async function ensureChampionStats(mode: GameModeKind, id: string, force = false) {
-  const key = webKey(mode, id, state.lastPosition);
+async function ensureChampionStats(mode: GameModeKind, id: string, force = false, position = state.lastPosition) {
+  const key = webKey(mode, id, position);
   const prev = state.web.champions[key];
   // 10: failed fetches are retried after 2 minutes instead of never.
   const retryable = prev === "error" && Date.now() - (webErrorAt.get(key) ?? 0) > 120_000;
@@ -1262,7 +1292,7 @@ async function ensureChampionStats(mode: GameModeKind, id: string, force = false
   if (!provider) return;
   set((s) => ({ web: { ...s.web, champions: { ...s.web.champions, [key]: "loading" } } }));
   try {
-    const cs = await provider(id, state.data!, force ? 0 : STATS_MAX_AGE_H);
+    const cs = await provider(id, state.data!, force ? 0 : STATS_MAX_AGE_H, position);
     if (!cs) throw new Error("No stats on page");
     set((s) => ({ web: { ...s.web, champions: { ...s.web.champions, [key]: cs }, version: s.web.version + 1, fetchedAt: Date.now() } }));
   } catch {

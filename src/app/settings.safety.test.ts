@@ -72,3 +72,11 @@ describe("data source picks (settings.dataSources)", () => {
     expect(normalizeSettings({ dataSources: "bad" } as never).dataSources).toEqual({});
   });
 });
+
+describe("role overrides (settings.roleOverrides)", () => {
+  it("adds null for old settings and keeps stored overrides", () => {
+    expect(normalizeSettings({}).roleOverrides).toBeNull();
+    const stored = { game: "CLASSIC|a|b", roles: { "CHAOS:Vladimir": "MIDDLE" as const } };
+    expect(normalizeSettings({ roleOverrides: stored }, true).roleOverrides).toEqual(stored);
+  });
+});
