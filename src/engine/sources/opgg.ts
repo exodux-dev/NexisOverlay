@@ -26,7 +26,8 @@ import { decodeRsc, grabJson } from "./hexmayhem";
 
 export const OPGG_SITE = "https://op.gg";
 
-export type OpggMode = "ranked" | "aram";
+/** "aram-mayhem" is used for rune pages only: its build tables publish no games / win rates. */
+export type OpggMode = "ranked" | "aram" | "aram-mayhem";
 export type OpggPosition = "top" | "jungle" | "mid" | "adc" | "support";
 export type OpggPage = "build" | "items" | "runes" | "skills" | "counters";
 
@@ -57,7 +58,7 @@ export function opggSlug(championId: string): string {
 /** Champion page URL. `position` only applies to Summoner's Rift. */
 export function opggChampionUrl(mode: OpggMode, championId: string, position?: string, page: OpggPage = "build"): string {
   const slug = opggSlug(championId);
-  if (mode === "aram") return `${OPGG_SITE}/lol/modes/aram/${slug}/${page}`;
+  if (mode !== "ranked") return `${OPGG_SITE}/lol/modes/${mode}/${slug}/${page}`;
   const pos = opggPosition(position);
   return `${OPGG_SITE}/lol/champions/${slug}/${page}${pos ? `/${pos}` : ""}`;
 }
@@ -414,6 +415,17 @@ const winStat = (games: number, winRate: number | undefined, pickRate?: number):
 });
 
 /** Convert a parsed OP.GG page into the engine's ChampionStats shape. */
+/** Rune pages (games / win rates) from an OP.GG page, in ChampionStats form; [] when none. */
+export function opggRunePages(html: string): NonNullable<ChampionStats["runes"]> {
+  return (parseOpggChampionPage(html)?.runes ?? []).map((r) => ({ primary: r.primary, sub: r.sub, perks: r.perks, ...(r.shards ? { shards: r.shards } : {}), ...winStat(r.games, r.winRate, r.pickRate) }));
+}
+
+/** Fill in rune pages a source lacks (HexMayhem publishes none) without touching anything else. */
+export function withOpggRunes(stats: ChampionStats, runes: ChampionStats["runes"] | undefined): ChampionStats {
+  if (stats.runes?.length || !runes?.length) return stats;
+  return { ...stats, runes, runesSource: "opgg" };
+}
+
 export function opggToChampionStats(parsed: OpggChampion, data: StaticData): ChampionStats {
   const games = parsed.games ?? 0;
 

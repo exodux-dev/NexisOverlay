@@ -53,6 +53,8 @@ function resolve(url: URL): Reply {
       if (p === "/lol/modes/arena") return html("opgg-arena-tierlist.html");
       if (p === "/lol/champions") return html("opgg-sr-tierlist.html");
       if (/^\/lol\/modes\/aram\/[a-z0-9]+\/build$/.test(p)) return html("opgg-aram-ahri-build.html");
+      // ARAM: Mayhem rune pages (real, trimmed Yasuo page) fill HexMayhem's missing runes.
+      if (/^\/lol\/modes\/aram-mayhem\/[a-z0-9]+\/runes$/.test(p)) return html("opgg-mayhem-yasuo-runes.html");
       const sr = /^\/lol\/champions\/[a-z0-9]+\/(build|items|runes)(\/[a-z]+)?$/.exec(p);
       if (sr) return html(`opgg-sr-ahri-${sr[1]}.html`);
       const arena = /^\/lol\/modes\/arena\/[a-z0-9]+\/(augments|build|items)$/.exec(p);

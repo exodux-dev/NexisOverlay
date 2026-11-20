@@ -68,6 +68,11 @@ export function RunesSpells({
               Runes
               {pages.length > 1 && <OptionsHelp top4={stats?.mode === "arena"} note="Rune pages are listed most played first; the first page is the default." />}
             </h3>
+            {stats?.runesSource === "opgg" && (
+              <span className="rs-source" title="HexMayhem publishes no runes: these rune pages are OP.GG's ARAM: Mayhem stats">
+                Runes: OP.GG
+              </span>
+            )}
             <Rates stat={page} label={wrLabel} />
           </div>
           {pages.length > 1 && (

@@ -210,6 +210,8 @@ export interface ChampionStats extends WinStat {
   boots?: Record<string, WinStat>;
   augments?: Record<string, WinStat>; // augment name -> stat
   runes?: Array<WinStat & { primary: number; sub: number; perks: number[]; shards?: number[] }>;
+  /** Set when the rune pages come from another source than the rest (Mayhem: OP.GG runes). */
+  runesSource?: "opgg";
   spells?: Array<WinStat & { ids: [number, number] }>;
   /** Most common level-by-level skill sequence (first 15-18 levels), when the source has one. */
   skillSequence?: Array<"Q" | "W" | "E" | "R">;

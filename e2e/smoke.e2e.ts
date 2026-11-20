@@ -23,6 +23,8 @@ test("champion search opens Build with build order, shop card and runes", async 
   await expect(page.locator(".order-source")).toContainText("HexMayhem");
   await expect(page.locator(".shop-card")).toBeVisible();
   await expect(page.getByRole("region", { name: "Runes and summoner spells" })).toBeVisible();
+  // HexMayhem has no runes: OP.GG's Mayhem rune pages fill them in.
+  await expect(page.getByRole("region", { name: "Runes and summoner spells" })).toContainText("Runes: OP.GG");
 });
 
 test("mode switch changes the stats provider", async ({ start }) => {

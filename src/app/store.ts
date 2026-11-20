@@ -5,7 +5,7 @@ import { createContext, createElement, useContext, useMemo, useSyncExternalStore
 import * as bridge from "../bridge";
 import { AUGMENTS, findAugment, rankAugments, registerArenaAugments, registerAugments, setAugmentPool, type AugmentScore, type GlobalAugmentStat } from "../engine/augments";
 import { AUGMENTS_URL, championUrl, parseAugmentTable, parseChampionPage, toChampionStats } from "../engine/sources/hexmayhem";
-import { mergeOpggChampion, opggChampionUrl, opggToChampionStats, parseOpggChampionPage, type OpggMode } from "../engine/sources/opgg";
+import { mergeOpggChampion, opggChampionUrl, opggRunePages, opggToChampionStats, parseOpggChampionPage, withOpggRunes, type OpggMode } from "../engine/sources/opgg";
 import { loadProfile, opggRegionFromPlatform, type PlayerProfile } from "../engine/sources/opggProfile";
 import { itemMapFor, setItemMap } from "../engine/staticData";
 import { arenaStatsProvider } from "../engine/sources/arena";
@@ -1257,11 +1257,16 @@ async function loadWebGlobal(force = false) {
 export type ChampionStatsProvider = (championId: string, data: StaticData, maxAgeHours: number, position?: string) => Promise<ChampionStats | undefined>;
 const providers: Partial<Record<GameModeKind, ChampionStatsProvider>> = {
   mayhem: async (id, data, maxAge) => {
+    // HexMayhem publishes no runes: OP.GG's Mayhem runes page fills them in (failure = no runes).
+    const runes = bridge
+      .fetchText(opggChampionUrl("aram-mayhem", id, undefined, "runes"), `opgg-aram-mayhem-${id.toLowerCase()}-main-runes.html`, maxAge)
+      .then(opggRunePages)
+      .catch(() => undefined);
     const html = await bridge.fetchText(championUrl(id), `hexmayhem-${id.toLowerCase()}.html`, maxAge);
     const parsed = parseChampionPage(html);
     if (!parsed) return undefined;
     registerAugments(parsed.augments);
-    return toChampionStats(parsed, data);
+    return withOpggRunes(toChampionStats(parsed, data), await runes);
   },
 };
 const opggProvider =
