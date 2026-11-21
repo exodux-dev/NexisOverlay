@@ -11,6 +11,7 @@ import { actions, devHooks, getState, registerDemo, useApp, useDerived } from ".
 import { rerollAdvice, type AugmentScore } from "../engine/augments";
 import type { OcrMatch } from "../engine/ocrMatch";
 import { MiniHud } from "./MiniHud";
+import { hudOf } from "./hudSettings";
 import * as bridge from "../bridge";
 import "./layer.css";
 
@@ -33,6 +34,7 @@ export default function Layer() {
   return (
     <div className="nl-root" aria-hidden="true">
       <AugmentBadges />
+      <PickReminder />
       <CalibrationPreview />
       <MiniHud />
     </div>
@@ -96,6 +98,49 @@ function AugmentBadges() {
           style={{ left: `${(region.x + card.x * region.w) * 100}vw`, top, animationDelay: `${i * 70}ms` }}
         />
       ))}
+    </div>
+  );
+}
+
+// ------------------------------------------------------------------ pick reminder
+
+/** How long the "mark your pick" reminder stays up after an augment offer is detected. */
+export const PICK_REMINDER_MS = 8000;
+
+/**
+ * Nexis can't see which card you click (that would mean watching your mouse), so a new offer
+ * shows a short reminder to mark the pick in the app. Once per offer (a reroll is a new offer).
+ */
+function PickReminder() {
+  const cards = useApp((s) => s.cards);
+  const enabled = useApp((s) => hudOf(s.settings).pickReminder);
+  const hotkey = useApp((s) => s.settings.hotkeyToggle);
+  const region = useApp((s) => s.settings.scanRegion);
+  const [shownFor, setShownFor] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);
+  const last = useRef("");
+  const timers = useRef<number[]>([]);
+  const key = cards.map((c) => c.augment.name).sort().join("|");
+
+  // Timers live in a ref: the cards leaving the screen must not cancel the hide (fixed duration).
+  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
+  useEffect(() => {
+    if (!enabled || !key || key === last.current) return;
+    last.current = key;
+    timers.current.forEach((t) => window.clearTimeout(t));
+    setShownFor(key);
+    setVisible(true);
+    timers.current = [window.setTimeout(() => setVisible(false), PICK_REMINDER_MS), window.setTimeout(() => setShownFor(null), PICK_REMINDER_MS + FADE_MS)];
+  }, [key, enabled]);
+
+  if (!shownFor) return null;
+  return (
+    <div
+      className={`nl-pick-reminder ${visible ? "nl-in" : "nl-out"}`}
+      role="status"
+      style={{ left: `${(region.x + region.w / 2) * 100}vw`, top: `calc(${(region.y + region.h) * 100}vh + 7.5em)` }}
+    >
+      Augments detected: open Nexis (<b>{hotkey}</b>) and mark your pick so your stats stay accurate
     </div>
   );
 }

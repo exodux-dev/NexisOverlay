@@ -270,3 +270,24 @@ test("keys typed right after Ctrl+K land in the palette, even on a slow machine"
   await expect(palette).toBeHidden();
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: 1 });
 });
+
+test("HUD shows a pick reminder for ~8 s when augment cards are detected", async ({ start, context }) => {
+  await start();
+  const hud = await context.newPage();
+  await hud.clock.install();
+  await hud.goto("/?view=hud");
+  await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
+  await emit(hud, "live-game", liveGame());
+  const offer = ["Back To Basics", "Clown College", "Draw Your Sword"];
+  const scan = { ok: true, auto: true, scan: { millis: 40, lines: offer.map((text, i) => ({ text, x: 200 + i * 300, y: 300, w: 180, h: 24 })) } };
+  // Background detection needs the same cards twice in a row.
+  await emit(hud, "augment-scan", scan);
+  await emit(hud, "augment-scan", scan);
+  const reminder = hud.locator(".nl-pick-reminder");
+  await expect(reminder).toContainText("mark your pick");
+  await expect(reminder).toContainText("Ctrl+Shift+Space");
+  await hud.clock.fastForward(5000);
+  await expect(reminder).toHaveClass(/nl-in/);
+  await hud.clock.fastForward(4000);
+  await expect(reminder).toHaveCount(0);
+});

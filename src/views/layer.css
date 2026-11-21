@@ -563,3 +563,28 @@ html.nexis-layer #root {
   font-weight: 600;
   white-space: nowrap;
 }
+
+/* "Mark your pick" reminder under the augment badges (~8 s per new offer). */
+.nl-pick-reminder {
+  position: absolute;
+  transform: translateX(-50%);
+  max-width: 34em;
+  padding: 0.45em 0.95em;
+  border-radius: 999px;
+  font-family: var(--display);
+  font-size: 0.82em;
+  font-weight: 600;
+  text-align: center;
+  color: #f1e6c8;
+  background: var(--glass);
+  border: 1px solid rgba(200, 170, 110, 0.6);
+  box-shadow: 0 0.3em 0.9em rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  transition: opacity 320ms ease;
+}
+.nl-pick-reminder b {
+  color: #f0c46c;
+}
+.nl-pick-reminder.nl-out {
+  opacity: 0;
+}

@@ -663,6 +663,12 @@ function HudLayoutCard() {
           <Toggle checked={hud.collapsed} onChange={(v) => updateHud({ collapsed: v })} label="Collapse to a pill" sub="Just the next buy (and a skill point reminder) in a tiny pill" />
           <Toggle checked={hud.compact} onChange={(v) => updateHud({ compact: v })} label="Compact" sub="Icons only — a narrow strip with no labels" />
           <Toggle
+            checked={hud.pickReminder}
+            onChange={(v) => updateHud({ pickReminder: v })}
+            label="Augment pick reminder"
+            sub="When augment cards are detected, a reminder to mark your pick in Nexis shows for ~8 seconds"
+          />
+          <Toggle
             checked={hud.showHint}
             onChange={(v) => updateHud({ showHint: v })}
             label="Full-view hint"

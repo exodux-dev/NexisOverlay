@@ -30,6 +30,8 @@ export interface HudSettings {
   showPower: boolean;
   /** "Ctrl+Shift+Space for full view" footer. */
   showHint: boolean;
+  /** ~8 s reminder to mark your augment pick in Nexis when an offer is detected. */
+  pickReminder: boolean;
   /** Draw order of the widgets. */
   order: HudWidget[];
   /** Icons only, no labels. */
@@ -60,6 +62,7 @@ export const HUD_DEFAULTS: HudSettings = {
   showAugments: true,
   showPower: false,
   showHint: true,
+  pickReminder: true,
   order: [...HUD_WIDGETS],
   compact: false,
   collapsed: false,
@@ -143,6 +146,7 @@ export function normalizeHud(raw: unknown): HudSettings {
     showAugments: bool("showAugments"),
     showPower: bool("showPower"),
     showHint: bool("showHint"),
+    pickReminder: bool("pickReminder"),
     order: normalizeOrder(r.order),
     compact: bool("compact"),
     collapsed: bool("collapsed"),
