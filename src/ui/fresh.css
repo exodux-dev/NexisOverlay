@@ -857,3 +857,29 @@
   border: 1px dashed var(--fr-line-2);
   border-radius: 999px;
 }
+
+/* Home search: same look as the champion search dropdown */
+.home-search-field {
+  height: 50px;
+  border-radius: 14px;
+  border: 1px solid var(--fr-line-2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)), rgba(var(--bg-rgb), 0.6);
+}
+.home-search.is-open .home-search-field {
+  border-radius: 14px;
+}
+.home-search-list {
+  margin-top: 6px;
+  padding: 6px;
+  border: 1px solid var(--fr-line-2);
+  border-radius: 14px;
+  background: rgb(var(--panel-rgb));
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.75);
+  animation: nx-tip-in 0.12s ease-out both;
+}
+.home-search-item {
+  border-radius: 10px;
+}
+.home-search-item.is-sel {
+  background: var(--fr-accent-soft);
+}
