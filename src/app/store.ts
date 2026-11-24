@@ -24,6 +24,7 @@ import { stepTimeline, type TimelineRecorder } from "../engine/timeline";
 import { datasetMode, historyForMode, modeFromGameMode, type GameModeKind } from "../engine/mode";
 import { activeRoles, applyRoles, assignRole, NO_OVERRIDES, playerKey, roleGameKey, type RoleOverrides } from "../engine/roles";
 import type { Lane } from "../engine/power";
+import { NEW_TRACKER, stepPick, type PickTracker } from "../engine/pickDetect";
 import { defaultWebSource, fallbackNotice, resolveSource, selectedSource, sourcesForMode, type DataSourceId, type SourceResolution } from "../engine/dataSource";
 import { parseLiveGame, type AllGameDataRaw } from "../engine/live";
 import { stabilizeSnapshot } from "../engine/liveStable";
@@ -158,6 +159,8 @@ export interface Settings {
   badgeOffset: number; // extra vertical offset (fraction of screen) for the in-game tier badges
   /** Tier badges above the augment cards (default: clear of the reroll buttons) or below them. */
   badgePlacement: "above" | "below";
+  /** Mark your augment pick automatically when only the chosen card is left on screen. */
+  detectPicks: boolean;
   theme: ThemeSettings;
   /** Chosen build style per champion id (see engine/variants.ts). */
   buildStyles: Record<string, string>;
@@ -212,6 +215,7 @@ export const DEFAULT_SETTINGS: Settings = {
   autoDetectAugments: true,
   badgeOffset: 0,
   badgePlacement: "above",
+  detectPicks: true,
   theme: DEFAULT_THEME,
   buildStyles: {},
   leagueImport: DEFAULT_LEAGUE_IMPORT,
@@ -251,6 +255,7 @@ function finishNormalize(s: Settings): Settings {
   if (!s.dataSources || typeof s.dataSources !== "object" || Array.isArray(s.dataSources)) s.dataSources = {};
   if (s.roleOverrides === undefined) s.roleOverrides = null;
   if (s.badgePlacement !== "above" && s.badgePlacement !== "below") s.badgePlacement = "above";
+  if (typeof s.detectPicks !== "boolean") s.detectPicks = true;
   if (!Array.isArray(s.favorites)) s.favorites = [];
   else if (s.favorites.some((f) => typeof f !== "string")) s.favorites = s.favorites.filter((f): f is string => typeof f === "string");
   // The project moved to exodux-dev: an untouched old default stats URL follows it (custom URLs are kept).
@@ -1131,6 +1136,7 @@ function onLiveGame(raw: AllGameDataRaw) {
     intelPrev = null;
     intelPlan = null;
     timelineRec = null;
+    pickTracker = NEW_TRACKER;
     toastedBuild.clear();
     set({ myAugments: [], offered: [], scan: { status: "idle" }, demo: false, intel: [] });
   }
@@ -1184,6 +1190,7 @@ async function recordMatch(snap: GameSnapshot) {
 
 let missedScans = 0;
 let pendingCards = "";
+let pickTracker: PickTracker = NEW_TRACKER;
 
 /**
  * Whether a background scan's cards should show right away. Three recognised augment names at once
@@ -1198,6 +1205,10 @@ function onScan(payload: { ok: boolean; auto?: boolean; error?: string; scan?: {
   if (payload.auto) {
     // Background detection: update the in-game badges quietly.
     const matches = payload.ok && payload.scan ? matchAugments(payload.scan.lines, AUGMENTS) : [];
+    // Pick detection from the scans alone (the card left on screen after you choose).
+    const step = stepPick(pickTracker, matches.map((m) => m.augment.name));
+    pickTracker = step.tracker;
+    if (step.picked && currentView === "main" && state.settings.detectPicks && !state.myAugments.includes(step.picked)) actions.takeAugment(step.picked);
     if (matches.length >= 2) {
       missedScans = 0;
       const names = matches.map((m) => m.augment.name);

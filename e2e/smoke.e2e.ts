@@ -303,3 +303,23 @@ test("HUD Minimal / Full preset", async ({ start }) => {
   await preset.getByRole("radio", { name: "Full" }).click();
   expect(await storeValue<boolean>(page, "(s) => s.settings.hud.showBuildPath")).toBe(true);
 });
+
+test("detects the augment pick from the screen and shows it on the HUD", async ({ start, context }) => {
+  const scanOf = (names: string[]) => ({ ok: true, auto: true, scan: { millis: 40, lines: names.map((text, i) => ({ text, x: 200 + i * 300, y: 300, w: 180, h: 24 })) } });
+  const offer = ["Back To Basics", "Clown College", "Draw Your Sword"];
+  // Main window: records the pick.
+  const page = await start();
+  await emit(page, "live-game", liveGame());
+  await emit(page, "augment-scan", scanOf(offer));
+  await emit(page, "augment-scan", scanOf(["Clown College"]));
+  await emit(page, "augment-scan", scanOf(["Clown College"]));
+  await expect.poll(() => storeValue<string[]>(page, "(s) => s.myAugments")).toContain("Clown College");
+  // HUD window: receives the synced list (sync-augments) and shows "✓ Picked".
+  const hud = await context.newPage();
+  await hud.goto("/?view=hud");
+  await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
+  await emit(hud, "live-game", liveGame());
+  await emit(hud, "sync-augments", []);
+  await emit(hud, "sync-augments", ["Clown College"]);
+  await expect(hud.locator(".nl-picked")).toContainText("Picked Clown College");
+});

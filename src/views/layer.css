@@ -646,3 +646,10 @@ html.nexis-layer #root {
 .nl-pick-reminder.nl-out {
   opacity: 0;
 }
+
+.nl-pick-reminder.nl-picked {
+  border-color: color-mix(in srgb, var(--nl-ok) 70%, transparent);
+}
+.nl-pick-reminder.nl-picked b {
+  color: var(--nl-ok);
+}

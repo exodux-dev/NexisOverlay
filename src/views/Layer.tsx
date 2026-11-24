@@ -42,6 +42,7 @@ export default function Layer() {
     <div className="nl-root" aria-hidden="true">
       <AugmentBadges />
       <PickReminder />
+      <PickedNotice />
       <CalibrationPreview />
       <MiniHud />
     </div>
@@ -153,11 +154,41 @@ function PickReminder() {
     timers.current = [window.setTimeout(() => setVisible(false), PICK_REMINDER_MS), window.setTimeout(() => setShownFor(null), PICK_REMINDER_MS + FADE_MS)];
   }, [key, enabled]);
 
-  if (!shownFor) return null;
+  const picked = useApp((s) => !!shownFor && shownFor.split("|").some((n) => s.myAugments.includes(n)));
+  if (!shownFor || picked) return null;
   return (
     <TopNotice>
       <div className={`nl-pick-reminder ${visible ? "nl-in" : "nl-out"}`} role="status">
         Mark your augment pick in Nexis · <b>{hotkey}</b>
+      </div>
+    </TopNotice>
+  );
+}
+
+// ------------------------------------------------------------------ picked notice
+
+/** "✓ Picked <augment>" for a few seconds whenever an augment is added (detected or marked in the app). */
+function PickedNotice() {
+  const mine = useApp((s) => s.myAugments);
+  const prev = useRef<string[] | null>(null);
+  const [name, setName] = useState<string | null>(null);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    const before = prev.current;
+    prev.current = mine;
+    if (!before) return; // first render: nothing new
+    const added = mine.find((a) => !before.includes(a));
+    if (!added) return;
+    setName(added);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setName(null), 4000);
+  }, [mine]);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  if (!name) return null;
+  return (
+    <TopNotice>
+      <div className="nl-pick-reminder nl-picked nl-in" role="status">
+        ✓ Picked <b>{name}</b>
       </div>
     </TopNotice>
   );

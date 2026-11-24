@@ -758,7 +758,13 @@ function OverlaySection() {
           checked={s.autoDetectAugments}
           onChange={(v) => update({ autoDetectAugments: v })}
           label="Auto-detect augments"
-          sub="Shows tier badges under the augment cards automatically"
+          sub="Shows tier badges on the augment cards automatically"
+        />
+        <Toggle
+          checked={s.detectPicks}
+          onChange={(v) => update({ detectPicks: v })}
+          label="Detect your pick"
+          sub="Marks the augment you choose when only that card is left on screen (reads the screen only, never your mouse)"
         />
       </Card>
       <Card title="Tier badges" icon="augments">
