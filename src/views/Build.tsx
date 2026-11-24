@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { DataSourceBar } from "../ui/DataSourceBar";
+import { ChampSelectScout } from "./ChampSelectScout";
 import { playstyleLabel } from "../ui/format";
 import { ShareBuildButtons } from "../ui/ShareBuild";
 import { actions, useApp, useChampionSpells, useDerived, webKey, type Derived } from "../app/store";
@@ -570,6 +571,7 @@ export function BuildView({ d }: { d: Derived }) {
     <div className="view view-build">
       {d.mode === "explore" && <ExplorePanel d={d} />}
       {d.mode === "champselect" && <ChampSelectPanel />}
+      {d.mode === "champselect" && <ChampSelectScout />}
       {d.mode === "champselect" && <ChampSelectHelperBox d={d} />}
       {(d.mode === "live" || d.mode === "demo") && d.game && <MatchupBar d={d} />}
       {d.baseChampion && (

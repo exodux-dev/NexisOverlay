@@ -500,3 +500,19 @@ test("loading screen shows a game plan on the Players tab", async ({ start }) =>
   await emit(page, "live-game", game);
   await expect(card).toHaveCount(0);
 });
+
+test("champ select scouts teammates when their names are visible", async ({ start }) => {
+  const page = await start({ settings: { champSelectFull: true } });
+  await emit(page, "client-info", { phase: "ChampSelect", gameMode: "ARAM", queueId: 450, platformId: "NA1" });
+  const named = {
+    ...champSelect,
+    myTeam: champSelect.myTeam.map((m, i) => ({ ...m, gameName: ["Me", "Powder", "Dawnbringer", "LadyOfLight", "Noxus Hand"][i], tagLine: "NA1", nameVisibilityType: "VISIBLE" })),
+  };
+  await emit(page, "champ-select", named);
+  await act(page, "setTab", "build");
+  await expect(page.locator(".view-build .sc-card")).toHaveCount(5);
+  await expect(page.locator(".view-build")).toContainText("Powder");
+  // Hidden names (ranked solo / duo): a short note instead.
+  await emit(page, "champ-select", { ...named, myTeam: named.myTeam.map((m) => ({ ...m, nameVisibilityType: "HIDDEN" })) });
+  await expect(page.locator(".cs-scout-hidden")).toContainText("Names are hidden");
+});

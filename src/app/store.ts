@@ -322,6 +322,8 @@ export interface ChampSelectState {
   me?: Champion;
   team: Champion[];
   bench: Champion[];
+  /** Your team in pick order, with Riot IDs when the client shows them. */
+  mates?: Array<{ riotId?: string; champion?: Champion; position?: string; isMe: boolean }>;
 }
 
 export interface ScanState {
@@ -1152,7 +1154,7 @@ export function useLeagueAutoImport(d: Derived) {
 
 interface ChampSelectRaw {
   localPlayerCellId?: number;
-  myTeam?: Array<{ cellId: number; championId: number; assignedPosition?: string }>;
+  myTeam?: Array<{ cellId: number; championId: number; assignedPosition?: string; gameName?: string; tagLine?: string; nameVisibilityType?: string }>;
   benchChampions?: Array<{ championId: number }>;
   benchEnabled?: boolean;
 }
@@ -1165,6 +1167,13 @@ function parseChampSelect(raw: ChampSelectRaw | null, data: StaticData): ChampSe
     position: meCell?.assignedPosition || undefined,
     me: meCell ? byKey(meCell.championId) : undefined,
     team: raw.myTeam.map((p) => byKey(p.championId)).filter((c): c is Champion => !!c),
+    // Riot IDs only when the client shows them (hidden in ranked solo / duo champ select).
+    mates: raw.myTeam.map((p) => ({
+      ...(p.gameName && p.tagLine && p.nameVisibilityType !== "HIDDEN" ? { riotId: `${p.gameName}#${p.tagLine}` } : {}),
+      champion: byKey(p.championId),
+      position: p.assignedPosition || undefined,
+      isMe: p.cellId === raw.localPlayerCellId,
+    })),
     bench: (raw.benchChampions ?? []).map((b) => byKey(b.championId)).filter((c): c is Champion => !!c),
   };
 }
@@ -1427,12 +1436,15 @@ function hashString(str: string): string {
 
 /** Fetch OP.GG profiles for everyone in the game, 3 at a time, cached ~1 h. Runs once per game. */
 async function scoutPlayers(snap: GameSnapshot, gameKey: string) {
+  await scoutRiotIds([snap.me, ...snap.allies, ...snap.enemies].map((p) => p.riotId), gameKey);
+}
+
+/** Fetch OP.GG profiles for these Riot IDs (game or champ select), 3 at a time, cached ~1 h. */
+async function scoutRiotIds(ids: string[], gameKey: string) {
   if (currentView !== "main" || !state.settings.webStats || state.scout.gameKey === gameKey) return;
   const region = opggRegionFromPlatform(state.clientInfo?.platformId || state.clientInfo?.region || "");
   if (!region) return; // need the League client's region first; retried on the next snapshot
-  const players = [snap.me, ...snap.allies, ...snap.enemies]
-    .map((p) => p.riotId)
-    .filter((id) => /#/.test(id)); // skip hidden / streamer-mode names
+  const players = ids.filter((id) => /#/.test(id)); // skip hidden / streamer-mode names
   set({ scout: { region, gameKey, profiles: Object.fromEntries(players.map((id) => [id, "loading" as const])) } });
   const get = (url: string) => bridge.fetchText(url, `opgg-profile-${region}-${hashString(url)}`, 1);
   const queue = [...players];
@@ -1551,6 +1563,9 @@ export async function init(view: "main" | "hud" = "main") {
       // Warm the stats cache now so augment ratings are instant once the game starts.
       if (state.settings.webStats) void ensureChampionStats(effectiveMode(state), cs.me.id);
     }
+    // Scout your teammates (when their names are visible) while you pick.
+    const ids = (cs?.mates ?? []).map((m) => m.riotId).filter((x): x is string => !!x);
+    if (ids.length) void scoutRiotIds(ids, `cs:${[...ids].sort().join(",")}`);
     // Champ select helper needs this mode's tier list (bench / trade suggestions).
     if (cs && currentView === "main") void actions.loadTierList(effectiveMode(state));
   });
