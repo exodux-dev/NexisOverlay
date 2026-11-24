@@ -525,3 +525,39 @@
 .lfn-col > * {
   width: 100%;
 }
+
+/* Styled hover tips (replace the browser's plain title tooltips, see TitleTips.tsx) */
+.nx-tip {
+  position: fixed;
+  z-index: 10000;
+  max-width: 300px;
+  padding: 7px 11px;
+  transform: translateX(-50%);
+  border-radius: 9px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--text);
+  background: rgb(var(--panel-rgb));
+  border: 1px solid var(--fr-line-2);
+  box-shadow: 0 10px 28px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  white-space: pre-line;
+  animation: nx-tip-in 0.14s ease-out both;
+}
+.nx-tip-above {
+  transform: translate(-50%, -100%);
+  animation-name: nx-tip-in-above;
+}
+@keyframes nx-tip-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -3px);
+  }
+}
+@keyframes nx-tip-in-above {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% + 3px));
+  }
+}

@@ -12,6 +12,7 @@ import { Icon } from "./ui/icons";
 import { Nav } from "./ui/Nav";
 import { Onboarding } from "./ui/Onboarding";
 import { WhatsNew } from "./ui/WhatsNew";
+import { TitleTips } from "./ui/TitleTips";
 import { Toasts } from "./ui/Toasts";
 import { Logo, TopBar } from "./ui/TopBar";
 import { ResizeGrips, useEscToHide } from "./ui/WindowControls";
@@ -186,6 +187,7 @@ export default function App() {
       )}
       {ready && <Onboarding />}
       {ready && <WhatsNew />}
+      <TitleTips />
       {ready && postGame && (
         <PostGameSummary
           record={postGame}

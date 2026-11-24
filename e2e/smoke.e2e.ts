@@ -465,3 +465,21 @@ test("HUD opens a shop view while you're dead", async ({ start, context }) => {
   await expect(hud.locator(".nl-dead")).toHaveCount(0);
   await expect(hud.locator(".nl-collapsed")).toBeVisible();
 });
+
+test("hover text uses the styled tip, not the plain browser tooltip", async ({ start }) => {
+  const page = await start();
+  await act(page, "setExploreChampion", "Ahri");
+  await act(page, "setTab", "build");
+  const share = page.getByRole("button", { name: "Share" });
+  await share.hover();
+  const tip = page.locator(".nx-tip");
+  await expect(tip).toHaveText("Copy a code with this build's picks to share");
+  await expect(share).not.toHaveAttribute("title", /.+/);
+  await page.mouse.move(5, 700);
+  await expect(tip).toHaveCount(0);
+  if (process.env.SHOT) {
+    await share.hover();
+    await expect(tip).toBeVisible();
+    await page.screenshot({ path: process.env.SHOT, clip: { x: 500, y: 520, width: 680, height: 160 } });
+  }
+});
