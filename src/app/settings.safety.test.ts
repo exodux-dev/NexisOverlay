@@ -144,3 +144,10 @@ describe("SR role pick (settings.srRole)", () => {
     expect(normalizeSettings({ srRole: "jungle" }).srRole).toBe("jungle");
   });
 });
+
+describe("keep on top (settings.alwaysOnTop)", () => {
+  it("is off by default and kept when on", () => {
+    expect(normalizeSettings({}).alwaysOnTop).toBe(false);
+    expect(normalizeSettings({ alwaysOnTop: true }).alwaysOnTop).toBe(true);
+  });
+});

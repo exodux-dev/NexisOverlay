@@ -164,6 +164,8 @@ export interface Settings {
   hudPerMode: boolean;
   /** Stored HUD layouts of the modes not currently active. */
   hudByMode: Partial<Record<GameModeKind, HudSettings>>;
+  /** Keep the main window above every other window (the in-game HUD is always on top). */
+  alwaysOnTop: boolean;
   /** Summoner's Rift role picked on the Build tab ("" = auto: champ select, else the main role). */
   srRole: string;
   /** Hide player names / Riot IDs everywhere (safe to show on stream). */
@@ -227,6 +229,7 @@ export const DEFAULT_SETTINGS: Settings = {
   detectPicks: true,
   streamerMode: false,
   srRole: "",
+  alwaysOnTop: false,
   hudPerMode: false,
   hudByMode: {},
   theme: DEFAULT_THEME,
@@ -271,6 +274,7 @@ function finishNormalize(s: Settings): Settings {
   if (typeof s.detectPicks !== "boolean") s.detectPicks = true;
   if (typeof s.streamerMode !== "boolean") s.streamerMode = false;
   if (typeof s.srRole !== "string") s.srRole = "";
+  if (typeof s.alwaysOnTop !== "boolean") s.alwaysOnTop = false;
   if (typeof s.hudPerMode !== "boolean") s.hudPerMode = false;
   if (!s.hudByMode || typeof s.hudByMode !== "object" || Array.isArray(s.hudByMode)) s.hudByMode = {};
   if (!Array.isArray(s.favorites)) s.favorites = [];

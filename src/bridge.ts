@@ -204,6 +204,13 @@ export async function getMiniMode(): Promise<boolean> {
   return isTauri ? !!(await tauriInvoke<boolean>("get_mini_mode")) : false;
 }
 
+/** Main window above every other window (Settings → General → Keep Nexis on top). */
+export async function setAlwaysOnTop(on: boolean): Promise<void> {
+  if (!isTauri) return;
+  const { getCurrentWindow } = await import("@tauri-apps/api/window");
+  await getCurrentWindow().setAlwaysOnTop(on);
+}
+
 export async function startDrag(): Promise<void> {
   if (!isTauri) return;
   const { getCurrentWindow } = await import("@tauri-apps/api/window");

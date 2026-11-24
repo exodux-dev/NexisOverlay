@@ -153,6 +153,11 @@ export default function App() {
   useLeagueAutoImport(derived);
   useMigrateBuildChoice(derived);
   useEscToHide();
+  // Main window on top of other windows only when asked (Settings → General); off by default.
+  const onTop = useApp((s) => s.settings.alwaysOnTop);
+  useEffect(() => {
+    if (status === "ready") void bridge.setAlwaysOnTop(onTop).catch(() => {});
+  }, [onTop, status]);
   useLeaveHomeForGame(status === "ready", derived.mode);
 
   const ready = status === "ready";
