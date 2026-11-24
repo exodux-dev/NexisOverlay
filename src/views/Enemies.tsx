@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { gamePlan } from "../engine/gamePlan";
 import { RolesCard } from "../ui/RoleEditor";
 import { actions, useApp, type Derived } from "../app/store";
 import { powerSpikes, teamGold, type IntelEvent, type PlayerValue, type PowerSpike, type SpikeKind } from "../engine/intel";
@@ -282,6 +283,43 @@ function Players({ d }: { d: Derived }) {
 }
 
 /** Composition comparison: everyone is visible once the game loads. */
+const PLAN_ICON = { win: "spark", spike: "build", watch: "shield" } as const;
+
+/** Loading screen / first two minutes: win condition, first power spike, top threat. */
+function GamePlanCard({ d }: { d: Derived }) {
+  const game = d.game!;
+  const points = useMemo(() => {
+    const champs = (ps: typeof game.allies) => ps.map((p) => p.champion).filter((c): c is Champion => !!c);
+    const first = d.plan?.order.find((r) => r.kind === "core" && !r.owned);
+    return gamePlan({
+      champion: d.champion,
+      allies: champs([game.me, ...game.allies]),
+      enemies: champs(game.enemies),
+      threat: d.threat,
+      mode: d.gameMode,
+      firstItem: first ? { name: first.item.name, cost: first.item.cost } : undefined,
+    });
+  }, [game.me, game.allies, game.enemies, d.threat, d.gameMode, d.plan, d.champion]);
+  if (!points.length) return null;
+  return (
+    <Card title="Game plan" icon="spark" className="gp-card" extra={<span className="dim small">For this game, before it starts</span>}>
+      <ul className="gp-list">
+        {points.map((pt) => (
+          <li key={pt.kind} className={`gp-item gp-${pt.kind}`}>
+            <span className="gp-icon">
+              <Icon name={PLAN_ICON[pt.kind]} size={15} />
+            </span>
+            <span className="gp-text">
+              <strong>{pt.title}</strong>
+              <span>{pt.text}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
+
 function TeamComps({ d }: { d: Derived }) {
   const game = d.game!;
   const allies = useMemo(() => [game.me, ...game.allies].map((p) => p.champion).filter((c): c is Champion => !!c), [game.me, game.allies]);
@@ -328,6 +366,7 @@ export function EnemiesView({ d }: { d: Derived }) {
   return (
     <div className="view view-enemies">
       {/* Loading screen: scouting first. Once the game runs, scoreboard intel leads. */}
+      {(d.mode === "live" || d.mode === "demo") && d.game && (d.game.loading || d.game.gameTime < 120) && <GamePlanCard d={d} />}
       {(d.mode === "live" || d.mode === "demo") && d.game && <RolesCard d={d} />}
       {(d.mode === "live" || d.mode === "demo") && d.game && !d.game.loading && d.power && <TeamPowerCard power={d.power} />}
       {(d.mode === "live" || d.mode === "demo") && d.game && <TeamComps d={d} />}

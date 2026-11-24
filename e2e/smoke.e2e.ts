@@ -483,3 +483,20 @@ test("hover text uses the styled tip, not the plain browser tooltip", async ({ s
     await page.screenshot({ path: process.env.SHOT, clip: { x: 500, y: 520, width: 680, height: 160 } });
   }
 });
+
+test("loading screen shows a game plan on the Players tab", async ({ start }) => {
+  const page = await start();
+  const game = liveGame();
+  game.gameData.gameTime = 0;
+  await emit(page, "live-game", game);
+  await expect(tab(page, "enemies")).toHaveAttribute("aria-current", "page");
+  const card = page.locator(".gp-card");
+  await expect(card).toBeVisible();
+  await expect(card).toContainText("Win condition");
+  await expect(card).toContainText("First power spike");
+  if (process.env.SHOT) await card.screenshot({ path: process.env.SHOT });
+  // Later in the game it's gone.
+  game.gameData.gameTime = 600;
+  await emit(page, "live-game", game);
+  await expect(card).toHaveCount(0);
+});

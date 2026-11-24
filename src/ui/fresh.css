@@ -561,3 +561,51 @@
     transform: translate(-50%, calc(-100% + 3px));
   }
 }
+
+/* Players tab: loading-screen game plan */
+.gp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+.gp-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--fr-line);
+  border-radius: var(--fr-r-sm);
+  background: var(--fr-surface-2);
+}
+.gp-icon {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--accent);
+  background: var(--fr-accent-soft);
+}
+.gp-watch .gp-icon {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.14);
+}
+.gp-spike .gp-icon {
+  color: #f3c969;
+  background: rgba(243, 201, 105, 0.14);
+}
+.gp-text {
+  display: grid;
+  gap: 2px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-2);
+}
+.gp-text strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}

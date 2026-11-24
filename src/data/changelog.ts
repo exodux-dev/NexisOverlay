@@ -8,6 +8,13 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-25.1",
+    title: "Game plan at the loading screen",
+    items: [
+      "Players tab, at the loading screen: your win condition, your first power spike and the enemy threat to respect.",
+    ],
+  },
+  {
     id: "2026-11-24.4",
     title: "Smoother text boxes and clearer playstyles",
     items: [
