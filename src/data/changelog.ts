@@ -12,6 +12,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     title: "Game plan at the loading screen",
     items: [
       "Players tab, at the loading screen: your win condition, your first power spike and the enemy threat to respect.",
+      "Champ select: “Your best picks” ranks the champions you play (your record, tier and team fit); in ARAM only the bench / trades.",
       "Champ select (full overlay): your teammates' OP.GG rank, recent form and mains, when the queue shows their names.",
     ],
   },

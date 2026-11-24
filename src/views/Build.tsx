@@ -1,4 +1,6 @@
-import { Fragment, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
+import { yourBestPicks } from "../engine/yourPicks";
+import { historyForMode } from "../engine/mode";
 import { DataSourceBar } from "../ui/DataSourceBar";
 import { ChampSelectScout } from "./ChampSelectScout";
 import { playstyleLabel } from "../ui/format";
@@ -546,16 +548,64 @@ function ChampSelectHelperBox({ d }: { d: Derived }) {
   const rows = useApp((s) => s.tierLists[d.gameMode]?.rows);
   if (!cs) return null;
   return (
-    <ChampSelectHelper
-      mode={d.gameMode}
-      me={cs.me}
-      team={cs.team}
-      bench={cs.bench}
-      rows={rows}
-      myPosition={cs.position}
-      onPick={actions.setExploreChampion}
-      meStats={d.championStats}
-    />
+    <>
+      <ChampSelectHelper
+        mode={d.gameMode}
+        me={cs.me}
+        team={cs.team}
+        bench={cs.bench}
+        rows={rows}
+        myPosition={cs.position}
+        onPick={actions.setExploreChampion}
+        meStats={d.championStats}
+      />
+      <YourBestPicks d={d} />
+    </>
+  );
+}
+
+/** Champ select: the champions YOU play, ranked for this team (your record + tier + comp fit). */
+function YourBestPicks({ d }: { d: Derived }) {
+  const cs = useApp((s) => s.champSelect);
+  const rows = useApp((s) => s.tierLists[d.gameMode]?.rows);
+  const history = useApp((s) => s.history);
+  const data = useApp((s) => s.data);
+  const picks = useMemo(() => {
+    if (!cs || !data) return [];
+    const team = cs.team.filter((c) => c.id !== cs.me?.id);
+    const pickMode = d.gameMode === "sr" || d.gameMode === "arena";
+    return yourBestPicks({
+      data,
+      history: historyForMode(history, d.gameMode),
+      mode: d.gameMode,
+      rows,
+      position: d.position,
+      team,
+      me: cs.me,
+      available: pickMode ? undefined : [...cs.bench, ...team],
+    });
+  }, [cs, data, history, rows, d.gameMode, d.position]);
+  if (!picks.length) return null;
+  return (
+    <Card title="Your best picks" icon="star" className="ybp-card" extra={<span className="dim small">From your games{d.gameMode === "sr" ? " · this role" : ""}</span>}>
+      <ul className="ybp-list">
+        {picks.map((p) => (
+          <li key={p.champion.id}>
+            <button type="button" className="ybp-item" onClick={() => actions.setExploreChampion(p.champion.id)} title={`Show the ${p.champion.name} build`}>
+              <GameIcon src={p.champion.icon} name={p.champion.name} size={36} round />
+              <span className="ybp-text">
+                <strong>{p.champion.name}</strong>
+                <span>
+                  You're {p.wins}–{p.games - p.wins}
+                  {p.row ? ` · ${(p.row.winRate * 100).toFixed(1)}% WR this patch` : ""}
+                </span>
+                {p.fit && <span className="ybp-fit">{p.fit}</span>}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </Card>
   );
 }
 

@@ -516,3 +516,17 @@ test("champ select scouts teammates when their names are visible", async ({ star
   await emit(page, "champ-select", { ...named, myTeam: named.myTeam.map((m) => ({ ...m, nameVisibilityType: "HIDDEN" })) });
   await expect(page.locator(".cs-scout-hidden")).toContainText("Names are hidden");
 });
+
+test("champ select lists your best picks from your own games", async ({ start }) => {
+  const page = await start({ settings: { champSelectFull: true } });
+  const rec = (champion: string, result: string, i: number) => ({ id: `yp-${champion}-${i}`, date: "2026-11-20T21:05:00Z", champion, result, kills: 5, deaths: 3, assists: 9, durationSec: 1100, items: [], augments: [], enemies: [], gameMode: "ARAM" });
+  await act(page, "importHistory", [rec("Jinx", "Win", 1), rec("Jinx", "Win", 2), rec("Jinx", "Lose", 3), rec("Lux", "Win", 4)]);
+  await emit(page, "client-info", { phase: "ChampSelect", gameMode: "ARAM", queueId: 450, platformId: "NA1" });
+  // Jinx is on the bench (id 222 is in the team list; use the bench for her).
+  await emit(page, "champ-select", { ...champSelect, myTeam: champSelect.myTeam.filter((m) => m.championId !== 222), benchChampions: [{ championId: 222 }] });
+  await act(page, "setTab", "build");
+  const card = page.locator(".ybp-card");
+  await expect(card).toBeVisible();
+  await expect(card).toContainText("Jinx");
+  await expect(card).toContainText("You're 2–1");
+});

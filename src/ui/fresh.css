@@ -609,3 +609,46 @@
   font-weight: 700;
   color: var(--text);
 }
+
+/* Champ select: Your best picks */
+.ybp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+.ybp-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+  background: var(--fr-surface-2);
+  border: 1px solid var(--fr-line);
+  border-radius: var(--fr-r-sm);
+  cursor: pointer;
+}
+.ybp-item:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: var(--fr-accent-soft);
+}
+.ybp-text {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.ybp-text strong {
+  font-size: 13.5px;
+  color: var(--text);
+}
+.ybp-fit {
+  color: var(--accent);
+  font-size: 12px;
+}
