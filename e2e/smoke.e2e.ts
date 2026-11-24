@@ -371,3 +371,15 @@ test("history exports as CSV and copies for a spreadsheet", async ({ start, cont
   const tsv = await page.evaluate(() => navigator.clipboard.readText());
   expect(tsv.split("\n")[1].split("\t").slice(1, 4)).toEqual(["ARAM: Mayhem", "Ahri", "Win"]);
 });
+
+test("What's new shows once after an update", async ({ start }) => {
+  const page = await start({ settings: { __whatsNew: true } });
+  const dialog = page.getByRole("dialog", { name: "What's new in Nexis" });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "Got it" }).click();
+  await expect(dialog).toBeHidden();
+  await page.reload();
+  await page.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
+  await page.waitForTimeout(300);
+  await expect(dialog).toHaveCount(0);
+});

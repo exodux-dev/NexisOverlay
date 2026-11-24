@@ -337,3 +337,40 @@
   background: rgba(var(--bg-rgb), 0.7);
   border: 1px solid var(--fr-line-2);
 }
+
+/* What's new popup (uses the onboarding scrim / dialog) */
+.wn-dialog {
+  padding: 22px 24px 18px;
+  max-width: 520px;
+}
+.wn-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.wn-body {
+  display: grid;
+  gap: 14px;
+  max-height: 55vh;
+  overflow: auto;
+}
+.wn-entry h3 {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  font-weight: 650;
+  color: var(--accent);
+}
+.wn-entry ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.wn-foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}

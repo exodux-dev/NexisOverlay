@@ -153,6 +153,7 @@ export const test = base.extend<Fixtures>({
             sessionStorage.setItem("nexis-e2e", "1");
             localStorage.clear();
             localStorage.setItem("nexis:onboarding.json", JSON.stringify({ done: true, version: 1 }));
+            if (!(s as { __whatsNew?: boolean } | null)?.__whatsNew) localStorage.setItem("nexis:whatsnew.json", JSON.stringify({ seen: "9999" }));
             if (s) localStorage.setItem("nexis:settings.json", JSON.stringify(s));
           }
           new Function(`(${diag})()`)();
