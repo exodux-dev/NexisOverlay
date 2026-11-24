@@ -430,3 +430,18 @@ test("Guide: change champion", async ({ start }) => {
   await page.keyboard.press("Enter");
   await expect(page.locator(".gd-hero-name")).toContainText("Jinx");
 });
+
+test("Augments: Look for next lists the best picks left per rarity", async ({ start }) => {
+  const page = await start();
+  await act(page, "setExploreChampion", "Ahri");
+  await modeSelect(page).selectOption("mayhem");
+  await act(page, "setTab", "augments");
+  const card = page.locator(".lfn-card");
+  await expect(card).toBeVisible();
+  await expect(card.locator(".lfn-item").first()).toBeVisible();
+  const first = (await card.locator(".lfn-name").first().innerText()).trim();
+  // Taking it removes it from the list.
+  await act(page, "takeAugment", first);
+  await expect(card.locator(".lfn-name", { hasText: new RegExp(`^${first.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`) })).toHaveCount(0);
+  if (process.env.SHOT) await card.screenshot({ path: process.env.SHOT });
+});

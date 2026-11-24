@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { augmentTargets, RARITY_ORDER } from "../engine/augmentPlan";
 import { DataSourceBar } from "../ui/DataSourceBar";
 import { MODE_LABEL as GAME_MODE_LABEL, actions, useApp, webKey, type Derived } from "../app/store";
 import { combosFor, rerollAdvice, synergiesFor, type AugmentScore, type AugmentSynergy } from "../engine/augments";
@@ -143,6 +144,47 @@ function RerollBanner({ offered }: { offered: AugmentScore[] }) {
 }
 
 /** Top HexMayhem "God-Tier Combos" for your champion (and multi-augment combos with what you own). */
+const RARITY_NAME = { prismatic: "Prismatic", gold: "Gold", silver: "Silver" } as const;
+
+/** "Look for next": the best augments still to take, per rarity (offers come one rarity at a time). */
+function LookForNext({ ranked, ctx }: { ranked: AugmentScore[]; ctx: SynCtx }) {
+  const targets = useMemo(() => augmentTargets(ranked, ctx), [ranked, ctx]);
+  if (!RARITY_ORDER.some((r) => targets[r].length)) return null;
+  return (
+    <Card title="Look for next" icon="spark" className="lfn-card" extra={<span className="dim small">Best picks left for this champion and what you own</span>}>
+      <div className="lfn-grid">
+        {RARITY_ORDER.map((r) =>
+          targets[r].length ? (
+            <div key={r} className={`lfn-col rar-chip-${r}`}>
+              <span className="lfn-rarity">
+                <span className="rar-dot" />
+                {RARITY_NAME[r]}
+              </span>
+              {targets[r].map((t) => (
+                <AugmentTip key={t.score.augment.name} name={t.score.augment.name} block>
+                  <div className="lfn-item gt-focus" tabIndex={0}>
+                    <span className={`lfn-grade g-${t.score.grade}`}>{t.score.grade}</span>
+                    <span className="lfn-text">
+                      <span className="lfn-name">{t.score.augment.name}</span>
+                      <span className="lfn-sub">
+                        {t.pairsWith.length
+                          ? `Pairs with ${t.pairsWith.join(", ")}`
+                          : t.score.winRate
+                            ? `${(t.score.winRate.rate * 100).toFixed(1)}% ${t.score.winRate.metric === "top4" ? "top 4" : "WR"}`
+                            : t.score.reasons[0] ?? ""}
+                      </span>
+                    </span>
+                  </div>
+                </AugmentTip>
+              ))}
+            </div>
+          ) : null,
+        )}
+      </div>
+    </Card>
+  );
+}
+
 function CombosCard({ ctx, championName }: { ctx: SynCtx; championName: string }) {
   const items = useApp((s) => s.data?.items);
   const mine = useApp((s) => s.myAugments);
@@ -535,6 +577,7 @@ export function AugmentsView({ d }: { d: Derived }) {
           </div>
         )}
       </Card>
+      {d.baseChampion && (d.gameMode === "mayhem" || d.gameMode === "arena") && <LookForNext ranked={d.allRanked} ctx={synCtx} />}
       {combos?.length && d.baseChampion && d.gameMode === "mayhem" ? <CombosCard ctx={synCtx} championName={d.baseChampion.name} /> : null}
       {statsLoading && (d.gameMode === "mayhem" || d.gameMode === "arena") && d.statsProvider !== "riot" ? (
         <SkeletonCard title="Tier list" icon="augments" rows={5} label={`Rating augments for ${d.baseChampion?.name ?? "your champion"}…`} className="tier-card" />

@@ -13,6 +13,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     items: [
       "Search boxes and text fields are softer, with a clear focus glow.",
       "Auto / Aggressive / Balanced / Safe / Frontline now explain in plain words what they change (hover them).",
+      "Augments tab: “Look for next” shows the best augments still to take per rarity, and which pair with ones you own.",
     ],
   },
   {
