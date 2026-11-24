@@ -30,6 +30,26 @@ function NavButton({ tab, label, icon, active, badge }: { tab: Tab; label: strin
   );
 }
 
+/** Small "Demo" switch above Settings: a sample game to try the overlay. Hidden during a real game
+ *  or champ select (the demo also switches itself off when one is detected). */
+function DemoToggle() {
+  const demo = useApp((s) => s.demo);
+  const busy = useApp((s) => !!s.live || !!s.champSelect);
+  if (busy) return null;
+  return (
+    <button
+      type="button"
+      className={`nav-demo ${demo ? "is-on" : ""}`}
+      aria-pressed={demo}
+      onClick={() => actions.setDemo(!demo)}
+      title={demo ? "Turn off the demo game" : "Try the overlay with a sample in-game state"}
+    >
+      <span className="nav-demo-dot" />
+      Demo
+    </button>
+  );
+}
+
 export function Nav() {
   const tab = useApp((s) => s.tab);
   const offered = useApp((s) => s.offered.length);
@@ -40,6 +60,7 @@ export function Nav() {
         <NavButton key={t.tab} {...t} active={tab === t.tab} badge={t.tab === "augments" && tab !== "augments" ? offered : undefined} />
       ))}
       <div className="nav-spacer" />
+      <DemoToggle />
       <NavButton tab="settings" label="Settings" icon="settings" active={tab === "settings"} />
       {version && <div className="nav-version" title={`Game data ${version}`}>Patch {displayPatch(version)}</div>}
     </nav>

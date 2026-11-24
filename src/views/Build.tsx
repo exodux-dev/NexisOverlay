@@ -2,6 +2,7 @@ import { Fragment, useMemo, useState } from "react";
 import { yourBestPicks } from "../engine/yourPicks";
 import { historyForMode } from "../engine/mode";
 import { DataSourceBar } from "../ui/DataSourceBar";
+import { ChampionSearch } from "../ui/ChampionSearch";
 import { ChampSelectScout } from "./ChampSelectScout";
 import { DuoCard } from "./DuoCard";
 import { playstyleLabel } from "../ui/format";
@@ -20,7 +21,7 @@ import type { BuildChoice } from "../engine/options";
 import { ChampSelectHelper } from "./ChampSelectHelper";
 import { MatchupsCard } from "./Matchups";
 import { ShopCard } from "./ShopCard";
-import { Card, Empty, LEVEL_LABEL, LEVEL_TONE, Meter, Pill, Segmented, SkeletonCard, Toggle } from "../ui/controls";
+import { Card, Empty, LEVEL_LABEL, LEVEL_TONE, Meter, Pill, Segmented, SkeletonCard } from "../ui/controls";
 import { ARCHETYPE_LABEL, gold } from "../ui/format";
 import { GameIcon } from "../ui/GameIcon";
 import { AbilityTip } from "../ui/GameTips";
@@ -317,11 +318,7 @@ function MatchupBar({ d }: { d: Derived }) {
       <span className="vs">VS</span>
       <TeamIcons players={game.enemies} />
       <div className="tb-spacer" />
-      {d.mode === "demo" && (
-        <div className="demo-flag">
-          <Toggle checked onChange={() => actions.setDemo(false)} label="Demo game" sub="Sample data — turn off to explore" />
-        </div>
-      )}
+      {d.mode === "demo" && <span className="demo-flag-pill">Demo game · turn off at the bottom left</span>}
     </div>
   );
 }
@@ -347,20 +344,14 @@ function ExplorePanel({ d }: { d: Derived }) {
   };
 
   return (
-    <div className="explore">
-      <div className="explore-block">
-        <div className="eyebrow">Your champion</div>
-        <div className="explore-me">
-          <button type="button" className="champ-select-btn" onClick={() => setPick({ kind: "me" })}>
-            {me && <GameIcon src={me.icon} name={me.name} size={44} />}
-            <span className="csb-text">
-              <span className="csb-name">{me?.name ?? "Pick a champion"}</span>
-              {me && <span className="dim small">{ARCHETYPE_LABEL[(d.champion ?? me).archetype]}</span>}
-            </span>
-            <Icon name="chevronDown" size={16} className="dim" />
-          </button>
-          {me && <FavStar id={me.id} name={me.name} size={18} className="explore-fav" />}
-        </div>
+    <div className="explore explore-v2">
+      <div className="explore-pick">
+        <ChampionSearch champions={data.champions} current={me} onPick={(c) => actions.setExploreChampion(c.id)} label="Search champions for a build" />
+        <button type="button" className="btn explore-all" onClick={() => setPick({ kind: "me" })} title="Browse every champion">
+          <Icon name="grid" size={15} />
+          All champions
+        </button>
+        {me && <FavStar id={me.id} name={me.name} size={18} className="explore-fav" />}
       </div>
       <div className="explore-block explore-enemies">
         <div className="eyebrow">
@@ -399,9 +390,6 @@ function ExplorePanel({ d }: { d: Derived }) {
             );
           })}
         </div>
-      </div>
-      <div className="explore-demo">
-        <Toggle checked={false} onChange={() => actions.setDemo(true)} label="Try demo game" sub="See the overlay with a sample in-game state" />
       </div>
       {pick && (
         <ChampionPicker

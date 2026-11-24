@@ -1552,7 +1552,8 @@ export async function init(view: "main" | "hud" = "main") {
   });
   await bridge.on<ChampSelectRaw | null>("champ-select", (raw) => {
     const cs = state.data ? parseChampSelect(raw, state.data) : null;
-    set({ champSelect: cs });
+    // A real champ select ends the demo game.
+    set(cs && state.demo ? { champSelect: cs, demo: false } : { champSelect: cs });
     if (cs?.position && cs.position !== state.lastPosition) {
       set({ lastPosition: cs.position });
       // A new champ select assignment replaces a role picked by hand earlier.

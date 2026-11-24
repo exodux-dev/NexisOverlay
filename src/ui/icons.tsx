@@ -36,6 +36,7 @@ export type IconName =
   | "lock"
   | "home"
   | "star"
+  | "grid"
   | "refresh";
 
 const PATHS: Record<IconName, ReactNode> = {
@@ -137,6 +138,7 @@ const PATHS: Record<IconName, ReactNode> = {
   ),
   shield: <path d="M12 3l7 3v5.5c0 4.4-3 8-7 9.5-4-1.5-7-5.1-7-9.5V6l7-3z" />,
   tiers: <path d="M4 6h3M4 12h3M4 18h3M10 6h10M10 12h7M10 18h4" />,
+  grid: <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />,
   spark: <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18" />,
   boot: <path d="M7 3h6v8l6 3.5c1 .6 1.5 1.5 1.5 2.5v2H4v-3.5L7 13V3z" />,
   play: <path d="M8 5.5v13l10-6.5-10-6.5z" />,

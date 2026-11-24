@@ -556,3 +556,25 @@ test("champion search guesses short names and typos", async ({ start }) => {
     await expect(page.locator(".home-search-item").first()).toContainText(name);
   }
 });
+
+test("Build tab: type to pick a champion, or open the full list", async ({ start }) => {
+  const page = await start();
+  await act(page, "setTab", "build");
+  const search = page.getByRole("combobox", { name: "Search champions for a build" });
+  await search.fill("tahm");
+  await page.keyboard.press("Enter");
+  await expect.poll(() => storeValue<string>(page, "(s) => s.explore.champion")).toBe("TahmKench");
+  await page.getByRole("button", { name: "All champions" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+});
+
+test("Demo switch in the sidebar turns off when champ select starts", async ({ start }) => {
+  const page = await start();
+  const demo = page.locator(".nav-demo");
+  await demo.click();
+  await expect(demo).toHaveAttribute("aria-pressed", "true");
+  expect(await storeValue<boolean>(page, "(s) => s.demo")).toBe(true);
+  await emit(page, "champ-select", champSelect);
+  await expect.poll(() => storeValue<boolean>(page, "(s) => s.demo")).toBe(false);
+  await expect(demo).toHaveCount(0); // hidden during champ select
+});

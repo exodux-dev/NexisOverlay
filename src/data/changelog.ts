@@ -8,6 +8,16 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-25.2",
+    title: "Smarter search and a cleaner Build tab",
+    items: [
+      "Champion search guesses what you meant: short names (mf, tf, j4, asol, tk), prefixes (yas, tahm, shyv) and typos (yasou).",
+      "Build tab: a centered search with live results replaces the Pick a champion button; “All champions” opens the full list.",
+      "Search bars are rounder and clearer everywhere.",
+      "The demo game is a small switch at the bottom left, and turns itself off when champ select or a game starts.",
+    ],
+  },
+  {
     id: "2026-11-25.1",
     title: "Game plan at the loading screen",
     items: [

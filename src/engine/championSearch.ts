@@ -59,7 +59,8 @@ export function championMatchScore(query: string, c: SearchableChampion): number
       for (const ch of name) if (ch === q[i]) i++;
       if (i === q.length) return 56 - Math.min(10, name.length - q.length);
     }
-    // Typos: compare with the same-length start of the name, then the whole name.
+    // Typos (4+ letters: shorter queries are too short to tell a typo from another name).
+    if (q.length < 4) return 0;
     const head = typoDistance(q, name.slice(0, q.length));
     if (head <= (q.length >= 6 ? 2 : 1)) return 44 - head * 4;
     const full = typoDistance(q, name);

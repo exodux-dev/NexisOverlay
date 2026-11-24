@@ -689,3 +689,171 @@
   font-weight: 650;
   color: #34d399;
 }
+
+/* ================= Search bars (overhaul) ================= */
+.search {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)), rgba(var(--bg-rgb), 0.55);
+  border: 1px solid var(--fr-line-2);
+}
+.search-sm {
+  height: 34px;
+  border-radius: 10px;
+}
+.search input {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Champion search (Build tab and anywhere ChampionSearch is used) */
+.csearch {
+  position: relative;
+  flex: 1 1 360px;
+  max-width: 520px;
+}
+.csearch-field {
+  height: 48px;
+  border-radius: 14px;
+  padding: 0 12px 0 10px;
+}
+.csearch-field input {
+  font-size: 15px;
+}
+.csearch-current {
+  flex: none;
+}
+.csearch-clear {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--fr-surface-2);
+  cursor: pointer;
+}
+.csearch-clear:hover {
+  color: var(--text);
+}
+.csearch-list {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border-radius: 14px;
+  background: rgb(var(--panel-rgb));
+  border: 1px solid var(--fr-line-2);
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.75);
+  animation: nx-tip-in 0.12s ease-out both;
+}
+.csearch-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.csearch-item.is-sel {
+  background: var(--fr-accent-soft);
+}
+.csearch-name {
+  font-weight: 600;
+  color: var(--text);
+}
+.csearch-arch {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.csearch-enter {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--fr-line-2);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+.csearch-empty {
+  padding: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Build tab: centered champion search + "All champions", enemies below */
+.explore.explore-v2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 16px 16px;
+}
+.explore-pick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+.explore-all {
+  height: 48px;
+  border-radius: 14px;
+  padding: 0 16px;
+  gap: 8px;
+}
+.explore-v2 .explore-enemies {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Sidebar: small Demo switch above Settings */
+.nav-demo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: center;
+  margin: 0 0 6px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--fr-surface-2);
+  border: 1px solid var(--fr-line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.nav-demo:hover {
+  color: var(--text);
+  border-color: var(--fr-line-2);
+}
+.nav-demo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--fr-line-2);
+}
+.nav-demo.is-on {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--fr-accent-soft);
+}
+.nav-demo.is-on .nav-demo-dot {
+  background: #34d399;
+  box-shadow: 0 0 6px #34d399;
+}
+.demo-flag-pill {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 4px 10px;
+  border: 1px dashed var(--fr-line-2);
+  border-radius: 999px;
+}

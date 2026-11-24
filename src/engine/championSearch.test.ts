@@ -8,6 +8,7 @@ const top = (q: string) => searchChampions(q, champs, 3).map((c) => c.id);
 describe("champion search guesses what you meant", () => {
   it("prefixes", () => {
     expect(top("yas")[0]).toBe("Yasuo");
+    expect(searchChampions("yas", champs, 10).map((c) => c.id)).toEqual(["Yasuo"]); // no loose typo matches
     expect(top("tahm")[0]).toBe("TahmKench");
     expect(top("shyv")[0]).toBe("Shyvana");
     expect(top("cait")[0]).toBe("Caitlyn");
