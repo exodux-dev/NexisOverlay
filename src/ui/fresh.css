@@ -312,3 +312,28 @@
 :root[data-theme="nexis"] .nav-btn.active .nav-label {
   color: var(--text);
 }
+
+/* Share / paste build code (Build order card) */
+.share-paste {
+  position: absolute;
+  z-index: 5;
+  top: 46px;
+  right: 16px;
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--fr-line-2);
+  border-radius: var(--fr-r-sm);
+  background: rgb(var(--panel-rgb));
+  box-shadow: var(--fr-shadow);
+}
+.share-paste input {
+  width: 260px;
+  height: 28px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--text);
+  background: rgba(var(--bg-rgb), 0.7);
+  border: 1px solid var(--fr-line-2);
+}

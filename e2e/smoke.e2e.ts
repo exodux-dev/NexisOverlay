@@ -2,6 +2,7 @@
 // Fast and deterministic — they assert structure (things render, flows connect), not numbers.
 
 import type { Page } from "@playwright/test";
+import { encodeBuild } from "../src/engine/shareCode";
 import { act, champSelect, emit, expect, liveGame, storeValue, test } from "./support";
 
 const tab = (page: Page, t: string) => page.locator(`[data-tab="${t}"]`);
@@ -322,4 +323,21 @@ test("detects the augment pick from the screen and shows it on the HUD", async (
   await emit(hud, "sync-augments", []);
   await emit(hud, "sync-augments", ["Clown College"]);
   await expect(hud.locator(".nl-picked")).toContainText("Picked Clown College");
+});
+
+test("share a build code and import one", async ({ start, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  const page = await start();
+  await act(page, "setExploreChampion", "Ahri");
+  await act(page, "setTab", "build");
+  await page.getByRole("button", { name: "Share" }).click();
+  const code = await page.evaluate(() => navigator.clipboard.readText());
+  expect(code).toMatch(/^NX1-/);
+  // Import a friend's Jinx ARAM code.
+  const friend = encodeBuild({ champion: "Jinx", mode: "aram", choice: { core: "3031,3094,3036" } });
+  await page.getByRole("button", { name: "Paste code" }).click();
+  await page.getByRole("textbox", { name: "Build code" }).fill(friend);
+  await page.getByRole("button", { name: "Import", exact: true }).click();
+  await expect.poll(() => storeValue<unknown>(page, "(s) => s.settings.buildChoices['aram:Jinx']")).toEqual({ core: "3031,3094,3036" });
+  expect(await storeValue<string>(page, "(s) => s.explore.champion")).toBe("Jinx");
 });

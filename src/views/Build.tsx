@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { DataSourceBar } from "../ui/DataSourceBar";
+import { ShareBuildButtons } from "../ui/ShareBuild";
 import { actions, useApp, useChampionSpells, useDerived, webKey, type Derived } from "../app/store";
 import { COUNTER_LABEL, type BuildPlan, type ItemRec } from "../engine/build";
 import { findChampion } from "../engine/staticData";
@@ -56,6 +57,7 @@ function BuildOrder({ plan }: { plan: BuildPlan }) {
       className="order-card"
       extra={
         <>
+          <ShareBuildButtons d={d} />
           <ImportToLeagueButton />
           <Pill tone={src.tone} title={src.title} dot>
             Data: {src.label}

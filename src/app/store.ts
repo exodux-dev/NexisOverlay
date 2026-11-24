@@ -25,6 +25,7 @@ import { datasetMode, historyForMode, modeFromGameMode, type GameModeKind } from
 import { activeRoles, applyRoles, assignRole, NO_OVERRIDES, playerKey, roleGameKey, type RoleOverrides } from "../engine/roles";
 import type { Lane } from "../engine/power";
 import { NEW_TRACKER, stepPick, type PickTracker } from "../engine/pickDetect";
+import { decodeBuild } from "../engine/shareCode";
 import { defaultWebSource, fallbackNotice, resolveSource, selectedSource, sourcesForMode, type DataSourceId, type SourceResolution } from "../engine/dataSource";
 import { parseLiveGame, type AllGameDataRaw } from "../engine/live";
 import { stabilizeSnapshot } from "../engine/liveStable";
@@ -839,6 +840,19 @@ export const actions = {
   },
   resetRoles() {
     return actions.updateSettings({ roleOverrides: null });
+  },
+  /** Save a pasted share code's picks (and build style) for its champion + mode; shows that champion. */
+  importBuildCode(text: string): { ok: true; champion: string; mode: GameModeKind } | { ok: false; error: string } {
+    const b = decodeBuild(text);
+    if (!b) return { ok: false, error: "That isn't a Nexis build code (it starts with NX1-)." };
+    const champ = state.data ? findChampion(state.data, b.champion) : undefined;
+    if (!champ) return { ok: false, error: `Unknown champion in the code: ${b.champion}` };
+    const key = webKey(b.mode, champ.id, b.position);
+    const patch: Partial<Settings> = { buildChoices: { ...state.settings.buildChoices, [key]: b.choice } };
+    if (b.style) patch.buildStyles = { ...state.settings.buildStyles, [champ.id]: b.style };
+    void actions.updateSettings(patch);
+    if (!state.live) actions.setExploreChampion(champ.id);
+    return { ok: true, champion: champ.name, mode: b.mode };
   },
   /** Pick the recommendation data source for a mode ("auto" removes the pick). */
   setDataSource(mode: GameModeKind, id: DataSourceId) {
