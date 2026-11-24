@@ -6,6 +6,7 @@ import { actions, devHooks, getState, init, registerDemo, DerivedProvider } from
 import "@fontsource-variable/inter";
 import "./ui/theme.css";
 import "./ui/polish.css";
+import "./ui/fresh.css";
 
 registerDemo(demoGame);
 

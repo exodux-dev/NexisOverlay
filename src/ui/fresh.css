@@ -1,0 +1,287 @@
+/* ==================================================================
+   Fresh look: keeps the League navy + gold identity but drops the dated
+   client chrome (gold hairline frames with corner ticks, ALL-CAPS spaced
+   titles and buttons, square boxes). Softer surfaces, rounded corners,
+   sentence-case type, gold as an accent only. Loaded last, so it sits on
+   top of theme.css / polish.css; delete the import in main.tsx to revert.
+   ================================================================== */
+
+:root {
+  /* The corner-radius setting still applies, but never below a modern minimum. */
+  --fr-r: max(var(--radius), 12px);
+  --fr-r-sm: max(calc(var(--radius) * 0.7), 8px);
+  --fr-surface: rgba(var(--panel-rgb), 0.55);
+  --fr-surface-2: rgba(255, 255, 255, 0.04);
+  --fr-line: rgba(255, 255, 255, 0.07);
+  --fr-line-2: rgba(255, 255, 255, 0.12);
+  --fr-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  --fr-accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+:root[data-theme="light"] {
+  --fr-surface: rgba(var(--panel-rgb), 0.9);
+  --fr-surface-2: rgba(0, 0, 0, 0.035);
+  --fr-line: rgba(0, 0, 0, 0.08);
+  --fr-line-2: rgba(0, 0, 0, 0.14);
+  --fr-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px -14px rgba(0, 0, 0, 0.18);
+}
+
+/* ---------- window */
+.shell::before {
+  display: none;
+}
+.topbar::after {
+  background: var(--fr-line);
+}
+.nav::after {
+  background: var(--fr-line);
+}
+
+/* ---------- cards and boxes: soft surface, no gold frame, no corner ticks */
+.card,
+.context-bar,
+.explore,
+.cs-panel,
+.style-bar,
+.skill-strip,
+.banner,
+.stat-tile {
+  background: var(--fr-surface);
+  border: 1px solid var(--fr-line);
+  border-radius: var(--fr-r);
+  box-shadow: var(--fr-shadow);
+}
+.card::before,
+.card::after {
+  display: none;
+}
+.view {
+  gap: calc(16px * var(--d));
+}
+
+/* ---------- type: sentence case, calmer spacing */
+.card-title {
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+}
+.card-title svg {
+  color: var(--accent);
+  opacity: 1;
+}
+.eyebrow,
+.subhead,
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.logo-word {
+  letter-spacing: 0.14em;
+}
+
+/* ---------- buttons: rounded, sentence case */
+.btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--fr-r-sm);
+  border: 1px solid var(--fr-line-2);
+  background: var(--fr-surface-2);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: none;
+}
+.btn:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--fr-accent-soft);
+  box-shadow: none;
+}
+.btn-sm {
+  height: 28px;
+  padding: 0 11px;
+  font-size: 12px;
+}
+.btn-primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: var(--on-accent, #0b1220) !important;
+  box-shadow: 0 4px 14px -6px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+.btn-primary:hover {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--accent) 85%, #ffffff);
+  box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+}
+.btn-ghost:hover {
+  background: var(--fr-surface-2);
+  border-color: var(--fr-line);
+}
+.btn-danger {
+  border-color: rgba(232, 64, 87, 0.45);
+  background: rgba(232, 64, 87, 0.1);
+}
+.icon-btn {
+  border-radius: var(--fr-r-sm);
+}
+
+/* ---------- sidebar: rounded highlight, no glow bar */
+.nav-btn {
+  border-radius: var(--fr-r-sm);
+}
+.nav-label {
+  font-size: 10.5px;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  font-weight: 600;
+}
+.nav-btn:hover {
+  background: var(--fr-surface-2);
+  color: var(--text);
+}
+.nav-btn.active {
+  background: var(--fr-accent-soft);
+  color: var(--accent);
+}
+.nav-btn.active::before {
+  display: none;
+}
+
+/* ---------- settings tabs */
+.settings-tabs {
+  border-color: var(--fr-line);
+}
+.settings-tab {
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.settings-tab.active::after {
+  left: 12px;
+  right: 12px;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+/* ---------- segmented controls: pill track */
+.seg {
+  border-radius: var(--fr-r-sm);
+  background: var(--fr-surface-2);
+  border: 1px solid var(--fr-line);
+}
+.seg-btn {
+  border-radius: calc(var(--fr-r-sm) - 3px);
+}
+.seg-btn.active,
+.topbar .seg-btn.active,
+.style-bar .seg-btn.active {
+  background: var(--fr-accent-soft);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* ---------- chips */
+.pill,
+.mode-chip,
+.ps-chip {
+  border-radius: 999px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---------- inputs */
+.nx-main input[type="text"],
+.nx-main input[type="search"],
+.nx-main input:not([type]),
+.nx-main select {
+  border-radius: var(--fr-r-sm);
+}
+
+/* ---------- Home banner + search */
+.home-hero {
+  border: 1px solid var(--fr-line);
+  border-radius: calc(var(--fr-r) + 4px);
+  overflow: visible;
+  box-shadow: var(--fr-shadow);
+}
+.home-hero::before,
+.home-hero::after {
+  display: none;
+}
+.home-status {
+  border-color: var(--fr-line-2);
+}
+.home-search-field {
+  border: 1px solid var(--fr-line-2);
+  border-radius: var(--fr-r);
+  background: rgba(var(--bg-rgb), 0.6);
+}
+.home-search-field:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  box-shadow: 0 0 0 3px var(--fr-accent-soft);
+}
+.home-link {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 13px;
+  border-radius: var(--fr-r-sm);
+}
+
+/* ---------- top bar + small controls */
+.mode-select {
+  border: 1px solid var(--fr-line-2);
+  border-radius: var(--fr-r-sm);
+  background: var(--fr-surface-2);
+}
+.kbd {
+  border-radius: 5px;
+  border-color: var(--fr-line-2);
+  background: var(--fr-surface-2);
+  box-shadow: 0 1px 0 var(--fr-line-2);
+}
+
+/* ---------- Build: pickers, slots, starter / shop boxes */
+.champ-select-btn,
+.enemy-slot-btn,
+.demo-flag,
+.explore-demo,
+.starter-item,
+.shop-buy,
+.shop-gold {
+  border-color: var(--fr-line-2);
+  border-radius: var(--fr-r-sm);
+}
+.champ-select-btn:hover,
+.enemy-slot-btn:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.shop-phase-pill,
+.kind-badge {
+  letter-spacing: 0.02em;
+}
+
+/* ---------- remaining framed boxes */
+.aug-champbar,
+.league-client-note {
+  border: 1px solid var(--fr-line);
+  border-radius: var(--fr-r);
+  background: var(--fr-surface);
+  box-shadow: var(--fr-shadow);
+}
+.league-client-note {
+  background: var(--fr-surface-2);
+  box-shadow: none;
+}
+.banner-icon,
+.empty-icon {
+  border-radius: var(--fr-r-sm);
+  border-color: var(--fr-line-2);
+  background: var(--fr-surface-2);
+}
