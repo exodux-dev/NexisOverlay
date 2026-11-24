@@ -1039,135 +1039,95 @@
   margin: 0 0 10px;
 }
 
-/* Role editor (Summoner's Rift) */
-.role-select {
-  font: inherit;
-  font-size: 12px;
-  color: var(--text);
-  background: rgba(var(--panel-rgb), 0.9);
-  border: 1px solid rgb(255 255 255 / 0.14);
-  border-radius: 6px;
-  padding: 2px 4px;
-  cursor: pointer;
+/* Roles (Players tab): lane rows, click two teammates to swap */
+.rb-hint {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  color: var(--muted);
 }
-.role-select:focus-visible {
+.rb-grid {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px 10px;
+}
+.rb-row {
+  display: contents;
+}
+.rb-team {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.rb-lane {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.rb-chip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+  padding: 4px 10px 4px 4px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  text-align: left;
+  background: rgb(255 255 255 / 0.035);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s, opacity 0.12s;
+}
+.rb-chip:hover:not(:disabled) {
+  background: rgb(255 255 255 / 0.07);
+}
+.rb-chip:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
-.roles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
+.rb-picked {
+  border-color: var(--accent);
+  background: rgb(200 170 110 / 0.14);
 }
-.roles-team ul {
-  list-style: none;
-  margin: 6px 0 0;
-  padding: 0;
-  display: grid;
-  gap: 6px;
+.rb-target {
+  border-style: dashed;
+  border-color: rgb(200 170 110 / 0.55);
 }
-.roles-team li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.rb-off {
+  opacity: 0.35;
+  cursor: default;
 }
-.roles-name {
+.rb-name {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.roles-me .roles-name {
+.rb-me .rb-name {
   color: var(--accent);
+  font-weight: 600;
 }
-.team-icon-role {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-}
-.team-icon-role .role-select {
-  font-size: 11px;
-  padding: 1px 2px;
-}
-
-/* Lane board (Players tab): League-style drag-and-drop roles */
-.lane-board {
-  display: grid;
-  grid-template-columns: 76px minmax(0, 1fr) minmax(0, 1fr);
-  gap: 6px 10px;
-  align-items: stretch;
-}
-.lb-lane {
-  display: flex;
-  align-items: center;
-  font-size: 12px;
+.rb-you {
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
 }
-.lb-slot {
-  min-height: 42px;
+.rb-none {
   display: flex;
   align-items: center;
-  padding: 3px;
-  border: 1px dashed rgb(255 255 255 / 0.12);
-  border-radius: 8px;
-  transition: border-color 0.12s, background 0.12s;
+  padding-left: 12px;
+  color: var(--muted);
 }
-.lb-slot.lb-over,
-.lb-slot.lb-target {
-  border-color: var(--accent);
-  background: rgb(255 255 255 / 0.04);
-  cursor: pointer;
-}
-.lb-chip {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 3px 8px 3px 3px;
-  font: inherit;
-  color: var(--text);
-  text-align: left;
-  background: rgba(var(--panel-rgb), 0.9);
-  border: 1px solid rgb(255 255 255 / 0.1);
-  border-radius: 999px;
-  cursor: grab;
-}
-.lb-chip:active {
-  cursor: grabbing;
-}
-.lb-chip.lb-picked {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
-}
-.lb-chip:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-.lb-me .lb-name {
-  color: var(--accent);
-}
-.lb-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.lb-empty {
-  padding-left: 8px;
-  font-size: 12px;
-}
-.lb-unassigned {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+.rb-stack {
+  display: grid;
   gap: 6px;
-  margin-top: 10px;
-}
-.lb-unassigned .lb-chip {
-  flex: 0 0 auto;
 }

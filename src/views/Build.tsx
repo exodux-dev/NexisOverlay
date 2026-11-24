@@ -1,6 +1,5 @@
 import { Fragment, useState } from "react";
 import { DataSourceBar } from "../ui/DataSourceBar";
-import { ResetRolesButton, RoleSelect } from "../ui/RoleEditor";
 import { actions, useApp, useChampionSpells, useDerived, webKey, type Derived } from "../app/store";
 import { COUNTER_LABEL, type BuildPlan, type ItemRec } from "../engine/build";
 import { findChampion } from "../engine/staticData";
@@ -290,26 +289,15 @@ function Swaps({ plan }: { plan: BuildPlan }) {
 
 // ------------------------------------------------------------------ context bars
 
-function TeamIcons({ players, me, d }: { players: PlayerState[]; me?: PlayerState; d: Derived }) {
+function TeamIcons({ players, me }: { players: PlayerState[]; me?: PlayerState }) {
   const list = me ? [me, ...players] : players;
   return (
     <div className="team-icons">
-      {list.map((p, i) => {
-        const icon = (
-          <Tip key={`${p.championName}-${i}`} content={<span className="tt-plain">{p.isMe ? `${p.championName} (you)` : p.championName}</span>}>
-            <GameIcon src={p.champion?.icon} name={p.championName} size={34} round className={p.isMe ? "me-ring" : ""} />
-          </Tip>
-        );
-        // Summoner's Rift: a role dropdown under each champion (swaps with whoever had that lane).
-        return d.roleGame ? (
-          <div key={`${p.championName}-${i}`} className="team-icon-role">
-            {icon}
-            <RoleSelect d={d} player={p} short />
-          </div>
-        ) : (
-          icon
-        );
-      })}
+      {list.map((p, i) => (
+        <Tip key={`${p.championName}-${i}`} content={<span className="tt-plain">{p.isMe ? `${p.championName} (you)` : p.championName}</span>}>
+          <GameIcon src={p.champion?.icon} name={p.championName} size={34} round className={p.isMe ? "me-ring" : ""} />
+        </Tip>
+      ))}
     </div>
   );
 }
@@ -318,11 +306,10 @@ function MatchupBar({ d }: { d: Derived }) {
   const game = d.game!;
   return (
     <div className="context-bar">
-      <TeamIcons players={game.allies} me={game.me} d={d} />
+      <TeamIcons players={game.allies} me={game.me} />
       <span className="vs">VS</span>
-      <TeamIcons players={game.enemies} d={d} />
+      <TeamIcons players={game.enemies} />
       <div className="tb-spacer" />
-      <ResetRolesButton d={d} />
       {d.mode === "demo" && (
         <div className="demo-flag">
           <Toggle checked onChange={() => actions.setDemo(false)} label="Demo game" sub="Sample data — turn off to explore" />

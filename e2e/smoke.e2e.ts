@@ -214,7 +214,7 @@ test("data source picker switches the recommendation and falls back", async ({ s
   await expect(bar.getByRole("radio", { name: "HexMayhem" })).toHaveCount(0);
 });
 
-test("SR role editor swaps lanes, Team power follows, Reset restores", async ({ start }) => {
+test("SR roles: click two teammates to swap, Team power follows, Reset restores", async ({ start }) => {
   const POS: Record<string, string> = {
     Ahri: "MIDDLE", Jinx: "BOTTOM", Leona: "UTILITY", Lux: "JUNGLE", Darius: "TOP",
     Soraka: "UTILITY", Aatrox: "TOP", Vladimir: "JUNGLE", Zed: "MIDDLE", Malphite: "BOTTOM",
@@ -224,28 +224,28 @@ test("SR role editor swaps lanes, Team power follows, Reset restores", async ({ 
   for (const p of game.allPlayers) p.position = POS[p.championName];
   const page = await start();
   await emit(page, "live-game", game);
-  // Build row: a role dropdown under each champion.
-  await expect(page.locator(".context-bar .role-select")).toHaveCount(10);
   await tab(page, "enemies").click();
   const roles = page.locator(".roles-card");
-  await expect(roles).toBeVisible();
-  const slot = (team: string, lane: string) => roles.locator(`.lb-slot[data-team="${team}"][data-lane="${lane}"]`);
-  await expect(slot("enemy", "JUNGLE")).toContainText("Vladimir");
-  // Drag Vladimir onto Mid: Zed (Mid) swaps to Jungle.
-  await roles.getByRole("button", { name: /^Vladimir: drag/ }).dragTo(slot("enemy", "MIDDLE"));
-  await expect(slot("enemy", "MIDDLE")).toContainText("Vladimir");
-  await expect(slot("enemy", "JUNGLE")).toContainText("Zed");
+  const row = (lane: string) => roles.locator(".rb-row", { has: page.locator(".rb-lane", { hasText: new RegExp(`^${lane}$`) }) });
+  const chip = (name: string) => roles.getByRole("button", { name: new RegExp(`^${name}`) });
+  await expect(row("Jungle")).toContainText("Vladimir");
+  // Vladimir then Zed: they swap (Vladimir Mid, Zed Jungle).
+  await chip("Vladimir").click();
+  await expect(chip("Ahri")).toBeDisabled(); // other team can't be swapped with
+  await chip("Zed").click();
+  await expect(row("Mid")).toContainText("Vladimir");
+  await expect(row("Jungle")).toContainText("Zed");
+  // Lane rows are in LANES order (Top, Jungle, Mid, ...): Mid is now Ahri vs Vladimir.
   await expect(page.locator(".tp-lanes > li").nth(2)).toContainText("Vladimir");
   await expect(page.locator(".tp-lanes > li").nth(1)).toContainText("Zed");
   expect(await storeValue<string>(page, "(s) => s.settings.roleOverrides.roles['CHAOS:Vladimir']")).toBe("MIDDLE");
-  // Click-to-move works too (your team): Darius → Mid swaps with you.
-  await roles.getByRole("button", { name: /^Darius: drag/ }).click();
-  await slot("ally", "MIDDLE").getByRole("button").click();
-  await expect(slot("ally", "MIDDLE")).toContainText("Darius");
-  await expect(slot("ally", "TOP")).toContainText("Ahri");
-  await roles.getByRole("button", { name: "Reset roles" }).click();
-  await expect(slot("enemy", "JUNGLE")).toContainText("Vladimir");
-  await expect(slot("ally", "MIDDLE")).toContainText("Ahri");
+  // Your own role: Darius ↔ you.
+  await chip("Darius").click();
+  await chip("Ahri").click();
+  await expect(row("Top")).toContainText("Ahri");
+  await roles.getByRole("button", { name: "Reset" }).click();
+  await expect(row("Jungle")).toContainText("Vladimir");
+  await expect(row("Mid")).toContainText("Ahri");
   expect(await storeValue<unknown>(page, "(s) => s.settings.roleOverrides")).toBeNull();
 });
 
@@ -253,7 +253,6 @@ test("role editor is hidden outside Summoner's Rift", async ({ start }) => {
   const page = await start();
   await emit(page, "live-game", liveGame());
   await expect(page.locator(".context-bar")).toBeVisible();
-  await expect(page.locator(".role-select")).toHaveCount(0);
   await tab(page, "enemies").click();
   await expect(page.locator(".roles-card")).toHaveCount(0);
 });
