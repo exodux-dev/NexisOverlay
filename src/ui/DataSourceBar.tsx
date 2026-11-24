@@ -1,4 +1,6 @@
-import { actions, type Derived } from "../app/store";
+import { actions, useApp, type Derived } from "../app/store";
+import { opggPosition } from "../engine/sources/opgg";
+import { POSITION_LABEL } from "../engine/sources/tierlists";
 import { DATA_SOURCE_LABEL, type DataSourceId } from "../engine/dataSource";
 import { Pill, Segmented } from "./controls";
 
@@ -25,6 +27,7 @@ export function DataSourceBar({ d }: { d: Derived }) {
   const metric = d.gameMode === "arena" ? "top-4" : "WR";
   return (
     <div className="data-source-bar">
+      {d.gameMode === "sr" && <RolePicker d={d} />}
       <span className="dim small">Data source</span>
       <Segmented<DataSourceId>
         size="sm"
@@ -43,5 +46,29 @@ export function DataSourceBar({ d }: { d: Derived }) {
         </Pill>
       )}
     </div>
+  );
+}
+
+const ROLES = ["top", "jungle", "mid", "adc", "support"] as const;
+
+/** Summoner's Rift: which role's build / runes / stats to show ("Auto" = champ select or main role). */
+function RolePicker({ d }: { d: Derived }) {
+  const picked = useApp((s) => s.settings.srRole);
+  const auto = opggPosition(d.position);
+  const value = (opggPosition(picked) ?? "") as "" | (typeof ROLES)[number];
+  return (
+    <>
+      <span className="dim small">Role</span>
+      <Segmented<"" | (typeof ROLES)[number]>
+        size="sm"
+        label="Role"
+        value={value}
+        onChange={(r) => void actions.setSrRole(r)}
+        options={[
+          { value: "", label: !value && auto ? `Auto · ${POSITION_LABEL[auto]}` : "Auto", hint: "Champ select's role, or the champion's main role" },
+          ...ROLES.map((r) => ({ value: r, label: POSITION_LABEL[r], hint: `Show the ${POSITION_LABEL[r]} build, runes and stats` })),
+        ]}
+      />
+    </>
   );
 }

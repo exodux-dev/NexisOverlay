@@ -13,6 +13,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     items: [
       "Fixed: OP.GG builds, boots, starters, items and spells weren't being read (OP.GG changed its page), so builds fell back to a generic template. All champions and modes.",
       "The default core build is now the most played one, in the same order OP.GG lists it; the highest win-rate build is one click away.",
+      "Summoner's Rift: pick your role (Top / Jungle / Mid / ADC / Support) on the Build tab to see that role's build, runes and stats.",
     ],
   },
   {

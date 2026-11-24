@@ -137,3 +137,10 @@ describe("HUD layout per mode (hudSwap)", () => {
     expect(normalizeSettings({}).hudByMode).toEqual({});
   });
 });
+
+describe("SR role pick (settings.srRole)", () => {
+  it("defaults to auto and is kept", () => {
+    expect(normalizeSettings({}).srRole).toBe("");
+    expect(normalizeSettings({ srRole: "jungle" }).srRole).toBe("jungle");
+  });
+});

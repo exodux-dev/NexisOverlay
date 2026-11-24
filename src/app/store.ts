@@ -164,6 +164,8 @@ export interface Settings {
   hudPerMode: boolean;
   /** Stored HUD layouts of the modes not currently active. */
   hudByMode: Partial<Record<GameModeKind, HudSettings>>;
+  /** Summoner's Rift role picked on the Build tab ("" = auto: champ select, else the main role). */
+  srRole: string;
   /** Hide player names / Riot IDs everywhere (safe to show on stream). */
   streamerMode: boolean;
   /** Mark your augment pick automatically when only the chosen card is left on screen. */
@@ -224,6 +226,7 @@ export const DEFAULT_SETTINGS: Settings = {
   badgePlacement: "above",
   detectPicks: true,
   streamerMode: false,
+  srRole: "",
   hudPerMode: false,
   hudByMode: {},
   theme: DEFAULT_THEME,
@@ -267,6 +270,7 @@ function finishNormalize(s: Settings): Settings {
   if (s.badgePlacement !== "above" && s.badgePlacement !== "below") s.badgePlacement = "above";
   if (typeof s.detectPicks !== "boolean") s.detectPicks = true;
   if (typeof s.streamerMode !== "boolean") s.streamerMode = false;
+  if (typeof s.srRole !== "string") s.srRole = "";
   if (typeof s.hudPerMode !== "boolean") s.hudPerMode = false;
   if (!s.hudByMode || typeof s.hudByMode !== "object" || Array.isArray(s.hudByMode)) s.hudByMode = {};
   if (!Array.isArray(s.favorites)) s.favorites = [];
@@ -528,6 +532,11 @@ export function webKey(mode: GameModeKind, championId: string, position?: string
   return mode === "sr" ? `sr:${championId}:${position || "main"}` : `${mode}:${championId}`;
 }
 
+/** Your Summoner's Rift role for stats: picked on the Build tab, else champ select's assignment. */
+export function rolePosition(s: State): string | undefined {
+  return s.settings.srRole || s.lastPosition;
+}
+
 export function currentGame(s: State): GameSnapshot | null {
   if (s.live) return s.live;
   if (!s.data) return null;
@@ -659,7 +668,7 @@ function useDerivedCompute(): Derived {
   const threat = useMemo(() => analyzeEnemies(game?.enemies ?? []), [enemiesKey]);
 
   const clientInfo = useApp((s) => s.clientInfo);
-  const champSelectPosition = useApp((s) => s.lastPosition);
+  const champSelectPosition = useApp((s) => rolePosition(s));
   // Your role: a manual override wins over champ select's assignment (SR stats are per role).
   const myOverride = game && roles !== NO_OVERRIDES ? roles[playerKey(game.me)] : undefined;
   const lastPosition = myOverride ? myOverride.toLowerCase() : champSelectPosition;
@@ -824,7 +833,7 @@ export const actions = {
     if (!c) return;
     const mode = effectiveMode(state);
     const mine = mode === "sr" && (state.live || state.demo) ? activeRoles(state.settings.roleOverrides, roleGameKey(g))[playerKey(g.me)] : undefined;
-    await ensureChampionStats(mode, c.id, true, mine ? mine.toLowerCase() : state.lastPosition);
+    await ensureChampionStats(mode, c.id, true, mine ? mine.toLowerCase() : rolePosition(state));
   },
   /** Load (or refresh) the champion tier list for a mode. Cached 3 h. */
   async loadTierList(mode: GameModeKind, force = false) {
@@ -864,6 +873,13 @@ export const actions = {
     if (merged) next[key] = merged;
     else delete next[key];
     return actions.updateSettings({ buildChoices: next });
+  },
+  /** Pick your Summoner's Rift role ("" = auto). In a live game this sets your lane too. */
+  setSrRole(role: string) {
+    const lane = ({ top: "TOP", jungle: "JUNGLE", mid: "MIDDLE", adc: "BOTTOM", support: "UTILITY" } as Record<string, Lane>)[role];
+    const g = currentGame(state);
+    if (lane && g && state.live && effectiveMode(state) === "sr") void actions.setRole(roleGameKey(g), g.me, lane);
+    return actions.updateSettings({ srRole: role });
   },
   /** Move a player to a lane in the current SR game (a teammate in that lane swaps). */
   setRole(gameKey: string, player: Pick<PlayerState, "team" | "championName">, lane: Lane) {
@@ -1373,7 +1389,7 @@ export function registerStatsProvider(mode: GameModeKind, provider: ChampionStat
 /** Stats are refreshed at most this often (hours) unless the user forces a refresh. */
 const STATS_MAX_AGE_H = 3;
 
-async function ensureChampionStats(mode: GameModeKind, id: string, force = false, position = state.lastPosition) {
+async function ensureChampionStats(mode: GameModeKind, id: string, force = false, position = rolePosition(state)) {
   const key = webKey(mode, id, position);
   const prev = state.web.champions[key];
   // 10: failed fetches are retried after 2 minutes instead of never.
@@ -1521,7 +1537,11 @@ export async function init(view: "main" | "hud" = "main") {
   await bridge.on<ChampSelectRaw | null>("champ-select", (raw) => {
     const cs = state.data ? parseChampSelect(raw, state.data) : null;
     set({ champSelect: cs });
-    if (cs?.position && cs.position !== state.lastPosition) set({ lastPosition: cs.position });
+    if (cs?.position && cs.position !== state.lastPosition) {
+      set({ lastPosition: cs.position });
+      // A new champ select assignment replaces a role picked by hand earlier.
+      if (state.settings.srRole && currentView === "main") void actions.updateSettings({ srRole: "" });
+    }
     if (cs?.me) {
       rememberChampion(cs.me.id);
       // Warm the stats cache now so augment ratings are instant once the game starts.

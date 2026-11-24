@@ -404,3 +404,19 @@ test("HUD layout per mode follows the mode switch", async ({ start }) => {
   await modeSelect(page).selectOption("aram");
   await expect.poll(compact).toBe(false);
 });
+
+test("Summoner's Rift role picker loads that role's build", async ({ start }) => {
+  const page = await start();
+  await act(page, "setExploreChampion", "Ahri");
+  await act(page, "setTab", "build");
+  await modeSelect(page).selectOption("sr");
+  const role = page.getByRole("radiogroup", { name: "Role" });
+  await expect(role.getByRole("radio", { name: /^Auto/ })).toHaveAttribute("aria-checked", "true");
+  await role.getByRole("radio", { name: "Top" }).click();
+  await expect.poll(() => storeValue<string>(page, "(s) => s.settings.srRole")).toBe("top");
+  await expect.poll(() => storeValue<boolean>(page, "(s) => typeof s.web.champions['sr:Ahri:top'] === 'object'")).toBe(true);
+  await expect(page.locator(".order-card .order .slot-icon").first()).toBeVisible();
+  // Other modes have no roles.
+  await modeSelect(page).selectOption("aram");
+  await expect(page.getByRole("radiogroup", { name: "Role" })).toHaveCount(0);
+});
