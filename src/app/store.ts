@@ -160,6 +160,10 @@ export interface Settings {
   badgeOffset: number; // extra vertical offset (fraction of screen) for the in-game tier badges
   /** Tier badges above the augment cards (default: clear of the reroll buttons) or below them. */
   badgePlacement: "above" | "below";
+  /** Each mode keeps its own in-game HUD layout (`hud` is the active one, see hudSwap). */
+  hudPerMode: boolean;
+  /** Stored HUD layouts of the modes not currently active. */
+  hudByMode: Partial<Record<GameModeKind, HudSettings>>;
   /** Hide player names / Riot IDs everywhere (safe to show on stream). */
   streamerMode: boolean;
   /** Mark your augment pick automatically when only the chosen card is left on screen. */
@@ -220,6 +224,8 @@ export const DEFAULT_SETTINGS: Settings = {
   badgePlacement: "above",
   detectPicks: true,
   streamerMode: false,
+  hudPerMode: false,
+  hudByMode: {},
   theme: DEFAULT_THEME,
   buildStyles: {},
   leagueImport: DEFAULT_LEAGUE_IMPORT,
@@ -261,6 +267,8 @@ function finishNormalize(s: Settings): Settings {
   if (s.badgePlacement !== "above" && s.badgePlacement !== "below") s.badgePlacement = "above";
   if (typeof s.detectPicks !== "boolean") s.detectPicks = true;
   if (typeof s.streamerMode !== "boolean") s.streamerMode = false;
+  if (typeof s.hudPerMode !== "boolean") s.hudPerMode = false;
+  if (!s.hudByMode || typeof s.hudByMode !== "object" || Array.isArray(s.hudByMode)) s.hudByMode = {};
   if (!Array.isArray(s.favorites)) s.favorites = [];
   else if (s.favorites.some((f) => typeof f !== "string")) s.favorites = s.favorites.filter((f): f is string => typeof f === "string");
   // The project moved to exodux-dev: an untouched old default stats URL follows it (custom URLs are kept).
@@ -463,6 +471,31 @@ function set(patch: Partial<State> | ((s: State) => Partial<State>)) {
   listeners.forEach((l) => l());
   syncAugmentMode();
   syncAugmentsToHud();
+  syncHudMode();
+}
+
+/**
+ * Per-mode HUD layouts: on a mode change, park the active layout under the mode being left and
+ * bring in the new mode's (a mode without one yet keeps the current layout as its start).
+ */
+export function hudSwap(s: Pick<Settings, "hud" | "hudByMode" | "hudPerMode">, from: GameModeKind, to: GameModeKind): Pick<Settings, "hud" | "hudByMode"> | undefined {
+  if (!s.hudPerMode || from === to) return undefined;
+  const byMode = { ...s.hudByMode, [from]: s.hud };
+  const next = byMode[to] ? normalizeHud(byMode[to]) : s.hud;
+  delete byMode[to];
+  return { hud: next, hudByMode: byMode };
+}
+
+let lastHudMode: GameModeKind | undefined;
+function syncHudMode() {
+  // Main window only (it owns settings writes; the HUD window follows via settings-changed).
+  if (currentView !== "main" || !started || state.status !== "ready") return;
+  const mode = effectiveMode(state);
+  const from = lastHudMode;
+  lastHudMode = mode;
+  if (!from || from === mode) return;
+  const patch = hudSwap(state.settings, from, mode);
+  if (patch) void actions.updateSettings(patch);
 }
 export function getState(): State {
   return state;

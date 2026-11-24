@@ -14,6 +14,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       "Streamer mode (Settings → General) hides every player name and Riot ID.",
       "History: Export CSV, or Copy for spreadsheet to paste into Excel / Google Sheets.",
       "This “What's new” popup after each update.",
+      "In-game overlay: “Separate layout per mode” gives Mayhem, ARAM, Arena and Rift their own HUD.",
     ],
   },
   {

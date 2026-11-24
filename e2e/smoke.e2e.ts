@@ -383,3 +383,16 @@ test("What's new shows once after an update", async ({ start }) => {
   await page.waitForTimeout(300);
   await expect(dialog).toHaveCount(0);
 });
+
+test("HUD layout per mode follows the mode switch", async ({ start }) => {
+  const page = await start({ settings: { mode: "mayhem", hudPerMode: true } });
+  const compact = () => storeValue<boolean>(page, "(s) => s.settings.hud.compact");
+  await act(page, "updateSettings", { hud: { ...(await storeValue<Record<string, unknown>>(page, "(s) => s.settings.hud")), compact: true } });
+  await modeSelect(page).selectOption("aram");
+  await expect.poll(() => storeValue<boolean>(page, "(s) => !!s.settings.hudByMode.mayhem")).toBe(true);
+  await act(page, "updateSettings", { hud: { ...(await storeValue<Record<string, unknown>>(page, "(s) => s.settings.hud")), compact: false } });
+  await modeSelect(page).selectOption("mayhem");
+  await expect.poll(compact).toBe(true);
+  await modeSelect(page).selectOption("aram");
+  await expect.poll(compact).toBe(false);
+});

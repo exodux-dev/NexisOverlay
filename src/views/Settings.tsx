@@ -3,7 +3,9 @@ import {
   DEFAULT_SETTINGS,
   DEFAULT_THEME,
   KNOWN_HOTKEY_CONFLICTS,
+  MODE_LABEL,
   THEME_PRESETS,
+  effectiveMode,
   actions,
   getState,
   useApp,
@@ -677,6 +679,12 @@ function HudLayoutCard() {
               onChange={setHoverOpacity}
             />
           )}
+          <Toggle
+            checked={s.hudPerMode}
+            onChange={(v) => void actions.updateSettings({ hudPerMode: v, ...(v ? {} : { hudByMode: {} }) })}
+            label="Separate layout per mode"
+            sub={s.hudPerMode ? `Mayhem, ARAM, Arena and Rift each keep their own HUD. You're editing the ${MODE_LABEL[effectiveMode(getState())]} layout.` : "Give Mayhem, ARAM, Arena and Rift their own HUD position and widgets"}
+          />
           <Toggle checked={hud.collapsed} onChange={(v) => updateHud({ collapsed: v })} label="Collapse to a pill" sub="Just the next buy (and a skill point reminder) in a tiny pill" />
           <Toggle checked={hud.compact} onChange={(v) => updateHud({ compact: v })} label="Compact" sub="Icons only — a narrow strip with no labels" />
           <Toggle

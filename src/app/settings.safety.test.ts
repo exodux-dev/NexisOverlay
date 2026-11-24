@@ -112,3 +112,28 @@ describe("augment offer confirmation (faster detection)", () => {
     expect(offerConfirmed(2, "A|B", "A|B")).toBe(true);
   });
 });
+
+describe("HUD layout per mode (hudSwap)", () => {
+  it("parks the active layout and brings in the new mode's", async () => {
+    const { hudSwap } = await import("./store");
+    const { normalizeHud } = await import("../views/hudSettings");
+    const mayhemHud = normalizeHud({ x: 0.9, y: 0.1, compact: true });
+    const s = { hudPerMode: true, hud: mayhemHud, hudByMode: {} };
+    // First visit to Arena: keeps the current layout as its start, parks Mayhem's.
+    const toArena = hudSwap(s, "mayhem", "arena")!;
+    expect(toArena.hud).toEqual(mayhemHud);
+    expect(toArena.hudByMode.mayhem).toEqual(mayhemHud);
+    // Edit Arena's layout, then go back: Mayhem's comes back, Arena's is parked.
+    const arenaHud = normalizeHud({ x: 0.1, y: 0.5 });
+    const back = hudSwap({ hudPerMode: true, hud: arenaHud, hudByMode: toArena.hudByMode }, "arena", "mayhem")!;
+    expect(back.hud).toEqual(mayhemHud);
+    expect(back.hudByMode).toEqual({ arena: arenaHud });
+    // Off, or same mode: nothing.
+    expect(hudSwap({ ...s, hudPerMode: false }, "mayhem", "arena")).toBeUndefined();
+    expect(hudSwap(s, "sr", "sr")).toBeUndefined();
+  });
+  it("old settings get the new keys, off", () => {
+    expect(normalizeSettings({}).hudPerMode).toBe(false);
+    expect(normalizeSettings({}).hudByMode).toEqual({});
+  });
+});
