@@ -189,7 +189,7 @@ const SECTION_RE = new RegExp(
   "g",
 );
 /** "<avg place> <1st %|-> <pick %> <n> Games <win %>" */
-const ROW_RE = /(\d+(?:\.\d+)?)\s+(?:(\d+(?:\.\d+)?)\s*%|-)\s+(\d+(?:\.\d+)?)\s*%\s+([\d,]+)\s*Games\s+(\d+(?:\.\d+)?)\s*%/g;
+const ROW_RE = /(\d+(?:\.\d+)?)\s+(?:(\d+(?:\.\d+)?)\s*%|-)\s+(\d+(?:\.\d+)?)\s*%\s+([\d,]+)\s*Games\s+(\d+(?:\.\d+)?)\s*%/gi;
 
 function sectionRows(text: string): Array<{ section: Section; items: number[]; rate: ArenaRate }> {
   const heads = [...text.matchAll(SECTION_RE)].map((m) => ({ section: m[1] as Section, start: m.index! + m[0].length, at: m.index! }));

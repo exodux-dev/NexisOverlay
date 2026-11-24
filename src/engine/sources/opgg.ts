@@ -130,7 +130,7 @@ const toNum = (s: string | undefined) => (s === undefined ? undefined : Number(s
 const pct = (s: string | undefined) => (s === undefined ? undefined : Math.round(Number(s) * 1e4) / 1e6);
 
 /** Stats at the end of a row: "<pick>% <games> Games <win>%" (pick may be "-" on ARAM). */
-const ROW_STATS = /(?:(\d+(?:\.\d+)?)\s*%|-)\s+([\d,]+)\s*Games(?:\s+(\d+(?:\.\d+)?)\s*%)?/;
+const ROW_STATS = /(?:(\d+(?:\.\d+)?)\s*%|-)\s+([\d,]+)\s*Games(?:\s+(\d+(?:\.\d+)?)\s*%)?/i;
 
 interface Row {
   tokens: Array<{ kind: string; id: string }>;
@@ -284,7 +284,7 @@ function parseCounters(html: string): OpggChampion["counters"] {
   const grab = (from: number, to: number, kind: "weak" | "strong") => {
     if (from < 0) return;
     const text = flattenHtml(html.slice(from, to > from ? to : from + 8000));
-    const re = /\{champion:([^}]+)\}\s*(\d+(?:\.\d+)?)\s*%\s*([\d,]+)\s*Games/g;
+    const re = /\{champion:([^}]+)\}\s*(\d+(?:\.\d+)?)\s*%\s*([\d,]+)\s*Games/gi;
     for (let m: RegExpExecArray | null; (m = re.exec(text)) && out.filter((c) => c.kind === kind).length < 10; )
       out.push({ championKey: m[1], winRate: pct(m[2]) ?? 0, games: toNum(m[3]) ?? 0, kind });
   };

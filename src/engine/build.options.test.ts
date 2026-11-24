@@ -46,26 +46,27 @@ const plan = (ctx: Partial<BuildContext> = {}) => recommendBuild({ data, champio
 const ids = (xs: Array<{ id: number }>) => xs.map((x) => x.id);
 
 describe("core build options", () => {
-  it("lists the auto pick (best WR) first, then the most played, deduplicated, max 3", () => {
+  it("lists the most played (auto, like the stats sites) first, then the best WR, deduplicated, max 3", () => {
     const p = plan();
     expect(p.coreOptions.map((o) => ids(o.items))).toEqual([
-      [MAL, LICH, CAP],
       [MAL, SF, ZH],
+      [MAL, LICH, CAP],
       [MAL, SF, CAP],
     ]);
-    expect(p.coreOptions.map((o) => o.tag)).toEqual(["best", "popular", undefined]);
-    expect(p.coreOptions[1].stat).toEqual({ games: 1300, wins: 690, pickRate: 0.13 });
+    expect(p.coreOptions.map((o) => o.tag)).toEqual(["popular", "best", undefined]);
+    expect(p.coreOptions[0].stat).toEqual({ games: 1300, wins: 690, pickRate: 0.13 });
     expect(p.coreIndex).toBe(0);
-    expect(ids(p.order.filter((r) => r.kind === "core").map((r) => r.item))).toEqual([MAL, LICH, CAP]);
+    expect(ids(p.order.filter((r) => r.kind === "core").map((r) => r.item))).toEqual([MAL, SF, ZH]);
+    expect(p.sourceLabel).toMatch(/^OP\.GG most played build · 53\.1% over 1300 games/);
   });
 
   it("bases the build order and the item set on the picked core build", () => {
-    const p = plan({ choice: { core: `${MAL},${SF},${ZH}` } });
+    const p = plan({ choice: { core: `${MAL},${LICH},${CAP}` } });
     expect(p.coreIndex).toBe(1);
-    expect(ids(p.order.filter((r) => r.kind === "core").map((r) => r.item))).toEqual([MAL, SF, ZH]);
-    expect(p.sourceLabel).toMatch(/^Your core build pick · 53\.1% over 1300 games/);
+    expect(ids(p.order.filter((r) => r.kind === "core").map((r) => r.item))).toEqual([MAL, LICH, CAP]);
+    expect(p.sourceLabel).toMatch(/^Your core build pick · 57\.5% over 400 games/);
     const core = buildItemSetBlocks(p).find((b) => b.type === "Core build")!;
-    expect(core.items.map((i) => Number(i.id)).filter((id) => [MAL, SF, ZH].includes(id))).toEqual([MAL, SF, ZH]);
+    expect(core.items.map((i) => Number(i.id)).filter((id) => [MAL, LICH, CAP].includes(id))).toEqual([MAL, LICH, CAP]);
   });
 
   it("labels an explicit pick as the user's even when it is the first (untagged) option", () => {
@@ -188,7 +189,7 @@ describe("core options with small samples", () => {
     const auto = plan({ stats: small });
     expect(auto.coreOptions.map((o) => o.tag)).toEqual(["popular", undefined]);
     expect(auto.coreIndex).toBe(0); // matches the source's top build
-    expect(auto.sourceLabel).toMatch(/^OP\.GG top build/);
+    expect(auto.sourceLabel).toMatch(/^OP\.GG most played build/);
     const picked = plan({ stats: small, choice: { core: `${LUD},${SF},${CAP}` } });
     expect(ids(picked.order.filter((r) => r.kind === "core").map((r) => r.item))).toEqual([LUD, SF, CAP]);
   });
@@ -217,7 +218,7 @@ describe("picks follow the option, not its position", () => {
 
   it("exposes each option's key and still honours a legacy index", () => {
     const p = plan();
-    expect(p.coreOptions.map((o) => o.key)).toEqual([`${MAL},${LICH},${CAP}`, `${MAL},${SF},${ZH}`, `${MAL},${SF},${CAP}`]);
+    expect(p.coreOptions.map((o) => o.key)).toEqual([`${MAL},${SF},${ZH}`, `${MAL},${LICH},${CAP}`, `${MAL},${SF},${CAP}`]);
     expect(p.starterOptions.map((o) => o.key)).toEqual([String(TOME), String(CHAPTER)]);
     expect(p.bootsOptions.map((o) => o.key)).toEqual([String(SORC), String(IONIAN), String(MERC)]);
     expect(plan({ choice: { core: 1 } }).coreIndex).toBe(1);

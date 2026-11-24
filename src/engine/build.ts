@@ -52,7 +52,7 @@ export interface CoreOption {
   key: string;
   items: Item[];
   stat: WinStat;
-  /** "best" = highest (smoothed) win rate among well-played builds — the auto pick; "popular" = most played. */
+  /** "popular" = most played (what OP.GG / HexMayhem list first) — the auto pick; "best" = highest (smoothed) win rate among well-played builds. */
   tag?: "best" | "popular";
 }
 
@@ -341,9 +341,9 @@ function chooseBoots(ctx: BuildContext, family: Family): { boots?: Item; reason:
 }
 
 /**
- * Core-build options: the auto pick (highest smoothed win rate, ≥3% of games; tagged "best") first,
- * then the most played. When no build is played enough to be the auto pick (small samples, e.g.
- * Arena), the most played builds are still offered as options, untagged by "best".
+ * Core-build options, like the stats sites list them: the most played build first (the auto pick,
+ * tagged "popular"), then the highest smoothed win rate among builds with ≥3% of games (tagged
+ * "best") when that's a different build, then the next most played.
  */
 export function coreBuildOptions(ctx: BuildContext): CoreOption[] {
   const { data, stats } = ctx;
@@ -377,10 +377,11 @@ export function coreBuildOptions(ctx: BuildContext): CoreOption[] {
     stat: { games: x.b.games, wins: x.b.wins, ...(x.b.pickRate !== undefined ? { pickRate: x.b.pickRate } : {}) },
     ...(tag ? { tag } : {}),
   });
-  if (!best) return played.slice(0, 3).map((x, i) => toOpt(x, i === 0 ? "popular" : undefined));
-  return [best, ...played.filter((x) => x !== best)]
+  if (!mostPlayed) return [];
+  const rest = played.filter((x) => x !== mostPlayed && x !== best);
+  return [mostPlayed, ...(best && best !== mostPlayed ? [best] : []), ...rest]
     .slice(0, 3)
-    .map((x) => toOpt(x, x === best ? "best" : x === mostPlayed ? "popular" : undefined));
+    .map((x) => toOpt(x, x === mostPlayed ? "popular" : x === best ? "best" : undefined));
 }
 
 function baseBuild(ctx: BuildContext): { core: Item[]; flex: Item[]; source: BuildPlan["source"]; label: string; coreOptions: CoreOption[]; coreIndex: number } {
@@ -401,14 +402,15 @@ function baseBuild(ctx: BuildContext): { core: Item[]; flex: Item[]; source: Bui
   const coreOptions = coreBuildOptions(ctx);
   const pickedIndex = resolveChoice(coreOptions.map((o) => o.key), ctx.choice?.core);
   const picked = pickedIndex >= 0;
-  // Auto = the "best" option when there is one; otherwise the source's top build (below).
-  let coreIndex = picked ? pickedIndex : coreOptions[0]?.tag === "best" ? 0 : -1;
+  // Auto = the source's most played build (first option), as the stats sites show it.
+  let coreIndex = picked ? pickedIndex : coreOptions.length ? 0 : -1;
   const top = coreOptions[coreIndex];
   if (top) {
     core = top.items;
     source = "stats";
     const rate = `${((top.stat.wins / Math.max(1, top.stat.games)) * 100).toFixed(1)}%${arena ? " top 4" : ""} over ${top.stat.games} games`;
-    label = picked && top.tag !== "best" ? `Your core build pick · ${rate}` : `Highest ${arena ? "top-4" : "win-rate"} build · ${rate}`;
+    const src = stats?.source === "hexmayhem" ? "HexMayhem" : stats?.source === "opgg" ? "OP.GG" : stats?.source === "riot" ? "Your dataset" : "Stats";
+    label = picked ? `Your core build pick · ${rate}` : `${src} most played build · ${rate}`;
   } else if (isDefault && stats?.bestBuild && stats.bestBuild.length >= 2) {
     const items = stats.bestBuild.map((id) => data.items.get(id)).filter((x): x is Item => onMap(x) && !x.tags.includes("Boots") && !isPrismatic(x));
     if (items.length >= 2) {

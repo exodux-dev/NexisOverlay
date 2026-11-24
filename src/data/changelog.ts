@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-24.3",
+    title: "Builds match OP.GG again",
+    items: [
+      "Fixed: OP.GG builds, boots, starters, items and spells weren't being read (OP.GG changed its page), so builds fell back to a generic template. All champions and modes.",
+      "The default core build is now the most played one, in the same order OP.GG lists it; the highest win-rate build is one click away.",
+    ],
+  },
+  {
     id: "2026-11-24.2",
     title: "Streamer mode, spreadsheet export and this popup",
     items: [

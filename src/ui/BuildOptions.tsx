@@ -101,14 +101,14 @@ export function CoreOptions({ plan, onChoose, top4 }: { plan: BuildPlan; onChoos
           <OptionRow
             key={o.items.map((it) => it.id).join("-")}
             on={i === plan.coreIndex}
-            onPick={onChoose && (() => onChoose({ core: i === 0 && o.tag === "best" ? undefined : o.key }))}
+            onPick={onChoose && (() => onChoose({ core: i === 0 ? undefined : o.key }))}
             label={`Core build ${i + 1}: ${o.items.map((it) => it.name).join(", ")}`}
             testId={`core-opt-${i}`}
           >
             <span className="bo-core-top">
               <span className="bo-rank">{i + 1}</span>
-              {o.tag === "best" && <span className="bo-tag bo-tag-best" title={`Highest ${top4 ? "top-4" : "win"} rate among builds with at least 3% of games`}>Recommended</span>}
-              {o.tag === "popular" && <span className="bo-tag">Most played</span>}
+              {o.tag === "popular" && <span className="bo-tag bo-tag-best" title="What most players build — the build the stats sites list first">Recommended</span>}
+              {o.tag === "best" && <span className="bo-tag" title={`Highest ${top4 ? "top-4" : "win"} rate among builds with at least 3% of games`}>Highest {top4 ? "top 4" : "win rate"}</span>}
               {i === plan.coreIndex && <Icon name="check" size={13} strokeWidth={3} className="bo-check" />}
             </span>
             <Icons items={o.items} size={32} arrows />
