@@ -121,6 +121,14 @@ test("game end shows the post-game summary with timeline", async ({ start }) => 
   await expect(dialog.locator(".gtl-plot svg[role=img]")).toBeVisible();
   const samples = await storeValue<number>(page, "(s) => s.history.at(-1)?.timeline?.samples.length ?? 0");
   expect(samples).toBeGreaterThan(5);
+  // Shareable recap image (PNG).
+  const download = page.waitForEvent("download");
+  await dialog.getByRole("button", { name: "Save image" }).click();
+  const png = await download;
+  expect(png.suggestedFilename()).toMatch(/^nexis-[a-z]+-\d{4}-\d\d-\d\d\.png$/);
+  const bytes = await (await import("node:fs")).promises.readFile((await png.path())!);
+  expect([...bytes.subarray(0, 4)]).toEqual([0x89, 0x50, 0x4e, 0x47]);
+  if (process.env.SHOT) await (await import("node:fs")).promises.writeFile(process.env.SHOT, bytes);
   // Esc closes the summary (and doesn't hide the overlay).
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();

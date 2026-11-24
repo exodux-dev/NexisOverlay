@@ -2,6 +2,7 @@
 //
 //   <PostGameSummary record={rec} onClose={…} onOpenHistory={…} />
 
+import { recapPng } from "../ui/recapImage";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MODE_LABEL, modeFromGameMode, useApp, webKey } from "../app/store";
@@ -10,7 +11,8 @@ import { findAugment, rankAugments, type AugmentScore } from "../engine/augments
 import { recommendBuild, type ItemRec } from "../engine/build";
 import { getItemMap, itemMapFor, setItemMap } from "../engine/staticData";
 import { analyzeEnemies } from "../engine/threat";
-import type { ChampionStats, MatchRecord, PlayerState } from "../engine/types";
+import type { ChampionStats, MatchRecord, PlayerState, StaticData } from "../engine/types";
+import { toast } from "../ui/Toasts";
 import { applyVariant, pickVariant, variantsFor } from "../engine/variants";
 import { clock, kda, winRate } from "../ui/format";
 import { GameIcon } from "../ui/GameIcon";
@@ -36,6 +38,28 @@ function norm(name: string | undefined): string {
 function signed(n: number, digits = 0): string {
   const v = n.toFixed(digits);
   return n > 0 ? `+${v}` : v;
+}
+
+async function shareRecap(record: MatchRecord, data: StaticData | null | undefined, how: "save" | "copy") {
+  try {
+    const png = await recapPng(record, data);
+    if (how === "copy") {
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": png })]);
+      toast("Recap image copied", "good", { id: "recap", detail: "Paste it into Discord (Ctrl+V)." });
+      return;
+    }
+    const url = URL.createObjectURL(png);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nexis-${record.champion.toLowerCase()}-${record.date.slice(0, 10)}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    toast("Recap image saved", "good", { id: "recap", detail: "It's in your Downloads folder." });
+  } catch {
+    toast("Couldn't create the image", "bad", { id: "recap", detail: how === "copy" ? "The clipboard is unavailable here; try Save image." : "Try Copy image instead." });
+  }
 }
 
 export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
@@ -332,6 +356,12 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
         <footer className="pg-foot">
           <span className="pg-muted">Saved to your match history on this PC.</span>
           <span className="pg-foot-actions">
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => void shareRecap(record, data, "save")} title="Save a picture of this summary (PNG) to post on Discord">
+              Save image
+            </button>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => void shareRecap(record, data, "copy")} title="Copy a picture of this summary to paste into Discord">
+              Copy image
+            </button>
             <button type="button" className="btn btn-ghost btn-sm" onClick={onOpenHistory}>
               <Icon name="history" size={14} />
               Open history
