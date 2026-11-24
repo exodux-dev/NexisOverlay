@@ -80,3 +80,11 @@ describe("role overrides (settings.roleOverrides)", () => {
     expect(normalizeSettings({ roleOverrides: stored }, true).roleOverrides).toEqual(stored);
   });
 });
+
+describe("badge placement (settings.badgePlacement)", () => {
+  it("defaults to above the cards and keeps a stored choice", () => {
+    expect(normalizeSettings({}).badgePlacement).toBe("above");
+    expect(normalizeSettings({ badgePlacement: "below" }).badgePlacement).toBe("below");
+    expect(normalizeSettings({ badgePlacement: "sideways" } as never).badgePlacement).toBe("above");
+  });
+});

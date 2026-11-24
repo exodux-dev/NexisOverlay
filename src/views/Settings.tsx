@@ -762,6 +762,22 @@ function OverlaySection() {
         />
       </Card>
       <Card title="Tier badges" icon="augments">
+        <div className="field-row">
+          <div className="field-text">
+            <span className="field-label">Badge position</span>
+            <span className="field-hint">Above keeps the reroll buttons under the cards clear</span>
+          </div>
+          <Segmented<"above" | "below">
+            size="sm"
+            label="Badge position"
+            value={s.badgePlacement}
+            onChange={(badgePlacement) => update({ badgePlacement })}
+            options={[
+              { value: "above", label: "Above cards" },
+              { value: "below", label: "Below cards" },
+            ]}
+          />
+        </div>
         <Slider label="Badge size" value={badge} min={0.75} max={1.5} step={0.05} format={pct0} onChange={setBadge} />
         <Slider
           label="Badge vertical offset"

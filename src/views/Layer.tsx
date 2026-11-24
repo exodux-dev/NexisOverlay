@@ -6,7 +6,7 @@
 // Riot policy: the HUD only shows static reference info (what to build next, the usual
 // skill order). It never issues real-time combat prompts.
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { actions, devHooks, getState, registerDemo, useApp, useDerived } from "../app/store";
 import { rerollAdvice, type AugmentScore } from "../engine/augments";
 import type { OcrMatch } from "../engine/ocrMatch";
@@ -23,6 +23,13 @@ if (import.meta.env.DEV && typeof window !== "undefined" && new URLSearchParams(
 }
 
 const FADE_MS = 320;
+
+/** Badge anchor: above the scan region (clear of the reroll buttons under the cards) or below it. */
+function badgeAnchor(region: { y: number; h: number }, offset: number, placement: "above" | "below"): CSSProperties {
+  return placement === "below"
+    ? { top: `calc(${(region.y + region.h + offset) * 100}vh + 8px)` }
+    : ({ top: `calc(${(region.y + offset) * 100}vh - 8px)`, "--nl-shift": "-100%" } as CSSProperties);
+}
 
 export default function Layer() {
   useEffect(() => {
@@ -53,6 +60,7 @@ function AugmentBadges() {
   const cards = useApp((s) => s.cards);
   const region = useApp((s) => s.settings.scanRegion);
   const badgeOffset = useApp((s) => s.settings.badgeOffset);
+  const placement = useApp((s) => s.settings.badgePlacement);
   const { offeredRanked } = useDerived();
 
   // Keep the last set of cards on screen while it fades out.
@@ -77,17 +85,19 @@ function AugmentBadges() {
   }, [cards, offeredRanked]);
 
   if (!shown) return null;
-  const top = `calc(${(region.y + region.h + badgeOffset) * 100}vh + 8px)`;
+  const anchor = badgeAnchor(region, badgeOffset, placement);
   // Static evaluation of the offer on screen: Mayhem lets you reroll augment offers.
   const advice = rerollAdvice(shown.cards.map((c) => c.score).filter((x): x is AugmentScore => !!x));
   return (
     <div key={shown.key} className={`nl-badges ${visible ? "nl-in" : "nl-out"}`}>
       {advice?.reroll && (
-        <div className="nl-reroll" style={{ left: `${(region.x + region.w / 2) * 100}vw`, top: `max(8px, calc(${region.y * 100}vh - 2.6em))` }}>
-          <RerollIcon />
-          Consider a reroll
-          <small>{advice.reason.replace(/ — consider rerolling\.$| — a reroll will likely do better\.$/, "")}</small>
-        </div>
+        <TopNotice order={1}>
+          <div className="nl-reroll">
+            <RerollIcon />
+            Consider a reroll
+            <small>{advice.reason.replace(/ — consider rerolling\.$| — a reroll will likely do better\.$/, "")}</small>
+          </div>
+        </TopNotice>
       )}
       {shown.cards.map(({ card, score }, i) => (
         <Badge
@@ -95,9 +105,20 @@ function AugmentBadges() {
           name={card.augment.name}
           score={score}
           best={card.augment.name === shown.bestName}
-          style={{ left: `${(region.x + card.x * region.w) * 100}vw`, top, animationDelay: `${i * 70}ms` }}
+          style={{ left: `${(region.x + card.x * region.w) * 100}vw`, ...anchor, animationDelay: `${i * 70}ms` }}
         />
       ))}
+    </div>
+  );
+}
+
+// ------------------------------------------------------------------ top notices
+
+/** Reroll hint + pick reminder: stacked at the top centre, away from the cards and their buttons. */
+function TopNotice({ children, order = 0 }: { children: ReactNode; order?: number }) {
+  return (
+    <div className="nl-top-notice" style={{ top: `calc(0.6vh + ${order * 2.4}em)` }}>
+      {children}
     </div>
   );
 }
@@ -115,7 +136,6 @@ function PickReminder() {
   const cards = useApp((s) => s.cards);
   const enabled = useApp((s) => hudOf(s.settings).pickReminder);
   const hotkey = useApp((s) => s.settings.hotkeyToggle);
-  const region = useApp((s) => s.settings.scanRegion);
   const [shownFor, setShownFor] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const last = useRef("");
@@ -135,13 +155,11 @@ function PickReminder() {
 
   if (!shownFor) return null;
   return (
-    <div
-      className={`nl-pick-reminder ${visible ? "nl-in" : "nl-out"}`}
-      role="status"
-      style={{ left: `${(region.x + region.w / 2) * 100}vw`, top: `calc(${(region.y + region.h) * 100}vh + 7.5em)` }}
-    >
-      Augments detected: open Nexis (<b>{hotkey}</b>) and mark your pick so your stats stay accurate
-    </div>
+    <TopNotice>
+      <div className={`nl-pick-reminder ${visible ? "nl-in" : "nl-out"}`} role="status">
+        Mark your augment pick in Nexis · <b>{hotkey}</b>
+      </div>
+    </TopNotice>
   );
 }
 
@@ -158,6 +176,7 @@ function CalibrationPreview() {
   const [on, setOn] = useState(false);
   const region = useApp((s) => s.settings.scanRegion);
   const badgeOffset = useApp((s) => s.settings.badgeOffset);
+  const placement = useApp((s) => s.settings.badgePlacement);
   const realCards = useApp((s) => s.cards.length > 0);
   useEffect(() => {
     let alive = true;
@@ -175,7 +194,7 @@ function CalibrationPreview() {
     };
   }, []);
   if (!on) return null;
-  const top = `calc(${(region.y + region.h + badgeOffset) * 100}vh + 8px)`;
+  const anchor = badgeAnchor(region, badgeOffset, placement);
   return (
     <div className="nl-calib">
       <div className="nl-calib-region" style={{ left: `${region.x * 100}vw`, top: `${region.y * 100}vh`, width: `${region.w * 100}vw`, height: `${region.h * 100}vh` }}>
@@ -183,7 +202,7 @@ function CalibrationPreview() {
       </div>
       {!realCards &&
         SAMPLE_CARDS.map((x, i) => (
-          <Badge key={i} name={`Sample augment ${i + 1}`} best={false} style={{ left: `${(region.x + x * region.w) * 100}vw`, top }} />
+          <Badge key={i} name={`Sample augment ${i + 1}`} best={false} style={{ left: `${(region.x + x * region.w) * 100}vw`, ...anchor }} />
         ))}
     </div>
   );

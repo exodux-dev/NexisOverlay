@@ -284,7 +284,7 @@ test("HUD shows a pick reminder for ~8 s when augment cards are detected", async
   await emit(hud, "augment-scan", scan);
   await emit(hud, "augment-scan", scan);
   const reminder = hud.locator(".nl-pick-reminder");
-  await expect(reminder).toContainText("mark your pick");
+  await expect(reminder).toContainText("Mark your augment pick");
   await expect(reminder).toContainText("Ctrl+Shift+Space");
   await hud.clock.fastForward(5000);
   await expect(reminder).toHaveClass(/nl-in/);

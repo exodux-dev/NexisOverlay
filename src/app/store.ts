@@ -154,6 +154,8 @@ export interface Settings {
   seeThroughWindow: boolean;
   autoDetectAugments: boolean; // OCR the augment cards automatically while in game
   badgeOffset: number; // extra vertical offset (fraction of screen) for the in-game tier badges
+  /** Tier badges above the augment cards (default: clear of the reroll buttons) or below them. */
+  badgePlacement: "above" | "below";
   theme: ThemeSettings;
   /** Chosen build style per champion id (see engine/variants.ts). */
   buildStyles: Record<string, string>;
@@ -207,6 +209,7 @@ export const DEFAULT_SETTINGS: Settings = {
   seeThroughWindow: false,
   autoDetectAugments: true,
   badgeOffset: 0,
+  badgePlacement: "above",
   theme: DEFAULT_THEME,
   buildStyles: {},
   leagueImport: DEFAULT_LEAGUE_IMPORT,
@@ -239,6 +242,7 @@ function finishNormalize(s: Settings): Settings {
   // Additive: only fills the key in (unknown values are read as "auto", see engine/dataSource).
   if (!s.dataSources || typeof s.dataSources !== "object" || Array.isArray(s.dataSources)) s.dataSources = {};
   if (s.roleOverrides === undefined) s.roleOverrides = null;
+  if (s.badgePlacement !== "above" && s.badgePlacement !== "below") s.badgePlacement = "above";
   if (!Array.isArray(s.favorites)) s.favorites = [];
   else if (s.favorites.some((f) => typeof f !== "string")) s.favorites = s.favorites.filter((f): f is string => typeof f === "string");
   // The project moved to exodux-dev: an untouched old default stats URL follows it (custom URLs are kept).
