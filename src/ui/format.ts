@@ -22,7 +22,7 @@ export const PLAYSTYLES: Array<{ value: Playstyle; label: string; hint: string }
   { value: "auto", label: "Auto", hint: "Adapts to how your game is going" },
   { value: "aggressive", label: "Aggressive", hint: "More damage, fewer defensive items" },
   { value: "balanced", label: "Balanced", hint: "Even mix of damage and safety" },
-  { value: "safe", label: "Safe", hint: "Prioritise survival items" },
+  { value: "safe", label: "Safe", hint: "Prioritize survival items" },
   { value: "frontline", label: "Frontline", hint: "Soak damage for your team" },
 ];
 

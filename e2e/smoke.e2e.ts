@@ -420,3 +420,13 @@ test("Summoner's Rift role picker loads that role's build", async ({ start }) =>
   await modeSelect(page).selectOption("aram");
   await expect(page.getByRole("radiogroup", { name: "Role" })).toHaveCount(0);
 });
+
+test("Guide: change champion", async ({ start }) => {
+  const page = await start();
+  await act(page, "setExploreChampion", "Ahri");
+  await act(page, "setTab", "guide");
+  await page.getByRole("button", { name: "Change champion" }).click();
+  await page.keyboard.type("Jinx");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".gd-hero-name")).toContainText("Jinx");
+});

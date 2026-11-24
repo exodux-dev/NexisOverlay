@@ -99,7 +99,7 @@ describe("topPicks", () => {
   });
 });
 
-describe("favourites settings migration", () => {
+describe("favorites settings migration", () => {
   it("only adds the favorites key and keeps everything else", async () => {
     const { normalizeSettings } = await import("../app/store");
     const old = { hotkeyToggle: "Ctrl+Alt+O", lastChampion: "Ahri", playstyle: "safe", opacity: 0.8 };

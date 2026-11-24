@@ -835,7 +835,7 @@ function GeneralSection() {
   const [startGold, setStartGold] = useDebounced(s.startGold, (v) => update({ startGold: v }));
   return (
     <>
-      <Card title="Overlay behaviour" icon="spark">
+      <Card title="Overlay behavior" icon="spark">
         <div className="field">
           <Segmented<"off" | "compact" | "full">
             size="sm"

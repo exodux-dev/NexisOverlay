@@ -1,4 +1,4 @@
-/** Normalise names for lookups: lowercase, strip accents/punctuation/spaces. */
+/** Normalize names for lookups: lowercase, strip accents/punctuation/spaces. */
 export function norm(s: string): string {
   return s
     .normalize("NFKD")
@@ -23,7 +23,7 @@ export function levenshtein(a: string, b: string): number {
   return prev[b.length];
 }
 
-/** Similarity 0..1 between two strings after normalisation. */
+/** Similarity 0..1 between two strings after normalization. */
 export function similarity(a: string, b: string): number {
   const x = norm(a);
   const y = norm(b);

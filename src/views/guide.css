@@ -709,7 +709,7 @@
 .gd-pair-text {
   color: var(--text-2);
 }
-/* Weapon names in running text: coloured, not boxed. */
+/* Weapon names in running text: colored, not boxed. */
 .gd-wname {
   font-weight: 700;
   color: var(--wtext, var(--w));

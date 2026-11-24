@@ -374,3 +374,10 @@
   justify-content: flex-end;
   margin-top: 16px;
 }
+
+/* Guide: change champion (outside a game) */
+.gd-hero-change {
+  order: 99;
+  margin-left: auto;
+  align-self: center;
+}

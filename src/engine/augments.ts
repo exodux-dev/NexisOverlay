@@ -161,9 +161,9 @@ function cleanDesc(desc?: string): string {
 // ARAM: Mayhem (Mayhem borrowed them), some exist only in Arena. The catalogue (AUGMENTS) holds
 // both; ranking filters it to the pool of the mode being played.
 
-/** Normalised names of augments in the Arena pool. */
+/** Normalized names of augments in the Arena pool. */
 const ARENA = new Set<string>();
-/** Normalised names registered only for Arena (hidden from the Mayhem pool). */
+/** Normalized names registered only for Arena (hidden from the Mayhem pool). */
 const ARENA_ONLY = new Set<string>();
 
 /**

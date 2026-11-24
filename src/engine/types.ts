@@ -107,12 +107,12 @@ export interface StaticData {
   version: string;
   champions: Champion[];
   championsById: Map<string, Champion>; // by DDragon id
-  championsByName: Map<string, Champion>; // normalised display name + id
+  championsByName: Map<string, Champion>; // normalized display name + id
   championsByKey: Map<number, Champion>;
   items: Map<number, Item>;
-  itemsByName: Map<string, Item>; // normalised name (ARAM-available variant preferred)
-  itemsByNameSr: Map<string, Item>; // normalised name (Summoner's Rift variant preferred)
-  /** Normalised name (Arena variant preferred); optional so hand-built StaticData in tests stays valid. */
+  itemsByName: Map<string, Item>; // normalized name (ARAM-available variant preferred)
+  itemsByNameSr: Map<string, Item>; // normalized name (Summoner's Rift variant preferred)
+  /** Normalized name (Arena variant preferred); optional so hand-built StaticData in tests stays valid. */
   itemsByNameArena?: Map<string, Item>;
   runes: Map<number, Rune>;
   spells: Map<number, SummonerSpell>;

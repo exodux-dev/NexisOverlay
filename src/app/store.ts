@@ -1264,7 +1264,7 @@ let pendingCards = "";
 let pickTracker: PickTracker = NEW_TRACKER;
 
 /**
- * Whether a background scan's cards should show right away. Three recognised augment names at once
+ * Whether a background scan's cards should show right away. Three recognized augment names at once
  * is an offer (stray fight text never matches three); with only two, wait for the same pair in the
  * next scan (~0.6 s later) so random text can't flash badges.
  */
@@ -1306,7 +1306,7 @@ function onScan(payload: { ok: boolean; auto?: boolean; error?: string; scan?: {
     tab: "augments",
     scan: {
       status: matches.length ? "done" : "error",
-      error: matches.length ? undefined : "No augment names recognised. Press the scan hotkey while the augment cards are on screen, or adjust the scan region in Settings.",
+      error: matches.length ? undefined : "No augment names recognized. Press the scan hotkey while the augment cards are on screen, or adjust the scan region in Settings.",
       ms: payload.scan.millis,
       lines: payload.scan.lines,
       matches,

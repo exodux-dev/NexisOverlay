@@ -10,7 +10,7 @@
 //
 // Layout editor (hotkey, default Ctrl+Shift+L, or Settings → "Edit layout"): the backend lets the
 // window take mouse input, the panel gets a dashed outline + toolbar and can be dragged anywhere
-// (snapping to edges / centre) and resized. Positions are saved as free-space fractions
+// (snapping to edges / center) and resized. Positions are saved as free-space fractions
 // (hudSettings.ts). Click-through always comes back: Done, the hotkey, Esc, a timeout, or a focus
 // change all end edit mode (src-tauri/src/hud.rs), and this window has its own timeout too.
 
@@ -240,7 +240,7 @@ export function MiniHud() {
 }
 
 /**
- * The in-game panel with the optional "fade / hide while the mouse is over it" behaviour. The HUD
+ * The in-game panel with the optional "fade / hide while the mouse is over it" behavior. The HUD
  * is click-through, so it never gets hover events: poll the cursor (read-only) and compare it with
  * the panel's rect. Only polls while the option is on.
  */
@@ -404,7 +404,7 @@ function HudEditor({ hud, model, hotkey, editKey, hidden, hudKey, sample }: { hu
       {dragging && local?.snapY && <div className={`nl-guide nl-guide-h nl-g-${local.snapY}`} />}
       <div className="nl-edit-banner">
         <strong>Edit HUD layout</strong>
-        <span>Drag the panel anywhere · drag the corner to resize · it snaps to edges and centre</span>
+        <span>Drag the panel anywhere · drag the corner to resize · it snaps to edges and center</span>
         <span className="nl-edit-keys">
           <span className="nl-kbd">Esc</span> or <span className="nl-kbd">{editKey || "Done"}</span> to finish
         </span>

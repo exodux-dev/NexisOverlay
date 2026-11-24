@@ -1,6 +1,6 @@
 // League-client-style hover cards for abilities, runes, stat shards, summoner spells and
 // augments. They share the item tooltip's frame (`.tt` inside `Tip`) and render Data Dragon
-// rich text through engine/tooltipText (tags → colours, unknown values → "?").
+// rich text through engine/tooltipText (tags → colors, unknown values → "?").
 
 import { Fragment, useMemo, type ReactNode } from "react";
 import { useChampionSpells, useDerived } from "../app/store";

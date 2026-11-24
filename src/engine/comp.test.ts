@@ -49,7 +49,7 @@ describe("analyzeComp", () => {
     expect(p.warnings.find((w) => w.key === "dmg-ap")?.text).toMatch(/magic resist/);
   });
 
-  it("recognises a heavy poke comp and its waveclear", () => {
+  it("recognizes a heavy poke comp and its waveclear", () => {
     const p = analyzeComp(team("Ziggs", "Xerath", "Jayce", "Ezreal", "Lux"), "aram");
     expect(p.scores.poke).toBeGreaterThan(0.9);
     expect(keys(p.strengths)).toContain("poke");

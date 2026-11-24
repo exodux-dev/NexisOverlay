@@ -45,7 +45,7 @@ const POSITION_ALIASES: Record<string, OpggPosition> = {
   utility: "support",
 };
 
-/** Normalise a role name ("MIDDLE", "bottom", "UTILITY", ...) to OP.GG's URL segment. */
+/** Normalize a role name ("MIDDLE", "bottom", "UTILITY", ...) to OP.GG's URL segment. */
 export function opggPosition(p?: string): OpggPosition | undefined {
   return p ? POSITION_ALIASES[p.toLowerCase()] : undefined;
 }

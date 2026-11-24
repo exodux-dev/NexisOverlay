@@ -109,7 +109,7 @@ function toCombo(raw: unknown): AugmentCombo | undefined {
   };
 }
 
-/** Parse the God-Tier Combos page. Returns [] if the page has no recognisable combo table. */
+/** Parse the God-Tier Combos page. Returns [] if the page has no recognizable combo table. */
 export function parseCombos(html: string): AugmentCombo[] {
   if (!html) return [];
   const rsc = decodeRsc(html) || html;

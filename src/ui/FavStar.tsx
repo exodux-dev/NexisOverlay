@@ -11,7 +11,7 @@ export function useIsFavorite(id: string | undefined): boolean {
 
 export function FavStar({ id, name, size = 16, className = "" }: { id: string; name?: string; size?: number; className?: string }) {
   const on = useIsFavorite(id);
-  const label = on ? `Remove ${name ?? id} from favourites` : `Add ${name ?? id} to favourites`;
+  const label = on ? `Remove ${name ?? id} from favorites` : `Add ${name ?? id} to favorites`;
   const onClick = (e: MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();

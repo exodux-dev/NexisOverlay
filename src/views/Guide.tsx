@@ -2,7 +2,8 @@
 // A pre-fight reference only — Nexis never prompts ability usage in real time (Riot third-party policy).
 
 import { Fragment, useState, type CSSProperties } from "react";
-import { actions, useChampionSpells, useDerived, type Derived } from "../app/store";
+import { actions, useApp, useChampionSpells, useDerived, type Derived } from "../app/store";
+import { ChampionPicker } from "../ui/ChampionPicker";
 import type { ChampionGuide, CoachAdvice, SkillKey } from "../engine/guide";
 import type { Archetype, ChampionSpell } from "../engine/types";
 import { Card, Empty, Pill, Segmented, type Tone } from "../ui/controls";
@@ -130,7 +131,7 @@ function weaponStyle(w: Weapon): CSSProperties {
   return { "--w": w.color, "--w-light": w.light } as CSSProperties;
 }
 
-/** Colour Aphelios weapon names inside free text. */
+/** Color Aphelios weapon names inside free text. */
 function Rich({ text, weapons }: { text: string; weapons: boolean }) {
   if (!weapons) return <>{text}</>;
   return (
@@ -671,11 +672,35 @@ function HowToPlay({ g, archetype, weapons }: { g?: ChampionGuide; archetype: Ar
 
 // ------------------------------------------------------------------ view
 
+/** Champion picker for the guide (outside a game; in a game the guide follows your champion). */
+function GuidePicker({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const champions = useApp((s) => s.data?.champions ?? []);
+  if (!open) return null;
+  return (
+    <ChampionPicker
+      title="Show the guide for…"
+      champions={champions}
+      onPick={(c) => {
+        actions.setExploreChampion(c.id);
+        onClose();
+      }}
+      onClose={onClose}
+    />
+  );
+}
+
 function Hero({ d }: { d: Derived }) {
   const base = d.baseChampion!;
   const v = d.variant;
+  const [picking, setPicking] = useState(false);
   return (
     <div className="gd-hero">
+      {d.mode === "explore" && (
+        <button type="button" className="btn btn-sm gd-hero-change" onClick={() => setPicking(true)} title="Show another champion's guide">
+          Change champion
+        </button>
+      )}
+      <GuidePicker open={picking} onClose={() => setPicking(false)} />
       <GameIcon src={base.icon} name={base.name} size={48} className="gd-hero-icon" />
       <div className="gd-hero-text">
         <span className="eyebrow">Champion guide</span>
@@ -705,6 +730,7 @@ export default function Guide() {
   const d = useDerived();
   const spells = useChampionSpells(d.baseChampion?.id);
   const base = d.baseChampion;
+  const [picking, setPicking] = useState(false);
 
   if (!base) {
     return (
@@ -715,7 +741,7 @@ export default function Guide() {
             icon="book"
             action={
               <>
-                <button type="button" className="btn btn-sm" onClick={() => actions.setTab("build")}>
+                <button type="button" className="btn btn-sm" onClick={() => setPicking(true)}>
                   <Icon name="build" size={13} />
                   Choose a champion
                 </button>
@@ -729,6 +755,7 @@ export default function Guide() {
             Skill order, combos and matchup tips for the champion you play.
           </Empty>
         </Card>
+        <GuidePicker open={picking} onClose={() => setPicking(false)} />
       </div>
     );
   }

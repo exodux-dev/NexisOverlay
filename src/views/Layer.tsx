@@ -115,7 +115,7 @@ function AugmentBadges() {
 
 // ------------------------------------------------------------------ top notices
 
-/** Reroll hint + pick reminder: stacked at the top centre, away from the cards and their buttons. */
+/** Reroll hint + pick reminder: stacked at the top center, away from the cards and their buttons. */
 function TopNotice({ children, order = 0 }: { children: ReactNode; order?: number }) {
   return (
     <div className="nl-top-notice" style={{ top: `calc(0.6vh + ${order * 2.4}em)` }}>

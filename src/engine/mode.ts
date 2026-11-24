@@ -61,7 +61,7 @@ export function modeFromQueue(queueId?: number): GameModeKind | undefined {
 
 /**
  * Mode a stats dataset (scripts/aggregate-stats.ts) is for, from its `queueId`. The aggregator
- * defaults to queue 2400 (ARAM Mayhem); a dataset without a recognisable queue is treated as
+ * defaults to queue 2400 (ARAM Mayhem); a dataset without a recognizable queue is treated as
  * Mayhem, which is what it was built for.
  */
 export function datasetMode(ds: Pick<StatsDataset, "queueId">): GameModeKind {

@@ -55,15 +55,15 @@ describe("hud drag math", () => {
     expect(px.top).toBeCloseTo(300, 0);
   });
 
-  it("snaps to edges and centre", () => {
+  it("snaps to edges and center", () => {
     const right = dragToFrac({ left: SCREEN.width - M - size.width - 10, top: 500, ...size }, SCREEN, M, 18);
     expect(right.x).toBe(1);
     expect(right.snapX).toBe("end");
     const left = dragToFrac({ left: M + 5, top: M + 3, ...size }, SCREEN, M, 18);
     expect(left).toMatchObject({ x: 0, y: 0, snapX: "start", snapY: "start" });
-    const centre = dragToFrac({ left: (SCREEN.width - size.width) / 2 + 7, top: 100, ...size }, SCREEN, M, 18);
-    expect(centre.x).toBe(0.5);
-    expect(centre.snapX).toBe("center");
+    const center = dragToFrac({ left: (SCREEN.width - size.width) / 2 + 7, top: 100, ...size }, SCREEN, M, 18);
+    expect(center.x).toBe(0.5);
+    expect(center.snapX).toBe("center");
   });
 
   it("keeps the panel on screen when dragged past the edges", () => {

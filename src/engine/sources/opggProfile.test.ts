@@ -136,7 +136,7 @@ describe("parseProfileJson", () => {
     expect(p.level).toBe(312);
     expect(p.region).toBe("euw");
     expect(p.ranks).toHaveLength(2);
-    // Solo/Duo wins over Flex even when listed second; "diamond 2" tier string is normalised.
+    // Solo/Duo wins over Flex even when listed second; "diamond 2" tier string is normalized.
     expect(p.rank).toMatchObject({ queue: "SOLORANKED", tier: "Diamond", division: 2, lp: 75, wins: 120, losses: 100, winRate: 55 });
     expect(p.ranks[0]).toMatchObject({ tier: "Gold", division: 3 });
     expect(p.topChampions[0]).toEqual({ name: "Ahri", key: "ahri", wins: 40, losses: 30, winRate: 57 });

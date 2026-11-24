@@ -287,7 +287,7 @@ describe("rankAugments", () => {
 // ------------------------------------------------------------------ text
 
 describe("text helpers", () => {
-  it("normalises names", () => {
+  it("normalizes names", () => {
     expect(norm("Kai'Sa")).toBe("kaisa");
     expect(norm("Nunu & Willump")).toBe("nunuandwillump");
     expect(norm("Jak'Sho, The Protean")).toBe("jakshotheprotean");

@@ -183,7 +183,7 @@ export function resolvePlaystyle(
     if (deaths >= 3 && deaths * 2 > kills + assists) return { style: "safe", reason: `You've died ${deaths}× — leaning defensive` };
     if (kills + assists >= 6 && kills + assists >= 3 * (deaths + 1)) return { style: "aggressive", reason: "You're ahead — pressing damage" };
   }
-  if (champion.archetype === "tank") return { style: "frontline", reason: "Tank — prioritising team frontline" };
+  if (champion.archetype === "tank") return { style: "frontline", reason: "Tank — prioritizing team frontline" };
   return { style: "balanced", reason: "Balanced until the game shows a trend" };
 }
 

@@ -94,14 +94,14 @@ export function itemStats(history: MatchRecord[], champion?: string): Record<str
 
 export interface HistoryImport {
   records: MatchRecord[];
-  /** Entries that weren't recognisable match records. */
+  /** Entries that weren't recognizable match records. */
   invalid: number;
 }
 
 const num = (v: unknown): number | undefined => (typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : undefined);
 
 /**
- * Validate + normalise an imported history file. Accepts a bare array (our export format)
+ * Validate + normalize an imported history file. Accepts a bare array (our export format)
  * or `{ history: [...] }` / `{ records: [...] }`. Throws if the file isn't a history at all.
  */
 /** Matches kept in history.json. */

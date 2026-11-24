@@ -417,7 +417,7 @@ function makeItems(): Record<string, FixtureDDItem> {
     out[String(id)] = it;
   }
 
-  // Entries assembleStaticData must ignore / de-prioritise (mirrors real Data Dragon quirks).
+  // Entries assembleStaticData must ignore / de-prioritize (mirrors real Data Dragon quirks).
   out["223031"] = { ...out["3031"], from: undefined, depth: 3, maps: { "11": false, "12": false, "30": true } }; // Arena copy
   out["3599"] = {
     name: "Kalista's Black Spear",

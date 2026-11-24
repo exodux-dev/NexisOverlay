@@ -1,5 +1,5 @@
 // Shareable post-game recap: a 1200×630 PNG (Discord / social card size) drawn on a canvas in the
-// current theme colours. Images that refuse cross-origin use are skipped, never block the card.
+// current theme colors. Images that refuse cross-origin use are skipped, never block the card.
 import { matchMode } from "../engine/mode";
 import type { MatchRecord, StaticData } from "../engine/types";
 

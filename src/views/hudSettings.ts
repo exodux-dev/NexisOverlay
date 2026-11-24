@@ -108,7 +108,7 @@ export function activeHudPreset(h: HudSettings): HudPreset | undefined {
 
 /**
  * Free-position equivalent of a v1 preset (keeps clear of League's own HUD: scoreboard/FPS at the
- * top right edge, team frames, chat lower left, minimap bottom right, ability bar bottom centre).
+ * top right edge, team frames, chat lower left, minimap bottom right, ability bar bottom center).
  */
 export function presetFrac(p: HudPosition): { x: number; y: number } {
   switch (p) {
@@ -198,7 +198,7 @@ export interface DragResult {
 
 /**
  * Converts a panel's dragged pixel rect into free-space fractions, snapping to the screen edges
- * (inside `margin`) and centre lines when within `snap` px. The panel is kept fully on screen.
+ * (inside `margin`) and center lines when within `snap` px. The panel is kept fully on screen.
  */
 export function dragToFrac(
   rect: { left: number; top: number; width: number; height: number },

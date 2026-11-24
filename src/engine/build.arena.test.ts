@@ -1,4 +1,4 @@
-// Arena (gameMode CHERRY) build behaviour: Arena-only item pool, Prismatic items in their own list,
+// Arena (gameMode CHERRY) build behavior: Arena-only item pool, Prismatic items in their own list,
 // per-round gold (no fake start gold), top-4 wording — and other modes unchanged.
 
 import { describe, expect, it } from "vitest";

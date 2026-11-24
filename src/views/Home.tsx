@@ -1,5 +1,5 @@
 // Home: the landing page when no game / champ select is running. Patch, mode and client status,
-// a champion search that opens the build, favourites, recent champions, your recent form,
+// a champion search that opens the build, favorites, recent champions, your recent form,
 // this patch's top picks and quick actions.
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
@@ -234,7 +234,7 @@ function Hero({ d, data, patch, featured, recent }: { d: Derived; data: StaticDa
   );
 }
 
-// ------------------------------------------------------------------ favourites
+// ------------------------------------------------------------------ favorites
 
 function TierLine({ row, mode, loading }: { row?: ChampionTierRow; mode: GameModeKind; loading: boolean }) {
   if (row)
@@ -249,7 +249,7 @@ function TierLine({ row, mode, loading }: { row?: ChampionTierRow; mode: GameMod
   return <span className="home-tierline dim">No data</span>;
 }
 
-/** "▲ A→S" on a favourite whose tier changed since the previous patch. */
+/** "▲ A→S" on a favorite whose tier changed since the previous patch. */
 function TierMoveBadge({ m, since }: { m: Mover; since: string }) {
   const up = m.tierDelta > 0;
   return (
@@ -259,7 +259,7 @@ function TierMoveBadge({ m, since }: { m: Mover; since: string }) {
   );
 }
 
-function Favourites({
+function Favorites({
   data,
   mode,
   rows,
@@ -279,7 +279,7 @@ function Favourites({
   const champs = favs.map((id) => findChampion(data, id)).filter((c): c is Champion => !!c);
   return (
     <Card
-      title="Favourites"
+      title="Favorites"
       icon="star"
       className="home-card home-favs"
       extra={
@@ -300,7 +300,7 @@ function Favourites({
             </div>
           </div>
           <button type="button" className="btn btn-sm" onClick={() => setAdding(true)}>
-            Add favourite
+            Add favorite
           </button>
         </div>
       ) : (
@@ -328,7 +328,7 @@ function Favourites({
       )}
       {adding && (
         <ChampionPicker
-          title="Add a favourite"
+          title="Add a favorite"
           champions={data.champions}
           exclude={favs}
           onClose={() => setAdding(false)}
@@ -766,7 +766,7 @@ export function HomeView({ d }: { d: Derived }) {
       <Hero d={d} data={data} patch={patch} featured={featured} recent={recent} />
       <div className="home-grid">
         <div className="home-col">
-          <Favourites data={data} mode={mode} rows={rows} loading={loading} position={mode === "sr" ? position : undefined} prev={prev} />
+          <Favorites data={data} mode={mode} rows={rows} loading={loading} position={mode === "sr" ? position : undefined} prev={prev} />
           <TopPicks data={data} mode={mode} rows={rows} status={tl?.status ?? "loading"} position={position} />
         </div>
         <div className="home-col">

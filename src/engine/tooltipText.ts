@@ -1,5 +1,5 @@
 // Turns Data Dragon rich text (ability tooltips, rune descriptions, summoner spells)
-// into styled segments: tags such as <magicDamage> become a colour "kind", {{ }} and
+// into styled segments: tags such as <magicDamage> become a color "kind", {{ }} and
 // @…@ placeholders are resolved from the values Data Dragon publishes, and anything it
 // leaves out renders as a tasteful "?" instead of raw template syntax.
 

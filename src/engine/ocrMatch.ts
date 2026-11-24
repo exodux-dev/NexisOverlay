@@ -14,8 +14,8 @@ export interface OcrLine {
 export interface OcrMatch {
   augment: Augment;
   confidence: number; // 0..1
-  x: number; // horizontal centre (0..1) – cards are ordered left→right
-  y: number; // vertical centre (0..1)
+  x: number; // horizontal center (0..1) – cards are ordered left→right
+  y: number; // vertical center (0..1)
 }
 
 /** Short names are easy to hit by accident ("Thresh" → THRASH, "Left" → Deft): demand near-exact matches. */
