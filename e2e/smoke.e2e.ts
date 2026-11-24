@@ -553,6 +553,6 @@ test("champion search guesses short names and typos", async ({ start }) => {
   const search = page.getByRole("combobox", { name: "Search champions" });
   for (const [q, name] of [["mf", "Miss Fortune"], ["tahm", "Tahm Kench"], ["yasou", "Yasuo"], ["shyv", "Shyvana"]] as const) {
     await search.fill(q);
-    await expect(page.getByRole("option").first()).toContainText(name);
+    await expect(page.locator(".home-search-item").first()).toContainText(name);
   }
 });
