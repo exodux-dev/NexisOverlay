@@ -1,6 +1,57 @@
 /* Nexis in-game layer (hud window). Full-monitor, transparent, click-through.
    Everything is scoped under html.nexis-layer / .nl-* so it can't leak into the main window. */
 
+/* HUD palette. Defaults = the League ("Classic") look; the Nexis theme swaps in graphite +
+   violet + teal. Gold stays for gold (costs). Defined on :root so the Settings preview gets it too. */
+:root {
+  --nl-hl: 200, 170, 110;
+  --nl-tx: 240, 230, 210;
+  --nl-deep: 1, 10, 19;
+  --nl-deep2: 1, 9, 17;
+  --nl-deep3: 1, 6, 12;
+  --nl-navy: 10, 21, 38;
+  --nl-navy2: 9, 20, 40;
+  --nl-ok-rgb: 10, 200, 185;
+  --nl-cream: #f0e6d2;
+  --nl-text2: #cdbe91;
+  --nl-muted2: #a09b8c;
+  --nl-gold-hi: #c8aa6e;
+  --nl-frame: #785a28;
+  --nl-frame-lo: #a07c3e;
+  --nl-line: #463714;
+  --nl-ok: #0ac8b9;
+  --nl-ok-hi: #a5fff4;
+  --nl-ok-lo: #068a80;
+  --nl-money: #c8aa6e;
+  --nl-radius: 2px;
+}
+:root[data-theme="nexis"] {
+  --nl-hl: 139, 124, 255;
+  --nl-tx: 236, 238, 243;
+  --nl-deep: 12, 13, 17;
+  --nl-deep2: 12, 13, 17;
+  --nl-deep3: 8, 9, 12;
+  --nl-navy: 26, 28, 37;
+  --nl-navy2: 26, 28, 37;
+  --nl-ok-rgb: 45, 212, 191;
+  --nl-cream: #eceef3;
+  --nl-text2: #c4c8d4;
+  --nl-muted2: #8a90a2;
+  --nl-gold-hi: #8b7cff;
+  --nl-frame: #3b3e52;
+  --nl-frame-lo: #5b4fd6;
+  --nl-line: #2a2c38;
+  --nl-ok: #2dd4bf;
+  --nl-ok-hi: #99f6e4;
+  --nl-ok-lo: #0f9488;
+  --nl-money: #f3c969;
+  --nl-radius: 10px;
+}
+:root[data-theme="nexis"] .nl-hud::before,
+:root[data-theme="nexis"] .nl-hud::after {
+  display: none;
+}
+
 html.nexis-layer,
 html.nexis-layer body,
 html.nexis-layer #root {
@@ -19,15 +70,15 @@ html.nexis-layer #root {
   --u-base: clamp(12px, 0.72vw, 24px);
   --u: calc(var(--u-base) * var(--badge-scale, 1));
   /* League client / in-game tooltip palette */
-  --glass: linear-gradient(180deg, rgba(9, 20, 40, 0.94), rgba(1, 10, 19, 0.94));
-  --line: #463714;
-  --frame: #785a28;
-  --frame-hi: #c8aa6e;
-  --text: #f0e6d2;
-  --muted: #a09b8c;
-  --gold: #c8aa6e;
+  --glass: linear-gradient(180deg, rgba(var(--nl-navy2), 0.94), rgba(var(--nl-deep), 0.94));
+  --line: var(--nl-line);
+  --frame: var(--nl-frame);
+  --frame-hi: var(--nl-gold-hi);
+  --text: var(--nl-cream);
+  --muted: var(--nl-muted2);
+  --gold: var(--nl-gold-hi);
   --display: "Inter Variable", "Inter", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
-  --ok: #0ac8b9;
+  --ok: var(--nl-ok);
   --tier: #8b9bb4;
 }
 .nl-root {
@@ -85,15 +136,15 @@ html.nexis-layer #root {
   align-items: stretch;
   gap: 0.75em;
   padding: 0.6em 0.8em 0.65em 0.6em;
-  border-radius: 2px;
+  border-radius: var(--nl-radius);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--tier) 10%, transparent), transparent 55%),
     var(--glass);
   border: 1px solid var(--frame);
   box-shadow:
     0 0.5em 1.4em rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(1, 10, 19, 0.85),
-    inset 0 1px 0 rgba(200, 170, 110, 0.25);
+    0 0 0 1px rgba(var(--nl-deep), 0.85),
+    inset 0 1px 0 rgba(var(--nl-hl), 0.25);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
 }
 .nl-badge::before {
@@ -104,7 +155,7 @@ html.nexis-layer #root {
   right: 0.9em;
   top: -1px;
   height: 2px;
-  border-radius: 2px;
+  border-radius: var(--nl-radius);
   background: var(--tier-grad, var(--tier));
   opacity: 0.9;
 }
@@ -122,7 +173,7 @@ html.nexis-layer #root {
   height: 1.4em;
   display: grid;
   place-items: center;
-  border-radius: 2px;
+  border-radius: var(--nl-radius);
   font-family: var(--display);
   font-weight: 700;
   font-size: 2.1em;
@@ -178,7 +229,7 @@ html.nexis-layer #root {
 .nl-reason {
   font-size: 0.8em;
   line-height: 1.3;
-  color: #cdbe91;
+  color: var(--nl-text2);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -189,10 +240,10 @@ html.nexis-layer #root {
 .nl-best {
   border-color: var(--frame-hi);
   box-shadow:
-    0 0 0 1px rgba(1, 10, 19, 0.85),
-    0 0 1.2em rgba(200, 170, 110, 0.35),
+    0 0 0 1px rgba(var(--nl-deep), 0.85),
+    0 0 1.2em rgba(var(--nl-hl), 0.35),
     0 0.5em 1.4em rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(240, 230, 210, 0.3);
+    inset 0 1px 0 rgba(var(--nl-tx), 0.3);
   padding-top: 0.85em;
 }
 .nl-ribbon {
@@ -204,7 +255,7 @@ html.nexis-layer #root {
   align-items: center;
   gap: 0.3em;
   padding: 0.18em 0.7em 0.18em 0.55em;
-  border-radius: 2px;
+  border-radius: var(--nl-radius);
   font-family: var(--display);
   font-size: 0.72em;
   font-weight: 700;
@@ -212,9 +263,9 @@ html.nexis-layer #root {
   white-space: nowrap;
   color: #1e2328;
   text-shadow: none;
-  background: linear-gradient(180deg, #f0e6d2, #c8aa6e 55%, #785a28);
-  border: 1px solid #f0e6d2;
-  box-shadow: 0 0.2em 0.6em rgba(0, 0, 0, 0.6), 0 0 0.8em rgba(200, 170, 110, 0.45);
+  background: linear-gradient(180deg, var(--nl-cream), var(--nl-gold-hi) 55%, var(--nl-frame));
+  border: 1px solid var(--nl-cream);
+  box-shadow: 0 0.2em 0.6em rgba(0, 0, 0, 0.6), 0 0 0.8em rgba(var(--nl-hl), 0.45);
 }
 .nl-crown {
   width: 1.15em;
@@ -259,9 +310,9 @@ html.nexis-layer #root {
 /* sketch of League's own HUD so the anchors make sense */
 .hudset-game {
   position: absolute;
-  background: rgba(1, 10, 19, 0.82);
+  background: rgba(var(--nl-deep), 0.82);
   border: 1px solid rgba(120, 90, 40, 0.65);
-  border-radius: 2px;
+  border-radius: var(--nl-radius);
 }
 .hudset-game.g-bar {
   left: 33%;
@@ -286,7 +337,7 @@ html.nexis-layer #root {
   bottom: 14%;
   width: 22%;
   height: 12%;
-  background: rgba(1, 10, 19, 0.4);
+  background: rgba(var(--nl-deep), 0.4);
   border-style: dashed;
   border-color: rgba(120, 90, 40, 0.35);
 }
@@ -296,7 +347,7 @@ html.nexis-layer #root {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(240, 230, 210, 0.35);
+  color: rgba(var(--nl-tx), 0.35);
 }
 
 .hudset-spot {
@@ -305,10 +356,10 @@ html.nexis-layer #root {
   width: 18%;
   aspect-ratio: 21.5 / 15;
   padding: 0;
-  border: 1px dashed rgba(200, 170, 110, 0.45);
+  border: 1px dashed rgba(var(--nl-hl), 0.45);
   border-radius: 3px;
-  background: rgba(1, 10, 19, 0.25);
-  color: rgba(240, 230, 210, 0.75);
+  background: rgba(var(--nl-deep), 0.25);
+  color: rgba(var(--nl-tx), 0.75);
   font: 600 10px/1.2 var(--font-body, system-ui);
   cursor: pointer;
   display: grid;
@@ -316,8 +367,8 @@ html.nexis-layer #root {
   transition: background 0.12s, border-color 0.12s, box-shadow 0.12s, opacity 0.12s;
 }
 .hudset-spot:hover {
-  background: rgba(200, 170, 110, 0.14);
-  border-color: rgba(200, 170, 110, 0.85);
+  background: rgba(var(--nl-hl), 0.14);
+  border-color: rgba(var(--nl-hl), 0.85);
 }
 .hudset-spot:focus-visible {
   outline: 2px solid var(--accent);
@@ -333,9 +384,9 @@ html.nexis-layer #root {
 }
 .hudset-spot.active {
   cursor: default;
-  border: 1px solid #c8aa6e;
-  background: linear-gradient(180deg, rgba(9, 20, 40, var(--hud-a, 0.94)), rgba(1, 10, 19, var(--hud-a, 0.94)));
-  box-shadow: 0 0 0 1px rgba(1, 10, 19, 0.85), 0 0 14px rgba(200, 170, 110, 0.35);
+  border: 1px solid var(--nl-gold-hi);
+  background: linear-gradient(180deg, rgba(var(--nl-navy2), var(--hud-a, 0.94)), rgba(var(--nl-deep), var(--hud-a, 0.94)));
+  box-shadow: 0 0 0 1px rgba(var(--nl-deep), 0.85), 0 0 14px rgba(var(--nl-hl), 0.35);
 }
 .hudset-skel {
   position: absolute;
@@ -351,7 +402,7 @@ html.nexis-layer #root {
   flex: 1 1 0;
   min-height: 2px;
   border-radius: 1px;
-  background: rgba(200, 170, 110, 0.55);
+  background: rgba(var(--nl-hl), 0.55);
 }
 .hudset-skel i:nth-child(1) {
   width: 35%;
@@ -359,14 +410,14 @@ html.nexis-layer #root {
 }
 .hudset-skel i:nth-child(2) {
   flex-grow: 2.4;
-  background: linear-gradient(90deg, rgba(200, 170, 110, 0.8) 0 22%, transparent 22% 28%, rgba(240, 230, 210, 0.35) 28%);
+  background: linear-gradient(90deg, rgba(var(--nl-hl), 0.8) 0 22%, transparent 22% 28%, rgba(var(--nl-tx), 0.35) 28%);
 }
 .hudset-skel i:nth-child(3) {
-  background: repeating-linear-gradient(90deg, rgba(200, 170, 110, 0.55) 0 13%, transparent 13% 17.4%);
+  background: repeating-linear-gradient(90deg, rgba(var(--nl-hl), 0.55) 0 13%, transparent 13% 17.4%);
 }
 .hudset-skel i:nth-child(4) {
   width: 70%;
-  background: rgba(10, 200, 185, 0.45);
+  background: rgba(var(--nl-ok-rgb), 0.45);
 }
 /* --fx / --fy: same free-space fractions as the real HUD (hudSettings.ts), 1.2% margin. */
 .hudset-spot {
@@ -382,7 +433,7 @@ html.nexis-layer #root {
 }
 .hudset-preset {
   opacity: 0.55;
-  border-color: rgba(200, 170, 110, 0.3);
+  border-color: rgba(var(--nl-hl), 0.3);
 }
 .hudset-preset:hover,
 .hudset-preset:focus-visible {
@@ -460,11 +511,11 @@ html.nexis-layer #root {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(240, 230, 210, 0.55);
+  color: rgba(var(--nl-tx), 0.55);
 }
 .hudset-empty {
   font-size: 12px;
-  color: rgba(240, 230, 210, 0.7);
+  color: rgba(var(--nl-tx), 0.7);
   text-align: center;
   max-width: 220px;
 }
@@ -554,8 +605,8 @@ html.nexis-layer #root {
 }
 .nl-calib-region {
   position: absolute;
-  border: 2px dashed rgba(10, 200, 185, 0.9);
-  background: rgba(10, 200, 185, 0.06);
+  border: 2px dashed rgba(var(--nl-ok-rgb), 0.9);
+  background: rgba(var(--nl-ok-rgb), 0.06);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
 }
@@ -565,8 +616,8 @@ html.nexis-layer #root {
   left: 0;
   padding: 0.2em 0.6em;
   border-radius: 4px;
-  background: rgba(1, 10, 19, 0.85);
-  color: #0ac8b9;
+  background: rgba(var(--nl-deep), 0.85);
+  color: var(--nl-ok);
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
@@ -584,7 +635,7 @@ html.nexis-layer #root {
   text-align: center;
   color: #f1e6c8;
   background: var(--glass);
-  border: 1px solid rgba(200, 170, 110, 0.6);
+  border: 1px solid rgba(var(--nl-hl), 0.6);
   box-shadow: 0 0.3em 0.9em rgba(0, 0, 0, 0.6);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
   transition: opacity 320ms ease;
