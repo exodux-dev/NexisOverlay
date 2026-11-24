@@ -14,6 +14,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       "Champion search guesses what you meant: short names (mf, tf, j4, asol, tk), prefixes (yas, tahm, shyv) and typos (yasou).",
       "Build tab: a centered search with live results replaces the Pick a champion button; “All champions” opens the full list.",
       "Search bars are rounder and clearer everywhere.",
+      "Home: “Grow your pool” suggests strong champions this patch that play like the ones you win with.",
       "The demo game is a small switch at the bottom left, and turns itself off when champ select or a game starts.",
     ],
   },

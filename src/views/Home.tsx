@@ -2,6 +2,7 @@
 // a champion search that opens the build, favorites, recent champions, your recent form,
 // this patch's top picks and quick actions.
 
+import { poolSuggestions } from "../engine/poolCoach";
 import { searchChampions } from "../engine/championSearch";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { MODE_LABEL, actions, useApp, type Derived, type GameModeKind } from "../app/store";
@@ -338,6 +339,41 @@ function Favorites({
 }
 
 // ------------------------------------------------------------------ recent form
+
+/** "Grow your pool": strong champions this patch in the style you already win with. */
+function PoolCoach({ data, mode, rows, position }: { data: StaticData; mode: GameModeKind; rows?: ChampionTierRow[]; position?: TierPosition }) {
+  const history = useApp((s) => s.history);
+  const picks = useMemo(() => poolSuggestions({ data, history: historyForMode(history, mode), rows, mode, position }), [data, history, mode, rows, position]);
+  if (!picks.length) return null;
+  return (
+    <Card title="Grow your pool" icon="spark" className="home-pool" extra={<span className="home-sub">{MODE_LABEL[mode]}{position ? ` · ${POSITION_LABEL[position]}` : ""}</span>}>
+      <ul className="pool-list">
+        {picks.map((p) => (
+          <li key={p.champion.id}>
+            <button
+              type="button"
+              className="pool-item"
+              onClick={() => {
+                actions.setExploreChampion(p.champion.id);
+                actions.setTab("build");
+              }}
+              title={`Open the ${p.champion.name} build`}
+            >
+              <GameIcon src={p.champion.icon} name={p.champion.name} size={36} round />
+              <span className="pool-text">
+                <strong>{p.champion.name}</strong>
+                <span>
+                  {(p.row.winRate * 100).toFixed(1)}% WR this patch
+                  {p.like ? ` · plays like your ${p.like.name}` : ""}
+                </span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  );
+}
 
 function FormCard({ data, mode }: { data: StaticData; mode: GameModeKind }) {
   const history = useApp((s) => s.history);
@@ -766,6 +802,7 @@ export function HomeView({ d }: { d: Derived }) {
         </div>
         <div className="home-col">
           <FormCard data={data} mode={mode} />
+          <PoolCoach data={data} mode={mode} rows={rows} position={mode === "sr" ? position : undefined} />
           {webStats && <PatchMovers data={data} mode={mode} rows={rows} patch={shortPatch(tl?.patch)} prev={prev} status={tl?.status ?? "loading"} position={position} />}
           <QuickActions mode={mode} />
         </div>

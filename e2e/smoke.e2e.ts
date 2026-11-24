@@ -578,3 +578,14 @@ test("Demo switch in the sidebar turns off when champ select starts", async ({ s
   await expect.poll(() => storeValue<boolean>(page, "(s) => s.demo")).toBe(false);
   await expect(demo).toHaveCount(0); // hidden during champ select
 });
+
+test("Home: Grow your pool suggests champions in your style", async ({ start }) => {
+  const page = await start({ settings: { mode: "mayhem" } });
+  const rec = (i: number, result: string) => ({ id: `pool-${i}`, date: "2026-11-20T21:05:00Z", champion: "Ahri", result, kills: 5, deaths: 3, assists: 9, durationSec: 1100, items: [], augments: ["Eureka"], enemies: [], gameMode: "KIWI" });
+  await act(page, "importHistory", [rec(1, "Win"), rec(2, "Win"), rec(3, "Lose"), rec(4, "Win"), rec(5, "Win"), rec(6, "Lose")]);
+  await act(page, "setTab", "home");
+  const card = page.locator(".home-pool");
+  await expect(card).toBeVisible();
+  await expect(card.locator(".pool-item").first()).toBeVisible();
+  await expect(card).not.toContainText(/^Ahri$/);
+});
