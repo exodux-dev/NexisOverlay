@@ -1,5 +1,6 @@
 // Match history: your personal profile (u.gg / op.gg style) built from games Nexis recorded on this PC.
 
+import { historyCsv, historyTsv } from "../engine/historyExport";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type PointerEvent, type ReactNode, type RefObject } from "react";
 import { actions, getState, MODE_LABEL, modeFromGameMode, useApp, type GameModeKind } from "../app/store";
 import { findAugment } from "../engine/augments";
@@ -48,17 +49,15 @@ function modeLabel(gameMode: string): string {
   return m ? MODE_LABEL[m] : gameMode ? gameMode.charAt(0) + gameMode.slice(1).toLowerCase() : "Unknown mode";
 }
 
-function exportHistory(history: MatchRecord[]) {
-  const json = JSON.stringify(history, null, 2);
-  const n = history.length;
-  const file = `nexis-history-${new Date().toISOString().slice(0, 10)}.json`;
+/** Save text as a file in Downloads; falls back to the clipboard when downloads are blocked. */
+function downloadText(text: string, file: string, mime: string, what: string) {
   const copy = () =>
-    navigator.clipboard.writeText(json).then(
-      () => toast("History copied to clipboard", "good", { detail: `${n} games as JSON — paste it into a .json file to keep a backup.` }),
+    navigator.clipboard.writeText(text).then(
+      () => toast(`${what} copied to clipboard`, "good", { detail: `Downloads are unavailable here: paste it into a ${file.split(".").pop()} file.` }),
       () => toast("Couldn't export history", "bad", { detail: "Downloads and the clipboard are both unavailable here." }),
     );
   try {
-    const url = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+    const url = URL.createObjectURL(new Blob([text], { type: mime }));
     const a = document.createElement("a");
     a.href = url;
     a.download = file;
@@ -67,10 +66,29 @@ function exportHistory(history: MatchRecord[]) {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
-    toast(`Exported ${n} game${n === 1 ? "" : "s"}`, "good", { detail: `Saved as ${file} in your Downloads folder.` });
+    toast(`Exported ${what}`, "good", { detail: `Saved as ${file} in your Downloads folder.` });
   } catch {
     void copy();
   }
+}
+
+const today = () => new Date().toISOString().slice(0, 10);
+const gamesWord = (n: number) => `${n} game${n === 1 ? "" : "s"}`;
+
+function exportHistory(history: MatchRecord[]) {
+  downloadText(JSON.stringify(history, null, 2), `nexis-history-${today()}.json`, "application/json", gamesWord(history.length));
+}
+
+function exportCsv(history: MatchRecord[]) {
+  // BOM so Excel opens the UTF-8 file with the right characters.
+  downloadText("\uFEFF" + historyCsv(history, getState().data), `nexis-history-${today()}.csv`, "text/csv", `${gamesWord(history.length)} as CSV`);
+}
+
+function copyForSheet(history: MatchRecord[]) {
+  void navigator.clipboard.writeText(historyTsv(history, getState().data)).then(
+    () => toast(`${gamesWord(history.length)} copied`, "good", { detail: "Paste into Excel or Google Sheets: each value lands in its own cell." }),
+    () => toast("Couldn't copy", "bad", { detail: "The clipboard is unavailable here — use Export CSV instead." }),
+  );
 }
 
 async function importFile(file: File) {
@@ -806,9 +824,15 @@ export function HistoryView() {
           )}
         </div>
         <div className="hi-actions">
-          <button type="button" className="btn btn-ghost btn-sm" onClick={() => exportHistory(getState().history)} title="Download all recorded games as JSON">
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => exportCsv(getState().history)} title="Download all recorded games as a spreadsheet file (.csv)">
             <Icon name="external" size={14} />
-            Export
+            Export CSV
+          </button>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => copyForSheet(getState().history)} title="Copy all games to paste into Excel or Google Sheets">
+            Copy for spreadsheet
+          </button>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => exportHistory(getState().history)} title="Download a full backup (.json) that Nexis can import again">
+            Backup
           </button>
           <ImportButton />
           <ClearButton />

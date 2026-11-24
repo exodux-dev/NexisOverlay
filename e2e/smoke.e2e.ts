@@ -353,3 +353,21 @@ test("streamer mode hides player names on the Players tab", async ({ start }) =>
   await expect(view).not.toContainText("#NA1");
   await expect(view).toContainText("Jinx player");
 });
+
+test("history exports as CSV and copies for a spreadsheet", async ({ start, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  const page = await start();
+  const rec = { id: "e2e-1", date: "2026-11-20T21:05:00Z", champion: "Ahri", result: "Win", kills: 9, deaths: 2, assists: 11, durationSec: 1230, items: [], augments: ["Eureka"], enemies: ["Zed"], gameMode: "KIWI" };
+  await act(page, "importHistory", [rec]);
+  await tab(page, "history").click();
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export CSV" }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toMatch(/^nexis-history-\d{4}-\d\d-\d\d\.csv$/);
+  const csv = await (await import("node:fs")).promises.readFile((await file.path())!, "utf8");
+  expect(csv).toContain("Date,Mode,Champion,Result");
+  expect(csv).toContain("ARAM: Mayhem,Ahri,Win,9,2,11");
+  await page.getByRole("button", { name: "Copy for spreadsheet" }).click();
+  const tsv = await page.evaluate(() => navigator.clipboard.readText());
+  expect(tsv.split("\n")[1].split("\t").slice(1, 4)).toEqual(["ARAM: Mayhem", "Ahri", "Win"]);
+});
