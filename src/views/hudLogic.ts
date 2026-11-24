@@ -112,7 +112,12 @@ export function splitAdvice(s: DamageSplit): string {
 export interface HudPower {
   team?: number;
   lane?: { label: string; diff: number; vs: string };
+  /** Power spikes: your next item and the gold left, and enemies close to finishing an item. */
+  spike?: { next?: { name: string; need: number }; enemyClose: string[] };
 }
+
+/** Enemies this close (gold) to a completed item count as "about to spike". */
+export const SPIKE_CLOSE_GOLD = 700;
 
 const LANE_SHORT: Record<string, string> = { TOP: "Top", JUNGLE: "Jgl", MIDDLE: "Mid", BOTTOM: "Bot", UTILITY: "Sup" };
 
@@ -120,10 +125,13 @@ const LANE_SHORT: Record<string, string> = { TOP: "Top", JUNGLE: "Jgl", MIDDLE: 
 export function powerOf(derived: unknown): HudPower | undefined {
   const p = (derived as { power?: TeamPower } | null | undefined)?.power;
   if (!p || typeof p !== "object") return undefined;
+  const save = shopOf(derived)?.saveFor;
   // Loading screen / opening seconds: nobody owns items yet, so "Team even" would be noise.
   if (p.ally && p.enemy && p.ally.itemGold + p.enemy.itemGold === 0) return undefined;
   const out: HudPower = {};
   if (p.teamsComparable && p.ally && p.enemy) out.team = p.diff.itemGold;
   if (p.myLane) out.lane = { label: LANE_SHORT[p.myLane.lane] ?? p.myLane.lane, diff: p.myLane.itemGold, vs: p.myLane.enemy.championName };
-  return out.team === undefined && !out.lane ? undefined : out;
+  const enemyClose = (p.builds ?? []).filter((b) => b.toward && b.toward.missing > 0 && b.toward.missing <= SPIKE_CLOSE_GOLD).map((b) => b.championName);
+  if (save || enemyClose.length) out.spike = { ...(save ? { next: { name: save.name, need: save.need } } : {}), enemyClose };
+  return out.team === undefined && !out.lane && !out.spike ? undefined : out;
 }

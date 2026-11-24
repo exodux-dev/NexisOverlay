@@ -1078,3 +1078,28 @@ body.nl-editing .tip {
   border-radius: 50%;
   background: #f87171;
 }
+
+/* Power spike line (Team power widget) */
+.nl-spike {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 0.9em;
+  width: 100%;
+  margin-top: 0.25em;
+  font-size: 0.9em;
+}
+.nl-spike small {
+  color: var(--muted);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.nl-spike b {
+  color: var(--nl-money);
+}
+.nl-spike-enemy b {
+  color: #f87171;
+}
+.nl-power:has(.nl-spike) {
+  flex-wrap: wrap;
+}

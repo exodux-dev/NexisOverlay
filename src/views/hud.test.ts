@@ -141,6 +141,23 @@ describe("hud power line", () => {
     });
     expect(p).toEqual({ team: -2100, lane: { label: "Mid", diff: 450, vs: "Zed" } });
   });
+  it("adds the spike line: your next item and enemies close to finishing one", () => {
+    const p = powerOf({
+      shop: { phase: "mid", phaseLabel: "Mid", buyNow: [], tips: [], saveFor: { itemId: "3089", name: "Rabadon's Deathcap", need: 900 } },
+      power: {
+        teamsComparable: true,
+        ally: { itemGold: 5000 },
+        enemy: { itemGold: 5200 },
+        diff: { itemGold: -200 },
+        builds: [
+          { championName: "Zed", toward: { missing: 400 } },
+          { championName: "Lux", toward: { missing: 1600 } },
+          { championName: "Sona" },
+        ],
+      },
+    });
+    expect(p?.spike).toEqual({ next: { name: "Rabadon's Deathcap", need: 900 }, enemyClose: ["Zed"] });
+  });
 });
 
 describe("HUD presets", () => {

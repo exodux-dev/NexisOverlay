@@ -85,7 +85,7 @@ export function useHudModel(): HudModel {
   const derived = useDerived();
   const { plan, threat, skillPlan, levelOrder, game, champion } = derived;
   const shopRaw = shopOf(derived);
-  const power = useMemo(() => powerOf(derived), [derived.power]); // eslint-disable-line react-hooks/exhaustive-deps
+  const power = useMemo(() => powerOf(derived), [derived.power, derived.shop]); // eslint-disable-line react-hooks/exhaustive-deps
   const data = useApp((s) => s.data);
   const myAugments = useApp((s) => s.myAugments);
   const enemies = game?.enemies;
@@ -864,6 +864,20 @@ function PowerWidget({ p, c }: { p: HudPower; c: boolean }) {
         <span className="nl-pw" title={`${p.lane.label} vs ${p.lane.vs}`}>
           <small>{p.lane.label}</small>
           <b className={tone(p.lane.diff)}>{fmt(p.lane.diff)}</b>
+        </span>
+      )}
+      {p.spike && (
+        <span className="nl-spike" title="Your next item and enemies close to finishing one (scoreboard items only)">
+          {p.spike.next && (
+            <span>
+              <small>Next spike</small> <b>{c ? fmtGold(p.spike.next.need) : `${p.spike.next.name} · ${fmtGold(p.spike.next.need)}`}</b>
+            </span>
+          )}
+          {p.spike.enemyClose.length > 0 && (
+            <span className="nl-spike-enemy">
+              <small>Enemy</small> <b>{c ? p.spike.enemyClose.length : `${p.spike.enemyClose.length} item${p.spike.enemyClose.length > 1 ? "s" : ""} almost done`}</b>
+            </span>
+          )}
         </span>
       )}
     </div>
