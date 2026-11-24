@@ -12,6 +12,7 @@ import {
   type RankEntry,
   type ScoutTag,
 } from "../engine/sources/opggProfile";
+import { useApp } from "../app/store";
 import { GameIcon } from "../ui/GameIcon";
 import { Icon } from "../ui/icons";
 import { Tip } from "../ui/Tip";
@@ -42,6 +43,12 @@ interface PanelProps {
 }
 
 const QUEUE_SHORT: Record<string, string> = { SOLORANKED: "Solo/Duo", FLEXRANKED: "Flex", RANKED5S: "5v5" };
+
+/** Streamer mode: a player is shown by champion only ("Ahri player"), never by Riot ID. */
+function useStreamer(): boolean {
+  return useApp((s) => s.settings.streamerMode);
+}
+const maskedName = (p: { championName: string; isMe?: boolean }) => (p.isMe ? "You" : `${p.championName} player`);
 
 function splitId(riotId: string): { name: string; tag?: string } {
   const i = riotId.lastIndexOf("#");
@@ -189,7 +196,8 @@ function Skeleton() {
 }
 
 function PlayerCard({ player, state, queue, style }: { player: ScoutPlayer; state: ProfileState | undefined; queue?: string; style?: CSSProperties }) {
-  const { name, tag } = splitId(player.riotId);
+  const streamer = useStreamer();
+  const { name, tag } = streamer ? { name: maskedName(player), tag: undefined } : splitId(player.riotId);
   const profile = typeof state === "object" ? state : undefined;
   const s = profile ? summarizeProfile(profile, champOf(player)) : undefined;
   const tags = profile ? scoutTags(profile, champOf(player), queue, { position: player.position }) : [];
@@ -204,7 +212,7 @@ function PlayerCard({ player, state, queue, style }: { player: ScoutPlayer; stat
       </div>
       <div className="sc-body">
         <header className="sc-head">
-          <span className="sc-id" title={player.riotId}>
+          <span className="sc-id" title={streamer ? undefined : player.riotId}>
             <span className="sc-name">{name}</span>
             {tag && <span className="sc-tagline">#{tag}</span>}
           </span>
@@ -331,6 +339,7 @@ export function ScoutPanel({ players, profiles, region, status, queue }: PanelPr
 /** Compact one-line-per-enemy summary for small spaces. */
 export function ScoutStrip({ players, profiles, queue, max = 1, style }: { players: ScoutPlayer[]; profiles: Record<string, ProfileState>; queue?: string; max?: number; style?: CSSProperties }) {
   const { enemy } = teamsOf(players);
+  const streamer = useStreamer();
   return (
     <div className="sc-strip" style={style}>
       {enemy.map((p) => {
@@ -341,8 +350,8 @@ export function ScoutStrip({ players, profiles, queue, max = 1, style }: { playe
         return (
           <div key={p.riotId} className="sc-row">
             <GameIcon src={p.championIcon} name={p.championName} size={24} />
-            <span className="sc-row-name" title={p.riotId}>
-              {splitId(p.riotId).name}
+            <span className="sc-row-name" title={streamer ? undefined : p.riotId}>
+              {streamer ? maskedName(p) : splitId(p.riotId).name}
             </span>
             {st === "loading" || st === undefined ? (
               <span className="sc-skel-bar sc-row-skel" />

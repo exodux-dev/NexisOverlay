@@ -866,6 +866,7 @@ function GeneralSection() {
           }
         />
         <Toggle checked={s.showPostGame} onChange={(v) => update({ showPostGame: v })} label="Post-game summary" sub="Opens a short recap of your game when it ends" />
+        <Toggle checked={s.streamerMode} onChange={(v) => update({ streamerMode: v })} label="Streamer mode" sub="Hides every player name and Riot ID (players show as their champion), so Nexis is safe to show on stream" />
       </Card>
       <Card title="Builds" icon="build">
         <div className="field-stack">

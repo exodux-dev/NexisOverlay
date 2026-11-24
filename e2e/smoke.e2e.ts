@@ -341,3 +341,15 @@ test("share a build code and import one", async ({ start, context }) => {
   await expect.poll(() => storeValue<unknown>(page, "(s) => s.settings.buildChoices['aram:Jinx']")).toEqual({ core: "3031,3094,3036" });
   expect(await storeValue<string>(page, "(s) => s.explore.champion")).toBe("Jinx");
 });
+
+test("streamer mode hides player names on the Players tab", async ({ start }) => {
+  const page = await start();
+  await emit(page, "live-game", liveGame());
+  await tab(page, "enemies").click();
+  const view = page.locator(".view-enemies");
+  await expect(view).toContainText("Powder");
+  await act(page, "updateSettings", { streamerMode: true });
+  await expect(view).not.toContainText("Powder");
+  await expect(view).not.toContainText("#NA1");
+  await expect(view).toContainText("Jinx player");
+});

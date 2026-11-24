@@ -160,6 +160,8 @@ export interface Settings {
   badgeOffset: number; // extra vertical offset (fraction of screen) for the in-game tier badges
   /** Tier badges above the augment cards (default: clear of the reroll buttons) or below them. */
   badgePlacement: "above" | "below";
+  /** Hide player names / Riot IDs everywhere (safe to show on stream). */
+  streamerMode: boolean;
   /** Mark your augment pick automatically when only the chosen card is left on screen. */
   detectPicks: boolean;
   theme: ThemeSettings;
@@ -217,6 +219,7 @@ export const DEFAULT_SETTINGS: Settings = {
   badgeOffset: 0,
   badgePlacement: "above",
   detectPicks: true,
+  streamerMode: false,
   theme: DEFAULT_THEME,
   buildStyles: {},
   leagueImport: DEFAULT_LEAGUE_IMPORT,
@@ -257,6 +260,7 @@ function finishNormalize(s: Settings): Settings {
   if (s.roleOverrides === undefined) s.roleOverrides = null;
   if (s.badgePlacement !== "above" && s.badgePlacement !== "below") s.badgePlacement = "above";
   if (typeof s.detectPicks !== "boolean") s.detectPicks = true;
+  if (typeof s.streamerMode !== "boolean") s.streamerMode = false;
   if (!Array.isArray(s.favorites)) s.favorites = [];
   else if (s.favorites.some((f) => typeof f !== "string")) s.favorites = s.favorites.filter((f): f is string => typeof f === "string");
   // The project moved to exodux-dev: an untouched old default stats URL follows it (custom URLs are kept).
