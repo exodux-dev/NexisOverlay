@@ -1,6 +1,7 @@
 // Champion tier list per game mode (HexMayhem for ARAM: Mayhem, OP.GG for ARAM and Summoner's Rift).
 // Pure view: the caller loads `rows` (see engine/sources/tierlists.ts) and handles picks / refresh.
 
+import { searchChampions } from "../engine/championSearch";
 import { displayPatch } from "../ui/format";
 import { useMemo, useState, type ReactNode } from "react";
 import { useApp } from "../app/store";
@@ -177,7 +178,9 @@ export function TierListView({ mode, rows, status, position, onPosition, onPick,
 
   const filtered = useMemo(() => {
     const n = norm(q);
-    return n ? entries.filter((e) => norm(e.name).includes(n) || norm(e.row.championKey).includes(n)) : entries;
+    if (!n) return entries;
+    const hit = new Set(searchChampions(q, entries.map((e) => ({ id: e.row.championKey, name: e.name })), entries.length).map((c) => c.id));
+    return entries.filter((e) => hit.has(e.row.championKey));
   }, [entries, q]);
 
   const sorted = useMemo(() => {

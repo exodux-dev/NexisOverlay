@@ -2,6 +2,7 @@
 // a champion search that opens the build, favorites, recent champions, your recent form,
 // this patch's top picks and quick actions.
 
+import { searchChampions } from "../engine/championSearch";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { MODE_LABEL, actions, useApp, type Derived, type GameModeKind } from "../app/store";
 import { isTauri, setHudEdit } from "../bridge";
@@ -86,16 +87,10 @@ function ChampionSearch({ data }: { data: StaticData }) {
   const results = useMemo(() => {
     const n = norm(q);
     if (!n) return [];
-    const scored: Array<{ c: Champion; s: number }> = [];
-    for (const c of data.champions) {
-      const name = norm(c.name);
-      const s = name.startsWith(n) ? 3 : name.includes(n) ? 2 : norm(c.id).includes(n) ? 1 : norm(ARCHETYPE_LABEL[c.archetype]).includes(n) ? 0.5 : 0;
-      if (s) scored.push({ c, s });
-    }
-    return scored
-      .sort((a, b) => b.s - a.s || a.c.name.localeCompare(b.c.name))
-      .slice(0, 6)
-      .map((x) => x.c);
+    // Name guesses first ("yas", "tahm", "mf", typos); a class ("mage", "tank") as a fallback.
+    const byName = searchChampions(q, data.champions, 6);
+    if (byName.length) return byName;
+    return data.champions.filter((c) => norm(ARCHETYPE_LABEL[c.archetype]).includes(n)).slice(0, 6);
   }, [q, data]);
   useEffect(() => setSel(0), [q]);
   useEffect(() => {

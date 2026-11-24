@@ -547,3 +547,12 @@ test("Duo partners: Arena partners from OP.GG synergies", async ({ start }) => {
   await page.getByRole("radiogroup", { name: "Role" }).getByRole("radio", { name: "Mid" }).click();
   await expect(page.locator(".duo-card")).toHaveCount(0);
 });
+
+test("champion search guesses short names and typos", async ({ start }) => {
+  const page = await start();
+  const search = page.getByRole("combobox", { name: "Search champions" });
+  for (const [q, name] of [["mf", "Miss Fortune"], ["tahm", "Tahm Kench"], ["yasou", "Yasuo"], ["shyv", "Shyvana"]] as const) {
+    await search.fill(q);
+    await expect(page.getByRole("option").first()).toContainText(name);
+  }
+});

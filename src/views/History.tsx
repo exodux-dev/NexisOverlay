@@ -1,5 +1,6 @@
 // Match history: your personal profile (u.gg / op.gg style) built from games Nexis recorded on this PC.
 
+import { championMatchScore } from "../engine/championSearch";
 import { historyCsv, historyTsv } from "../engine/historyExport";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type PointerEvent, type ReactNode, type RefObject } from "react";
 import { actions, getState, MODE_LABEL, modeFromGameMode, useApp, type GameModeKind } from "../app/store";
@@ -723,7 +724,7 @@ export function HistoryView() {
     return history.filter((m) => {
       if (mode !== "all" && modeFromGameMode(m.gameMode) !== mode) return false;
       if (result !== "all" && m.result !== result) return false;
-      if (q && !champName(data, m.champion).toLowerCase().includes(q) && !m.champion.toLowerCase().includes(q)) return false;
+      if (q && championMatchScore(q, { id: m.champion, name: champName(data, m.champion) }) <= 0) return false;
       return true;
     });
   }, [history, mode, result, query, data]);

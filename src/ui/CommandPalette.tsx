@@ -1,5 +1,6 @@
 // Ctrl+K command palette: jump to any champion, tab, mode or setting from the keyboard.
 
+import { championMatchScore } from "../engine/championSearch";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MODE_LABEL, THEME_PRESETS, actions, useApp, type GameModeKind, type Tab, type ThemePreset } from "../app/store";
 import { norm } from "../engine/text";
@@ -31,6 +32,11 @@ const TABS: Array<{ tab: Tab; label: string; icon: IconName }> = [
 
 function score(cmd: Command, q: string): number {
   if (!q) return cmd.group === "Champions" ? 0 : 1;
+  // Champions: the same guessing as every other champion search ("yas", "mf", typos).
+  if (cmd.group === "Champions") {
+    const s = championMatchScore(q, { id: cmd.keywords ?? cmd.label, name: cmd.label });
+    return s > 0 ? s : -1;
+  }
   const label = norm(cmd.label);
   const kw = norm(cmd.keywords ?? "");
   if (label === q) return 100;

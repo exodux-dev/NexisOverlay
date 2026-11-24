@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import { searchChampions } from "../engine/championSearch";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Champion } from "../engine/types";
 import { norm } from "../engine/text";
@@ -27,9 +28,10 @@ export function ChampionPicker({ title, champions, exclude = [], onPick, onClose
 
   const list = useMemo(() => {
     const n = norm(q);
-    return champions.filter(
-      (c) => !exclude.includes(c.id) && (!n || norm(c.name).includes(n) || norm(ARCHETYPE_LABEL[c.archetype]).includes(n)),
-    );
+    const pool = champions.filter((c) => !exclude.includes(c.id));
+    if (!n) return pool;
+    const byName = searchChampions(q, pool, pool.length);
+    return byName.length ? byName : pool.filter((c) => norm(ARCHETYPE_LABEL[c.archetype]).includes(n));
   }, [q, champions, exclude]);
 
   // Portal to <body>: inside the scrolling view a "fixed" scrim is positioned against the page,
