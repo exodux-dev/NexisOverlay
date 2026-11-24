@@ -252,15 +252,17 @@ fn find_credentials(league_path: &str) -> Lookup {
             return Lookup { creds: Some(c), spawned: false };
         }
     }
-    // Not installed at a known spot: ask Windows for the running client (a cheap process-list
-    // query, no process spawn). Not running => nothing to find, and no PowerShell every poll.
+    // Not installed at a known spot: ask Windows for the running client's folder (a cheap
+    // process-list query, no process spawn) and read the lockfile there.
     match client_process() {
         ClientProcess::NotRunning => Lookup { creds: None, spawned: false },
         ClientProcess::Running(Some(dir)) => match read_lockfile(&dir.join("lockfile")) {
             Some(c) => Lookup { creds: Some(c), spawned: false },
-            None => Lookup { creds: from_process_args(), spawned: true },
+            None => Lookup { creds: None, spawned: false },
         },
-        ClientProcess::Running(None) | ClientProcess::Unknown => Lookup { creds: from_process_args(), spawned: true },
+        // No lockfile where we can see it: set the League folder in Settings. (No PowerShell /
+        // command-line reading of the client: antivirus flags that pattern as credential theft.)
+        ClientProcess::Running(None) | ClientProcess::Unknown => Lookup { creds: None, spawned: false },
     }
 }
 
@@ -315,43 +317,6 @@ fn client_process() -> ClientProcess {
     ClientProcess::Unknown
 }
 
-#[cfg(windows)]
-fn from_process_args() -> Option<Credentials> {
-    use std::os::windows::process::CommandExt;
-    const CREATE_NO_WINDOW: u32 = 0x0800_0000;
-    let out = std::process::Command::new("powershell")
-        .args([
-            "-NoProfile",
-            "-Command",
-            "(Get-CimInstance Win32_Process -Filter \"name='LeagueClientUx.exe'\").CommandLine",
-        ])
-        .creation_flags(CREATE_NO_WINDOW)
-        .output()
-        .ok()?;
-    parse_args(&String::from_utf8_lossy(&out.stdout))
-}
-
-#[cfg(not(windows))]
-fn from_process_args() -> Option<Credentials> {
-    let out = std::process::Command::new("ps").args(["-A", "-o", "args"]).output().ok()?;
-    let text = String::from_utf8_lossy(&out.stdout);
-    let line = text.lines().find(|l| l.contains("LeagueClientUx"))?;
-    parse_args(line)
-}
-
-fn parse_args(cmdline: &str) -> Option<Credentials> {
-    let grab = |key: &str| -> Option<String> {
-        let idx = cmdline.find(key)? + key.len();
-        let rest = &cmdline[idx..];
-        let end = rest.find(|c: char| c == '"' || c.is_whitespace()).unwrap_or(rest.len());
-        Some(rest[..end].to_string())
-    };
-    Some(Credentials {
-        port: grab("--app-port=")?.parse().ok()?,
-        token: grab("--remoting-auth-token=")?,
-    })
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -366,11 +331,5 @@ mod tests {
         let e = describe_error(400, r#"{"errorCode":"RPC_ERROR","message":"Max pages reached"}"#, "POST", "/lol-perks/v1/pages");
         assert!(e.contains("400") && e.contains("Max pages reached"));
         assert!(describe_error(401, "", "GET", "/x").contains("not authorised"));
-    }
-    #[test]
-    fn parses_args() {
-        let c = parse_args("\"LeagueClientUx.exe\" \"--remoting-auth-token=tok_123\" \"--app-port=6000\"").unwrap();
-        assert_eq!(c.port, 6000);
-        assert_eq!(c.token, "tok_123");
     }
 }
