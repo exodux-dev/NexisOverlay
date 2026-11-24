@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-24.4",
+    title: "Smoother text boxes and clearer playstyles",
+    items: [
+      "Search boxes and text fields are softer, with a clear focus glow.",
+      "Auto / Aggressive / Balanced / Safe / Frontline now explain in plain words what they change (hover them).",
+    ],
+  },
+  {
     id: "2026-11-24.3",
     title: "Builds match OP.GG again",
     items: [

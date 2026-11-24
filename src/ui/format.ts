@@ -19,12 +19,15 @@ export const ARCHETYPE_LABEL: Record<Archetype, string> = {
 };
 
 export const PLAYSTYLES: Array<{ value: Playstyle; label: string; hint: string }> = [
-  { value: "auto", label: "Auto", hint: "Adapts to how your game is going" },
-  { value: "aggressive", label: "Aggressive", hint: "More damage, fewer defensive items" },
-  { value: "balanced", label: "Balanced", hint: "Even mix of damage and safety" },
-  { value: "safe", label: "Safe", hint: "Prioritize survival items" },
-  { value: "frontline", label: "Frontline", hint: "Soak damage for your team" },
+  { value: "auto", label: "Auto", hint: "Picks a style for you as the game goes: safer when you're dying a lot, more damage when you're ahead" },
+  { value: "aggressive", label: "Aggressive", hint: "Leans into damage: defensive counter items only when the threat is big" },
+  { value: "balanced", label: "Balanced", hint: "An even mix: buy whatever counter the enemy team calls for most" },
+  { value: "safe", label: "Safe", hint: "Survive first: defensive items against their burst and crowd control come earlier" },
+  { value: "frontline", label: "Frontline", hint: "Built to absorb damage for your team: tankier counters, a bit less damage" },
 ];
+
+/** "Balanced" for a resolved playstyle id. */
+export const playstyleLabel = (id: string) => PLAYSTYLES.find((p) => p.value === id)?.label ?? id;
 
 export const RARITY_LABEL: Record<AugmentRarity, string> = { prismatic: "Prismatic", gold: "Gold", silver: "Silver" };
 

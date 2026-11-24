@@ -177,14 +177,14 @@ export function resolvePlaystyle(
   me: PlayerState | undefined,
   champion: Champion,
 ): { style: Exclude<Playstyle, "auto">; reason: string } {
-  if (playstyle && playstyle !== "auto") return { style: playstyle, reason: "Set manually" };
+  if (playstyle && playstyle !== "auto") return { style: playstyle, reason: "You picked this style" };
   if (me) {
     const { kills, deaths, assists } = me;
-    if (deaths >= 3 && deaths * 2 > kills + assists) return { style: "safe", reason: `You've died ${deaths}× — leaning defensive` };
-    if (kills + assists >= 6 && kills + assists >= 3 * (deaths + 1)) return { style: "aggressive", reason: "You're ahead — pressing damage" };
+    if (deaths >= 3 && deaths * 2 > kills + assists) return { style: "safe", reason: `You've died ${deaths} times, so defensive items come first` };
+    if (kills + assists >= 6 && kills + assists >= 3 * (deaths + 1)) return { style: "aggressive", reason: "You're ahead, so the build leans into damage" };
   }
-  if (champion.archetype === "tank") return { style: "frontline", reason: "Tank — prioritizing team frontline" };
-  return { style: "balanced", reason: "Balanced until the game shows a trend" };
+  if (champion.archetype === "tank") return { style: "frontline", reason: "Tanks build to protect the team" };
+  return { style: "balanced", reason: "No clear trend yet: an even mix of damage and defense" };
 }
 
 function needs(threat: ThreatReport, champion: Champion): Record<Counter, { v: number; why: string }> {

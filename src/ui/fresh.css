@@ -381,3 +381,80 @@
   margin-left: auto;
   align-self: center;
 }
+
+/* ---------- text boxes: soft field, clear focus ring, calm placeholder */
+.search,
+.input,
+.kb-btn,
+.share-paste input {
+  border: 1px solid var(--fr-line-2);
+  border-radius: var(--fr-r-sm);
+  background: rgba(var(--bg-rgb), 0.55);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.search {
+  height: 38px;
+  padding: 0 14px;
+  gap: 10px;
+}
+.search-sm {
+  height: 32px;
+  padding: 0 12px;
+}
+.search:hover,
+.input:hover,
+.kb-btn:hover {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--fr-line-2));
+}
+.search:focus-within,
+.input:focus,
+.kb-btn:focus-visible,
+.share-paste input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent) 65%, transparent);
+  background: rgba(var(--bg-rgb), 0.75);
+  box-shadow: 0 0 0 3px var(--fr-accent-soft), inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.search input,
+.input,
+.share-paste input {
+  font-size: 13.5px;
+  letter-spacing: 0.005em;
+}
+.nx-main input::placeholder,
+.nx-main textarea::placeholder {
+  color: color-mix(in srgb, var(--muted) 80%, transparent);
+  opacity: 1;
+}
+.search svg {
+  color: var(--muted);
+  flex: none;
+}
+.search:focus-within svg {
+  color: var(--accent);
+}
+
+/* ---------- playstyle switch (top bar): calmer type */
+.topbar .seg-btn {
+  font-weight: 550;
+  letter-spacing: 0.01em;
+}
+.order-foot .ps-chip {
+  text-transform: none;
+  font-weight: 650;
+  color: var(--text);
+  background: var(--fr-accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  padding: 2px 10px;
+}
+.search input,
+.search input:focus,
+.search input:focus-visible {
+  border: 0;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  height: 100%;
+}

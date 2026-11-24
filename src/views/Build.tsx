@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { DataSourceBar } from "../ui/DataSourceBar";
+import { playstyleLabel } from "../ui/format";
 import { ShareBuildButtons } from "../ui/ShareBuild";
 import { actions, useApp, useChampionSpells, useDerived, webKey, type Derived } from "../app/store";
 import { COUNTER_LABEL, type BuildPlan, type ItemRec } from "../engine/build";
@@ -98,7 +99,7 @@ function BuildOrder({ plan }: { plan: BuildPlan }) {
       </ol>
       <CoreOptions plan={plan} onChoose={chooser(d)} top4={arena} />
       <div className="order-foot">
-        <span className="ps-chip">{plan.playstyle}</span>
+        <span className="ps-chip">{playstyleLabel(plan.playstyle)}</span>
         <span className="dim">{plan.playstyleReason}</span>
       </div>
     </Card>
