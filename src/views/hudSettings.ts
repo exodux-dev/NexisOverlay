@@ -90,6 +90,22 @@ export const WIDGET_FLAG: Record<HudWidget, keyof Pick<HudSettings, "showNextIte
   power: "showPower",
 };
 
+export type HudPreset = "minimal" | "full";
+
+/** Widget / look settings a preset sets (position, size, opacity and hover mode are kept). */
+export function hudPreset(p: HudPreset): Partial<HudSettings> {
+  if (p === "minimal")
+    return { showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: false, showPower: false, showHint: false, compact: true, collapsed: false };
+  const { showNextItem, showSkillOrder, showBuildPath, showThreats, showAugments, showPower, showHint, compact, collapsed } = HUD_DEFAULTS;
+  return { showNextItem, showSkillOrder, showBuildPath, showThreats, showAugments, showPower, showHint, compact, collapsed };
+}
+
+/** The preset the current settings match exactly, if any. */
+export function activeHudPreset(h: HudSettings): HudPreset | undefined {
+  const same = (p: HudPreset) => Object.entries(hudPreset(p)).every(([k, v]) => h[k as keyof HudSettings] === v);
+  return same("minimal") ? "minimal" : same("full") ? "full" : undefined;
+}
+
 /**
  * Free-position equivalent of a v1 preset (keeps clear of League's own HUD: scoreboard/FPS at the
  * top right edge, team frames, chat lower left, minimap bottom right, ability bar bottom centre).

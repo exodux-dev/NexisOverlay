@@ -142,3 +142,21 @@ describe("hud power line", () => {
     expect(p).toEqual({ team: -2100, lane: { label: "Mid", diff: 450, vs: "Zed" } });
   });
 });
+
+describe("HUD presets", () => {
+  it("Minimal keeps only the next buy + skill order as icons, Full restores defaults", async () => {
+    const { HUD_DEFAULTS, activeHudPreset, hudPreset, normalizeHud } = await import("./hudSettings");
+    const custom = normalizeHud({ x: 0.3, y: 0.7, scale: 1.2, showPower: true });
+    const min = normalizeHud({ ...custom, ...hudPreset("minimal") });
+    expect(min).toMatchObject({ showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: false, showPower: false, showHint: false, compact: true });
+    // Position and size are kept.
+    expect(min).toMatchObject({ x: 0.3, y: 0.7, scale: 1.2 });
+    expect(activeHudPreset(min)).toBe("minimal");
+    const full = normalizeHud({ ...min, ...hudPreset("full") });
+    expect(activeHudPreset(full)).toBe("full");
+    expect(full.showBuildPath).toBe(HUD_DEFAULTS.showBuildPath);
+    expect(full.scale).toBe(1.2);
+    expect(activeHudPreset(custom)).toBeUndefined();
+    expect(activeHudPreset(HUD_DEFAULTS)).toBe("full");
+  });
+});

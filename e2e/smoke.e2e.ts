@@ -291,3 +291,16 @@ test("HUD shows a pick reminder for ~8 s when augment cards are detected", async
   await hud.clock.fastForward(4000);
   await expect(reminder).toHaveCount(0);
 });
+
+test("HUD Minimal / Full preset", async ({ start }) => {
+  const page = await start();
+  await tab(page, "settings").click();
+  await page.locator('[data-section="overlay"]').click();
+  const preset = page.getByRole("radiogroup", { name: "HUD preset" });
+  await expect(preset.getByRole("radio", { name: "Full" })).toHaveAttribute("aria-checked", "true");
+  await preset.getByRole("radio", { name: "Minimal" }).click();
+  await expect(preset.getByRole("radio", { name: "Minimal" })).toHaveAttribute("aria-checked", "true");
+  expect(await storeValue<Record<string, boolean>>(page, "(s) => s.settings.hud")).toMatchObject({ compact: true, showBuildPath: false, showThreats: false, showNextItem: true, showSkillOrder: true });
+  await preset.getByRole("radio", { name: "Full" }).click();
+  expect(await storeValue<boolean>(page, "(s) => s.settings.hud.showBuildPath")).toBe(true);
+});

@@ -23,7 +23,7 @@ import { Icon, type IconName } from "../ui/icons";
 import { HudCard, hudHasContent, sampleHudModel, useHudModel } from "./MiniHud";
 import { useLeagueClientConnected } from "../ui/ImportToLeague";
 import { DiagnosticsSection } from "./Diagnostics";
-import { HUD_DEFAULTS, HUD_HOVER_OPACITY, HUD_OPACITY, HUD_POSITIONS, HUD_SCALE, WIDGET_FLAG, hudFrac, hudOf, moveWidget, presetFrac, type HudPosition, type HudSettings, type HudWidget } from "./hudSettings";
+import { HUD_DEFAULTS, HUD_HOVER_OPACITY, HUD_OPACITY, HUD_POSITIONS, HUD_SCALE, WIDGET_FLAG, activeHudPreset, hudFrac, hudOf, hudPreset, moveWidget, presetFrac, type HudPosition, type HudPreset, type HudSettings, type HudWidget } from "./hudSettings";
 
 const update = (patch: Partial<Settings>) => void actions.updateSettings(patch);
 const updateTheme = (patch: Partial<ThemeSettings>) => void actions.updateTheme(patch);
@@ -617,6 +617,23 @@ function HudLayoutCard() {
             <span className="dim small">
               Or press <Kbd>{s.hotkeyHudEdit || "—"}</Kbd> in game: drag the HUD anywhere, resize it from the corner, <Kbd>Esc</Kbd> when done.
             </span>
+          </div>
+          <div className="field-row">
+            <div className="field-text">
+              <span className="field-label">Look</span>
+              <span className="field-hint">Minimal: just the next buy and skill order as small icons. Full: every default widget back.</span>
+            </div>
+            <Segmented<HudPreset | "custom">
+              size="sm"
+              label="HUD preset"
+              value={activeHudPreset(hud) ?? "custom"}
+              onChange={(p) => p !== "custom" && updateHud(hudPreset(p))}
+              options={[
+                { value: "minimal", label: "Minimal" },
+                { value: "full", label: "Full" },
+                ...(activeHudPreset(hud) ? [] : [{ value: "custom" as const, label: "Custom" }]),
+              ]}
+            />
           </div>
           <Slider label="HUD size" value={scale} min={HUD_SCALE.min} max={HUD_SCALE.max} step={0.05} format={pct0} onChange={setScale} />
           <Slider
