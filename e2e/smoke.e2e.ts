@@ -445,3 +445,23 @@ test("Augments: Look for next lists the best picks left per rarity", async ({ st
   await expect(card.locator(".lfn-name", { hasText: new RegExp(`^${first.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`) })).toHaveCount(0);
   if (process.env.SHOT) await card.screenshot({ path: process.env.SHOT });
 });
+
+test("HUD opens a shop view while you're dead", async ({ start, context }) => {
+  await start({ settings: { hud: { collapsed: true } } });
+  const hud = await context.newPage();
+  await hud.goto("/?view=hud");
+  await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
+  const game = liveGame() as ReturnType<typeof liveGame> & { allPlayers: Array<Record<string, unknown>> };
+  await emit(hud, "live-game", game);
+  await expect(hud.locator(".nl-collapsed")).toBeVisible();
+  game.allPlayers[0].isDead = true;
+  game.allPlayers[0].respawnTimer = 12.4;
+  await emit(hud, "live-game", game);
+  await expect(hud.locator(".nl-dead")).toHaveText("Dead · 13s · shop now");
+  await expect(hud.locator(".nl-collapsed")).toHaveCount(0);
+  await expect(hud.locator(".nl-sec").first()).toHaveClass(/nl-sec-shop/);
+  game.allPlayers[0].isDead = false;
+  await emit(hud, "live-game", game);
+  await expect(hud.locator(".nl-dead")).toHaveCount(0);
+  await expect(hud.locator(".nl-collapsed")).toBeVisible();
+});

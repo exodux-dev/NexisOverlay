@@ -15,6 +15,9 @@ interface LivePlayerRaw {
   level: number;
   items: Array<{ itemID: number; displayName: string }>;
   scores: { kills: number; deaths: number; assists: number; creepScore?: number };
+  isDead?: boolean;
+  /** Seconds until respawn (Live Client API), while dead. */
+  respawnTimer?: number;
 }
 
 export const APHELIOS_WEAPONS = ["Calibrum", "Severum", "Gravitum", "Infernum", "Crescendum"] as const;
@@ -69,9 +72,11 @@ export function parseLiveGame(raw: AllGameDataRaw, data: StaticData | null, meHi
   const active = raw.activePlayer ?? {};
   const meId = idOf(active);
   const meName = (active.riotIdGameName || "").toLowerCase();
+  let myRespawn: number | undefined;
   const mapped: PlayerState[] = players.map((p) => {
     const pid = idOf(p);
     const isMe = (!!meId && pid === meId) || (!!meName && (p.riotIdGameName || "").toLowerCase() === meName);
+    if (isMe && p.isDead) myRespawn = typeof p.respawnTimer === "number" ? p.respawnTimer : 0;
     return {
       championName: p.championName,
       // championName is localized (e.g. "아리" on a Korean client) — prefer the raw id.
@@ -86,6 +91,7 @@ export function parseLiveGame(raw: AllGameDataRaw, data: StaticData | null, meHi
       isMe,
       position: p.position || undefined,
       ...(typeof p.scores?.creepScore === "number" ? { creepScore: p.scores.creepScore } : {}),
+      ...(isMe && p.isDead ? { dead: true } : {}),
     };
   });
   const hint = meHint && data ? (findChampion(data, meHint)?.name ?? meHint) : meHint;
@@ -113,6 +119,7 @@ export function parseLiveGame(raw: AllGameDataRaw, data: StaticData | null, meHi
     ended: end?.Result === "Win" || end?.Result === "Lose" ? { result: end.Result } : undefined,
     loading: !active.championStats || (raw.gameData?.gameTime ?? 0) <= 1,
     ...(tower ? { firstTowerAt: tower.EventTime } : {}),
+    ...(me.dead && myRespawn !== undefined ? { respawnIn: Math.max(0, Math.ceil(myRespawn)) } : {}),
     ...(Object.values(ranks).every((v) => v !== undefined) ? { skills: ranks as Record<"Q" | "W" | "E" | "R", number> } : {}),
     ...(apheliosMain(ab?.Q) ? { apheliosMain: apheliosMain(ab?.Q) } : {}),
   };

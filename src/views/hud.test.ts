@@ -160,3 +160,15 @@ describe("HUD presets", () => {
     expect(activeHudPreset(HUD_DEFAULTS)).toBe("full");
   });
 });
+
+describe("death shop view", () => {
+  it("expands the HUD with the shop first and on", async () => {
+    const { deathView, normalizeHud } = await import("./hudSettings");
+    const minimal = normalizeHud({ collapsed: true, compact: true, showNextItem: false, order: ["path", "skill", "shop", "threats", "augments", "power"] });
+    const d = deathView(minimal);
+    expect(d).toMatchObject({ collapsed: false, compact: false, showNextItem: true });
+    expect(d.order[0]).toBe("shop");
+    expect(d.order).toHaveLength(6);
+    expect(normalizeHud({}).deathShop).toBe(true);
+  });
+});

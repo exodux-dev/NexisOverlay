@@ -27,7 +27,7 @@ import { AugmentTip, KeyAbilityTip } from "../ui/GameTips";
 import { threatLevel, type ThreatKey } from "../engine/threat";
 import type { AugmentRarity, Item, StaticData } from "../engine/types";
 import { damageSplit, nextSkill, pendingPoints, powerOf, shopOf, type DamageSplit, type HudPower } from "./hudLogic";
-import { HUD_DEFAULTS, HUD_SCALE, WIDGET_FLAG, dragToFrac, hudFrac, hudOf, type HudSettings, type HudWidget } from "./hudSettings";
+import { HUD_DEFAULTS, HUD_SCALE, WIDGET_FLAG, deathView, dragToFrac, hudFrac, hudOf, type HudSettings, type HudWidget } from "./hudSettings";
 import "./layer.css";
 import "./minihud.css";
 
@@ -232,6 +232,16 @@ export function MiniHud() {
 
   if (!editing) {
     if (!enabled || !(live || demo)) return null;
+    // Dead: full HUD with the shop first, so the back / death timer is used for shopping.
+    if (live?.me.dead && hud.deathShop) {
+      const banner = (
+        <div className="nl-dead" role="status">
+          <span className="nl-dead-dot" />
+          Dead{live.respawnIn ? ` · ${live.respawnIn}s` : ""} · shop now
+        </div>
+      );
+      return <HoverFade hud={deathView(hud)} model={model} hotkey={hotkey} banner={banner} />;
+    }
     return <HoverFade hud={hud} model={model} hotkey={hotkey} />;
   }
   // Editing: always show something to position, even outside a game or with the HUD toggled off.
@@ -244,7 +254,7 @@ export function MiniHud() {
  * is click-through, so it never gets hover events: poll the cursor (read-only) and compare it with
  * the panel's rect. Only polls while the option is on.
  */
-function HoverFade({ hud, model, hotkey }: { hud: HudSettings; model: HudModel; hotkey: string }) {
+function HoverFade({ hud, model, hotkey, banner }: { hud: HudSettings; model: HudModel; hotkey: string; banner?: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [over, setOver] = useState(false);
   useEffect(() => {
@@ -269,7 +279,7 @@ function HoverFade({ hud, model, hotkey }: { hud: HudSettings; model: HudModel; 
   const opacity = !over ? 1 : hud.hoverMode === "hide" ? 0 : hud.hoverOpacity;
   return (
     <div className="nl-hover" style={{ opacity, transition: "opacity 160ms ease" }}>
-      <HudCard hud={hud} model={model} hotkey={hotkey} panelRef={ref} />
+      <HudCard hud={hud} model={model} hotkey={hotkey} panelRef={ref} banner={banner} />
     </div>
   );
 }
@@ -493,6 +503,8 @@ interface CardProps {
   editing?: boolean;
   panelRef?: Ref<HTMLDivElement>;
   toolbar?: ReactNode;
+  /** Shown at the top of the panel (e.g. "Dead · 12s · shop now"). */
+  banner?: ReactNode;
   resizeHandle?: ReactNode;
   onPointerDown?: (e: ReactPointerEvent) => void;
   onPointerMove?: (e: ReactPointerEvent) => void;
@@ -501,7 +513,7 @@ interface CardProps {
 }
 
 /** The mini HUD panel, positioned over the game by its free-space fractions (or inline). */
-export function HudCard({ hud, model, hotkey, inline = false, editing = false, panelRef, toolbar, resizeHandle, ...handlers }: CardProps) {
+export function HudCard({ hud, model, hotkey, inline = false, editing = false, panelRef, toolbar, banner, resizeHandle, ...handlers }: CardProps) {
   if (!editing && !hudHasContent(hud, model)) return null;
   const c = hud.compact;
   const { x, y } = hudFrac(hud);
@@ -530,6 +542,7 @@ export function HudCard({ hud, model, hotkey, inline = false, editing = false, p
   return (
     <div ref={panelRef} className={cls} style={style} {...handlers}>
       {toolbar}
+      {banner}
       {!c && <Head model={model} />}
       {sections.map(([key, el]) => (
         <section key={key} className={`nl-sec nl-sec-${key}`} aria-label={WIDGET_LABEL[key]}>

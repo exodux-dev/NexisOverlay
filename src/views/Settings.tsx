@@ -688,6 +688,12 @@ function HudLayoutCard() {
           <Toggle checked={hud.collapsed} onChange={(v) => updateHud({ collapsed: v })} label="Collapse to a pill" sub="Just the next buy (and a skill point reminder) in a tiny pill" />
           <Toggle checked={hud.compact} onChange={(v) => updateHud({ compact: v })} label="Compact" sub="Icons only — a narrow strip with no labels" />
           <Toggle
+            checked={hud.deathShop}
+            onChange={(v) => updateHud({ deathShop: v })}
+            label="Shop view while dead"
+            sub="While you're dead the HUD opens up with the shop first (and your respawn time), then goes back to your layout"
+          />
+          <Toggle
             checked={hud.pickReminder}
             onChange={(v) => updateHud({ pickReminder: v })}
             label="Augment pick reminder"

@@ -1057,3 +1057,24 @@ body.nl-editing .tip {
   text-overflow: ellipsis;
   min-width: 0;
 }
+
+/* While dead: "Dead · 12s · shop now" at the top of the expanded HUD */
+.nl-dead {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin: -0.1em 0 0.5em;
+  padding: 0.3em 0.6em;
+  border-radius: var(--nl-radius);
+  font-weight: 700;
+  font-size: 0.86em;
+  color: var(--nl-cream);
+  background: rgba(248, 113, 113, 0.16);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+}
+.nl-dead-dot {
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: #f87171;
+}

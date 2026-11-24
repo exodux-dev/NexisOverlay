@@ -30,6 +30,8 @@ export interface HudSettings {
   showPower: boolean;
   /** "Ctrl+Shift+Space for full view" footer. */
   showHint: boolean;
+  /** While you're dead: expand the HUD with the shop first ("shop now"). */
+  deathShop: boolean;
   /** ~8 s reminder to mark your augment pick in Nexis when an offer is detected. */
   pickReminder: boolean;
   /** Draw order of the widgets. */
@@ -63,6 +65,7 @@ export const HUD_DEFAULTS: HudSettings = {
   showPower: false,
   showHint: true,
   pickReminder: true,
+  deathShop: true,
   order: [...HUD_WIDGETS],
   compact: false,
   collapsed: false,
@@ -89,6 +92,11 @@ export const WIDGET_FLAG: Record<HudWidget, keyof Pick<HudSettings, "showNextIte
   augments: "showAugments",
   power: "showPower",
 };
+
+/** The HUD while you're dead: full size, shop first and on (other widgets as you set them). */
+export function deathView(h: HudSettings): HudSettings {
+  return { ...h, collapsed: false, compact: false, showNextItem: true, order: ["shop", ...h.order.filter((w) => w !== "shop")] };
+}
 
 export type HudPreset = "minimal" | "full";
 
@@ -163,6 +171,7 @@ export function normalizeHud(raw: unknown): HudSettings {
     showPower: bool("showPower"),
     showHint: bool("showHint"),
     pickReminder: bool("pickReminder"),
+    deathShop: bool("deathShop"),
     order: normalizeOrder(r.order),
     compact: bool("compact"),
     collapsed: bool("collapsed"),

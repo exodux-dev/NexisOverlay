@@ -138,6 +138,8 @@ export interface PlayerState {
   isMe: boolean;
   /** Summoner's Rift lane from the live game ("TOP" | "JUNGLE" | "MIDDLE" | "BOTTOM" | "UTILITY"), if known. */
   position?: string;
+  /** You only: dead right now (Live Client API). */
+  dead?: boolean;
   /** Scoreboard minions + monsters killed, when the live game reports it. */
   creepScore?: number;
 }
@@ -155,6 +157,8 @@ export interface GameSnapshot {
   loading?: boolean;
   /** Your ability ranks (Live Client API), when known — used to show the next skill to level. */
   skills?: Record<"Q" | "W" | "E" | "R", number>;
+  /** Seconds until you respawn, while dead. */
+  respawnIn?: number;
   /** Game time (s) of the first turret kill (Live Client events), if any. */
   firstTowerAt?: number;
   /** Aphelios only: the main-hand weapon, read from his current Q in the Live Client API. */
