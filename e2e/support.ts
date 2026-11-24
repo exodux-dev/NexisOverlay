@@ -57,6 +57,8 @@ function resolve(url: URL): Reply {
       if (/^\/lol\/modes\/aram-mayhem\/[a-z0-9]+\/runes$/.test(p)) return html("opgg-mayhem-yasuo-runes.html");
       const sr = /^\/lol\/champions\/[a-z0-9]+\/(build|items|runes)(\/[a-z]+)?$/.exec(p);
       if (sr) return html(`opgg-sr-ahri-${sr[1]}.html`);
+      if (/^\/lol\/modes\/arena\/[a-z0-9]+\/synergies$/.test(p)) return html("opgg-arena-jinx-synergies.html");
+      if (/^\/lol\/champions\/[a-z0-9]+\/synergies$/.test(p)) return html("opgg-sr-jinx-synergies.html");
       const arena = /^\/lol\/modes\/arena\/[a-z0-9]+\/(augments|build|items)$/.exec(p);
       if (arena) return html(`opgg-arena-jinx-${arena[1]}.html`);
       return null; // ARAM items/runes pages, player profiles: "not found" (the app copes)

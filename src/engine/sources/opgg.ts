@@ -475,3 +475,50 @@ export function opggToChampionStats(parsed: OpggChampion, data: StaticData): Cha
     source: "opgg",
   };
 }
+
+// ---------------------------------------------------------------- synergies (duo partners)
+
+export interface OpggSynergy {
+  /** Data Dragon id of the partner (OP.GG image key). */
+  championKey: string;
+  games: number;
+  /** Win rate (Arena: OP.GG's "win rate" column). 0..1 */
+  winRate: number;
+  pickRate?: number;
+  /** Arena only: average placement and share of 1st places. */
+  avgPlace?: number;
+  firstRate?: number;
+}
+
+/**
+ * Synergies page (/synergies): Arena / ARAM have one "Synergies" table, Summoner's Rift one per
+ * partner lane ("Synergies with Support" …). Returns rows per table, keyed "all" or the lane name
+ * in lower case ("support", "top" …). ARAM currently publishes no data (empty result).
+ */
+export function parseOpggSynergies(html: string): Record<string, OpggSynergy[]> {
+  const out: Record<string, OpggSynergy[]> = {};
+  const re = /<caption>([\s\S]*?)<\/caption>/g;
+  for (let m: RegExpExecArray | null; (m = re.exec(html)); ) {
+    const cap = flattenHtml(m[1]);
+    const lane = /^Synergies with (\w+)/i.exec(cap)?.[1]?.toLowerCase() ?? (/^Synergies$/i.test(cap) ? "all" : undefined);
+    if (!lane) continue;
+    const end = html.indexOf("</table>", m.index);
+    const rows: OpggSynergy[] = [];
+    for (const tr of html.slice(m.index, end < 0 ? undefined : end).split(/<tr\b/).slice(1)) {
+      const t = flattenHtml(`<tr${tr}`);
+      const champ = /\{champion:([^}]+)\}/.exec(t)?.[1];
+      if (!champ) continue;
+      // Arena: "<avg place> <1st %> <pick %> <n> games <win %>"
+      const arena = /(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)\s*%\s+(\d+(?:\.\d+)?)\s*%\s+([\d,]+)\s*games\s+(\d+(?:\.\d+)?)\s*%/i.exec(t);
+      if (arena) {
+        rows.push({ championKey: champ, avgPlace: Number(arena[1]), firstRate: pct(arena[2]), pickRate: pct(arena[3]), games: toNum(arena[4]) ?? 0, winRate: pct(arena[5]) ?? 0 });
+        continue;
+      }
+      // Rift: "<pick %> <n>[ games] <win %>"
+      const sr = /(\d+(?:\.\d+)?)\s*%\s+([\d,]+)(?:\s*games)?\s+(\d+(?:\.\d+)?)\s*%/i.exec(t);
+      if (sr) rows.push({ championKey: champ, pickRate: pct(sr[1]), games: toNum(sr[2]) ?? 0, winRate: pct(sr[3]) ?? 0 });
+    }
+    out[lane] = rows;
+  }
+  return out;
+}

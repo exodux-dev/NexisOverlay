@@ -3,6 +3,7 @@ import { yourBestPicks } from "../engine/yourPicks";
 import { historyForMode } from "../engine/mode";
 import { DataSourceBar } from "../ui/DataSourceBar";
 import { ChampSelectScout } from "./ChampSelectScout";
+import { DuoCard } from "./DuoCard";
 import { playstyleLabel } from "../ui/format";
 import { ShareBuildButtons } from "../ui/ShareBuild";
 import { actions, useApp, useChampionSpells, useDerived, webKey, type Derived } from "../app/store";
@@ -656,6 +657,7 @@ export function BuildView({ d }: { d: Derived }) {
             <div className="stack">
               {data && <RunesSpells stats={d.championStats} data={data} choice={d.choice} onChoose={chooser(d)} />}
               <MatchupsCard d={d} />
+              <DuoCard d={d} />
               <Boots plan={plan} d={d} />
               <Starter plan={plan} startGold={d.gameMode === "sr" ? 500 : startGold} d={d} />
               <Swaps plan={plan} />

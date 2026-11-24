@@ -530,3 +530,20 @@ test("champ select lists your best picks from your own games", async ({ start })
   await expect(card).toContainText("Jinx");
   await expect(card).toContainText("You're 2–1");
 });
+
+test("Duo partners: Arena partners from OP.GG synergies", async ({ start }) => {
+  const page = await start();
+  await act(page, "setExploreChampion", "Jinx");
+  await modeSelect(page).selectOption("arena");
+  await act(page, "setTab", "build");
+  const card = page.locator(".duo-card");
+  await expect(card).toBeVisible();
+  await expect(card.locator(".duo-list li").first()).toBeVisible();
+  await expect(card.locator(".duo-list li")).toHaveCount(5);
+  // Rift: only for bot lane roles.
+  await modeSelect(page).selectOption("sr");
+  await page.getByRole("radiogroup", { name: "Role" }).getByRole("radio", { name: "ADC" }).click();
+  await expect(card).toContainText("bot lane");
+  await page.getByRole("radiogroup", { name: "Role" }).getByRole("radio", { name: "Mid" }).click();
+  await expect(page.locator(".duo-card")).toHaveCount(0);
+});
