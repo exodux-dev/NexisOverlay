@@ -70,7 +70,7 @@ export interface ClientInfo {
   platformId?: string | null;
 }
 
-export type ThemePreset = "league" | "midnight" | "hextech" | "void" | "crimson" | "frost" | "light";
+export type ThemePreset = "nexis" | "league" | "midnight" | "hextech" | "void" | "crimson" | "frost" | "light";
 
 export interface ThemeSettings {
   preset: ThemePreset;
@@ -82,8 +82,10 @@ export interface ThemeSettings {
 }
 
 export const THEME_PRESETS: Record<ThemePreset, { label: string; bg: string; panel: string; text: string; muted: string; accent: string; accent2: string; light?: boolean }> = {
-  // Matches the League client: hextech black/navy, gold frames, cyan accents.
-  league: { label: "League", bg: "1,10,19", panel: "9,20,40", text: "#f0e6d2", muted: "#a09b8c", accent: "#c8aa6e", accent2: "#0ac8b9" },
+  // Default: neutral graphite with a violet accent and teal highlights.
+  nexis: { label: "Nexis", bg: "12,13,17", panel: "22,24,31", text: "#eceef3", muted: "#8a90a2", accent: "#8b7cff", accent2: "#2dd4bf" },
+  // "Classic": matches the League client (hextech black/navy, gold frames, cyan accents).
+  league: { label: "Classic", bg: "1,10,19", panel: "9,20,40", text: "#f0e6d2", muted: "#a09b8c", accent: "#c8aa6e", accent2: "#0ac8b9" },
   midnight: { label: "Midnight", bg: "10,13,22", panel: "19,24,38", text: "#e8ecf4", muted: "#8b95a8", accent: "#2dd4bf", accent2: "#facc15" },
   hextech: { label: "Hextech", bg: "8,14,22", panel: "14,26,36", text: "#f0e6d2", muted: "#a09b8c", accent: "#c8aa6e", accent2: "#0ac8b9" },
   void: { label: "Void", bg: "14,8,26", panel: "26,16,44", text: "#ece6ff", muted: "#9d93b8", accent: "#a855f7", accent2: "#f472b6" },
@@ -92,7 +94,7 @@ export const THEME_PRESETS: Record<ThemePreset, { label: string; bg: string; pan
   light: { label: "Daylight", bg: "244,246,250", panel: "255,255,255", text: "#141824", muted: "#5d6678", accent: "#0d9488", accent2: "#d97706", light: true },
 };
 
-export const DEFAULT_THEME: ThemeSettings = { preset: "league", accent: "", scale: 1, density: "comfortable", badgeScale: 1, radius: 2 };
+export const DEFAULT_THEME: ThemeSettings = { preset: "nexis", accent: "", scale: 1, density: "comfortable", badgeScale: 1, radius: 2 };
 
 /** Hotkeys that clash with common software or League's own binds. */
 export const KNOWN_HOTKEY_CONFLICTS: Record<string, string> = {
@@ -226,6 +228,12 @@ export function normalizeSettings(raw: Partial<Settings> | Record<string, unknow
   const s: Settings = { ...DEFAULT_SETTINGS, ...r, theme: { ...DEFAULT_THEME, ...(r.theme ?? {}) }, buildStyles: { ...(r.buildStyles ?? {}) }, hud: normalizeHud(r.hud) };
   // v0.1 defaults collided with the NVIDIA overlay (Alt+Z) — move stored *old defaults* off it,
   // once, at startup (a user who deliberately picks Alt+Z later keeps it).
+  // The navy + gold "League" look stopped being the default: move it to the new default once
+  // (it stays available as "Classic" in Appearance, and a later pick of it is kept).
+  if (migrate && !(r as { themeV2?: boolean }).themeV2) {
+    (s as Settings & { themeV2?: boolean }).themeV2 = true;
+    if (s.theme.preset === "league") s.theme = { ...s.theme, preset: "nexis" };
+  }
   if (migrate && !(r as { hotkeysMigrated?: boolean }).hotkeysMigrated) (s as Settings & { hotkeysMigrated?: boolean }).hotkeysMigrated = true;
   else return finishNormalize(s);
   if (s.hotkeyToggle === "Alt+Z") s.hotkeyToggle = DEFAULT_SETTINGS.hotkeyToggle;
@@ -235,7 +243,7 @@ export function normalizeSettings(raw: Partial<Settings> | Record<string, unknow
 }
 
 function finishNormalize(s: Settings): Settings {
-  if (!(s.theme.preset in THEME_PRESETS)) s.theme.preset = "league";
+  if (!(s.theme.preset in THEME_PRESETS)) s.theme.preset = "nexis";
   s.leagueImport = { ...DEFAULT_LEAGUE_IMPORT, ...(s.leagueImport ?? {}) };
   // Additive: only fills the key in (bad entries are ignored when read, see engine/options).
   if (!s.buildChoices || typeof s.buildChoices !== "object" || Array.isArray(s.buildChoices)) s.buildChoices = {};
@@ -252,7 +260,7 @@ function finishNormalize(s: Settings): Settings {
 
 /** CSS custom properties for a theme (applied on :root by both windows). */
 export function themeVars(t: ThemeSettings, opacity: number): Record<string, string> {
-  const p = THEME_PRESETS[t.preset] ?? THEME_PRESETS.league;
+  const p = THEME_PRESETS[t.preset] ?? THEME_PRESETS.nexis;
   return {
     "--bg-rgb": p.bg,
     "--panel-rgb": p.panel,

@@ -285,3 +285,30 @@
   border-color: var(--fr-line-2);
   background: var(--fr-surface-2);
 }
+
+/* ---------- "Nexis" default theme: neutral text for names (gold is for gold only) */
+:root[data-theme="nexis"] {
+  /* --gold stays for in-game gold (coins, costs); text that only borrowed it goes neutral. */
+  --gold-text: var(--text);
+  --title: var(--text);
+}
+:root[data-theme="nexis"] :is(.next-name, .offer-name, .sit-name, .enemy-name, .csb-name, .tb-champ-name, .row-title, .home-top-name, .home-fav-name) {
+  color: var(--text);
+}
+:root[data-theme="nexis"] .home-mode-name {
+  background-image: linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--accent) 70%, #ffffff));
+}
+:root[data-theme="nexis"] .logo-word {
+  background-image: linear-gradient(180deg, #ffffff, color-mix(in srgb, var(--accent) 55%, #ffffff));
+}
+:root[data-theme="nexis"] :is(.demo-flag, .explore-demo) {
+  background: var(--fr-accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+:root[data-theme="nexis"] :is(.demo-flag, .explore-demo) :is(.toggle-label, strong, b) {
+  color: var(--text);
+}
+
+:root[data-theme="nexis"] .nav-btn.active .nav-label {
+  color: var(--text);
+}

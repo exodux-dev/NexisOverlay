@@ -88,3 +88,18 @@ describe("badge placement (settings.badgePlacement)", () => {
     expect(normalizeSettings({ badgePlacement: "sideways" } as never).badgePlacement).toBe("above");
   });
 });
+
+describe("theme v2 (Nexis default, League kept as Classic)", () => {
+  it("new installs get the Nexis theme", () => {
+    expect(normalizeSettings({}).theme.preset).toBe("nexis");
+  });
+  it("moves the old League default to Nexis once; a later pick of Classic is kept", () => {
+    const old = normalizeSettings({ theme: { preset: "league" } } as never, true) as unknown as { theme: { preset: string }; themeV2: boolean };
+    expect(old.theme.preset).toBe("nexis");
+    expect(old.themeV2).toBe(true);
+    const later = normalizeSettings({ theme: { preset: "league" }, themeV2: true } as never, true);
+    expect(later.theme.preset).toBe("league");
+    // Other presets are never touched.
+    expect(normalizeSettings({ theme: { preset: "void" } } as never, true).theme.preset).toBe("void");
+  });
+});
