@@ -71,7 +71,7 @@ pub fn scan(region: Region, debug: bool) -> Result<ScanResult, String> {
         .or_else(|| monitors.first())
         .ok_or("no monitor found")?;
     // Capture only the card band instead of the whole screen and cropping afterwards: this runs
-    // every ~1.2 s while auto-detect is on, and a full 4K grab is ~33 MB per shot.
+    // every ~0.6 s while auto-detect is on, and a full 4K grab is ~33 MB per shot.
     let (mw, mh) = (monitor.width().map_err(|e| e.to_string())?, monitor.height().map_err(|e| e.to_string())?);
     let (x, y, w, h) = crop_rect(region, mw, mh);
     let full_crop = |preview: &mut Option<String>, screen: &mut Option<(u32, u32)>| -> Result<image::RgbaImage, String> {

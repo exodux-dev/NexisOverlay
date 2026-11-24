@@ -1185,6 +1185,15 @@ async function recordMatch(snap: GameSnapshot) {
 let missedScans = 0;
 let pendingCards = "";
 
+/**
+ * Whether a background scan's cards should show right away. Three recognised augment names at once
+ * is an offer (stray fight text never matches three); with only two, wait for the same pair in the
+ * next scan (~0.6 s later) so random text can't flash badges.
+ */
+export function offerConfirmed(count: number, sig: string, pending: string): boolean {
+  return count >= 3 || sig === pending;
+}
+
 function onScan(payload: { ok: boolean; auto?: boolean; error?: string; scan?: { lines: OcrLine[]; millis: number } }) {
   if (payload.auto) {
     // Background detection: update the in-game badges quietly.
@@ -1193,9 +1202,7 @@ function onScan(payload: { ok: boolean; auto?: boolean; error?: string; scan?: {
       missedScans = 0;
       const names = matches.map((m) => m.augment.name);
       const sig = names.join("|");
-      // Require the same set of cards in two scans in a row (~1.2 s apart) before showing badges:
-      // real augment cards stay on screen, stray text in a fight doesn't.
-      const confirmed = sig === pendingCards;
+      const confirmed = offerConfirmed(matches.length, sig, pendingCards);
       pendingCards = sig;
       const changed = sig !== state.cards.map((c) => c.augment.name).join("|");
       if (confirmed && changed) {

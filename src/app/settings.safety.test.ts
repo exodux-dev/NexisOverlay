@@ -103,3 +103,12 @@ describe("theme v2 (Nexis default, League kept as Classic)", () => {
     expect(normalizeSettings({ theme: { preset: "void" } } as never, true).theme.preset).toBe("void");
   });
 });
+
+describe("augment offer confirmation (faster detection)", () => {
+  it("shows three recognised cards at once, needs two scans for a pair", async () => {
+    const { offerConfirmed } = await import("./store");
+    expect(offerConfirmed(3, "A|B|C", "")).toBe(true);
+    expect(offerConfirmed(2, "A|B", "")).toBe(false);
+    expect(offerConfirmed(2, "A|B", "A|B")).toBe(true);
+  });
+});

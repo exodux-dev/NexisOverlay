@@ -348,7 +348,9 @@ fn toggle_hud(app: &AppHandle) {
 async fn auto_detect_loop(app: AppHandle) {
     let mut last_error_sent = false;
     loop {
-        tokio::time::sleep(std::time::Duration::from_millis(1200)).await;
+        // ~0.6 s: badges appear within about half a second of the offer (one cropped capture +
+        // OCR is ~50 ms, and this only runs in augment modes with the game in front).
+        tokio::time::sleep(std::time::Duration::from_millis(600)).await;
         let state = app.state::<AppState>();
         // Only while an augment offer is plausible: in game, in a mode with augments (Mayhem /
         // Arena), auto-detect on, not editing the HUD layout, and the game (or our overlay) in front.
