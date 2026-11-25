@@ -80,6 +80,7 @@ const DICT: Record<string, [string, string]> = {
   "Paste code": ["Pegar código", "Colar código"],
   Import: ["Importar", "Importar"],
   "All champions": ["Todos los campeones", "Todos os campeões"],
+  "Support on Ko-fi": ["Apoyar en Ko-fi", "Apoiar no Ko-fi"],
   "Change champion": ["Cambiar campeón", "Trocar campeão"],
   Reset: ["Restablecer", "Redefinir"],
   "Got it": ["Entendido", "Entendi"],

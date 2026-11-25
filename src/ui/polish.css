@@ -1131,3 +1131,6 @@
   display: grid;
   gap: 6px;
 }
+.about-kofi .icon {
+  color: #ff5e5b;
+}

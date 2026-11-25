@@ -1184,6 +1184,7 @@ function DataSection() {
 }
 
 const REPO_URL = "https://github.com/exodux-dev/NexisOverlay";
+const KOFI_URL = "https://ko-fi.com/exoduxdev";
 
 const CREDITS: Array<{ name: string; what: string; url: string }> = [
   { name: "HexMayhem", what: "ARAM: Mayhem augment & champion stats", url: "https://hexmayhem.com" },
@@ -1338,6 +1339,10 @@ function AboutSection() {
             </button>
             <ExtLink href={REPO_URL} className="btn btn-ghost btn-sm">
               GitHub
+            </ExtLink>
+            <ExtLink href={KOFI_URL} className="btn btn-ghost btn-sm about-kofi">
+              <Icon name="heart" size={13} />
+              {tx("Support on Ko-fi")}
             </ExtLink>
           </div>
         </div>

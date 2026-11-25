@@ -538,7 +538,7 @@ fn set_augment_mode(app: AppHandle, enabled: bool) {
 
 /// Sites the UI links to (credits, repo, update page). Anything else is refused, so the webview
 /// can never make the OS open a local file, a `ms-settings:`-style URI or an arbitrary site.
-const LINK_HOSTS: &[&str] = &["github.com", "hexmayhem.com", "www.hexmayhem.com", "op.gg", "www.op.gg", "developer.riotgames.com"];
+const LINK_HOSTS: &[&str] = &["github.com", "hexmayhem.com", "www.hexmayhem.com", "op.gg", "www.op.gg", "developer.riotgames.com", "ko-fi.com"];
 
 fn link_allowed(url: &str) -> bool {
     store::https_host(url).is_some_and(|h| LINK_HOSTS.contains(&h.as_str()))
@@ -887,6 +887,7 @@ mod tests {
     fn only_known_https_links_open() {
         assert!(super::link_allowed("https://github.com/exodux-dev/NexisOverlay"));
         assert!(super::link_allowed("https://op.gg"));
+        assert!(super::link_allowed("https://ko-fi.com/exoduxdev"));
         for bad in ["file:///C:/Windows/System32/calc.exe", "ms-settings:", "http://github.com", "https://evil.com", "https://github.com.evil.com/", "https://op.gg@evil.com/", "https://github.com/\" x"] {
             assert!(!super::link_allowed(bad), "{bad}");
         }

@@ -11,6 +11,8 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 ![License](https://img.shields.io/badge/license-MIT-3fb950?style=flat-square)
 ![Built with Claude](https://img.shields.io/badge/built%20with-Claude-d97757?style=flat-square)
 
+[![Support on Ko-fi](https://img.shields.io/badge/support-Ko--fi-ff5e5b?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/exoduxdev)
+
 ![Nexis Overlay — Build tab](docs/screenshots/build.png)
 
 </div>
@@ -178,6 +180,10 @@ Issues and pull requests are welcome. Good first areas: champion traits (`src/da
 - Stats from [HexMayhem](https://hexmayhem.com) and [OP.GG](https://op.gg); game data from Riot Data Dragon and [CommunityDragon](https://communitydragon.org).
 - Thanks to **Evo** for the idea of the more transparent in-game overlay (the HUD that fades during play).
 - Inspired by u.gg, Blitz, Porofessor and Mobalytics.
+
+## Support
+
+Nexis is free and always will be. If it helped you win a few games, you can support development on [Ko-fi](https://ko-fi.com/exoduxdev). Thank you!
 
 ## License
 
