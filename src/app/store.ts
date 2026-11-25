@@ -6,7 +6,7 @@ import { createContext, createElement, useContext, useMemo, useSyncExternalStore
 import * as bridge from "../bridge";
 import { AUGMENTS, findAugment, rankAugments, registerArenaAugments, registerAugments, setAugmentPool, type AugmentScore, type GlobalAugmentStat } from "../engine/augments";
 import { AUGMENTS_URL, championUrl, parseAugmentTable, parseChampionPage, toChampionStats } from "../engine/sources/hexmayhem";
-import { mergeOpggChampion, opggChampionUrl, opggRunePages, opggToChampionStats, parseOpggChampionPage, withOpggRunes, type OpggMode } from "../engine/sources/opgg";
+import { mergeOpggChampion, opggChampionUrl, opggPosition, opggRunePages, opggToChampionStats, parseOpggChampionPage, withOpggRunes, type OpggMode } from "../engine/sources/opgg";
 import { loadProfile, opggRegionFromPlatform, type PlayerProfile } from "../engine/sources/opggProfile";
 import { itemMapFor, setItemMap } from "../engine/staticData";
 import { arenaStatsProvider } from "../engine/sources/arena";
@@ -270,6 +270,15 @@ function finishNormalize(s: Settings): Settings {
   s.leagueImport = { ...DEFAULT_LEAGUE_IMPORT, ...(s.leagueImport ?? {}) };
   // Additive: only fills the key in (bad entries are ignored when read, see engine/options).
   if (!s.buildChoices || typeof s.buildChoices !== "object" || Array.isArray(s.buildChoices)) s.buildChoices = {};
+  else {
+    // Rift picks saved under the client's role names ("sr:Ahri:middle") also get the normalized key
+    // ("sr:Ahri:mid") the app uses now. Additive: the original entries stay.
+    for (const [k, v] of Object.entries(s.buildChoices)) {
+      const m = /^sr:([^:]+):(middle|bottom|utility)$/.exec(k);
+      const norm = m ? `sr:${m[1]}:${opggPosition(m[2])}` : undefined;
+      if (norm && !(norm in s.buildChoices)) s.buildChoices = { ...s.buildChoices, [norm]: v };
+    }
+  }
   // Additive: only fills the key in (unknown values are read as "auto", see engine/dataSource).
   if (!s.dataSources || typeof s.dataSources !== "object" || Array.isArray(s.dataSources)) s.dataSources = {};
   if (s.roleOverrides === undefined) s.roleOverrides = null;
@@ -548,7 +557,8 @@ export function webKey(mode: GameModeKind, championId: string, position?: string
 
 /** Your Summoner's Rift role for stats: picked on the Build tab, else champ select's assignment. */
 export function rolePosition(s: State): string | undefined {
-  return s.settings.srRole || s.lastPosition;
+  // One spelling everywhere ("middle" / "MIDDLE" / "mid" → "mid"), so cache and saved-pick keys match.
+  return opggPosition(s.settings.srRole || s.lastPosition) ?? (s.settings.srRole || s.lastPosition);
 }
 
 export function currentGame(s: State): GameSnapshot | null {
@@ -685,7 +695,7 @@ function useDerivedCompute(): Derived {
   const champSelectPosition = useApp((s) => rolePosition(s));
   // Your role: a manual override wins over champ select's assignment (SR stats are per role).
   const myOverride = game && roles !== NO_OVERRIDES ? roles[playerKey(game.me)] : undefined;
-  const lastPosition = myOverride ? myOverride.toLowerCase() : champSelectPosition;
+  const lastPosition = myOverride ? opggPosition(myOverride) : champSelectPosition;
   const gameMode = useMemo(() => effectiveMode(state), [live, clientInfo, settings.mode, settings.lastMode]);
   const gameModeDetected = settings.mode === "auto" && !!detectedMode(state);
   const choiceKey = baseChampion ? webKey(gameMode, baseChampion.id, lastPosition) : undefined;
@@ -847,7 +857,7 @@ export const actions = {
     if (!c) return;
     const mode = effectiveMode(state);
     const mine = mode === "sr" && (state.live || state.demo) ? activeRoles(state.settings.roleOverrides, roleGameKey(g))[playerKey(g.me)] : undefined;
-    await ensureChampionStats(mode, c.id, true, mine ? mine.toLowerCase() : rolePosition(state));
+    await ensureChampionStats(mode, c.id, true, mine ? opggPosition(mine) : rolePosition(state));
   },
   /** Load (or refresh) the champion tier list for a mode. Cached 3 h. */
   async loadTierList(mode: GameModeKind, force = false) {
@@ -1577,13 +1587,13 @@ export async function init(view: "main" | "hud" = "main") {
   });
   await bridge.on<ChampSelectRaw | null>("champ-select", (raw) => {
     const cs = state.data ? parseChampSelect(raw, state.data) : null;
+    const fresh = !!cs && !state.champSelect;
     // A real champ select ends the demo game.
     set(cs && state.demo ? { champSelect: cs, demo: false } : { champSelect: cs });
-    if (cs?.position && cs.position !== state.lastPosition) {
-      set({ lastPosition: cs.position });
-      // A new champ select assignment replaces a role picked by hand earlier.
-      if (state.settings.srRole && currentView === "main") void actions.updateSettings({ srRole: "" });
-    }
+    if (cs?.position && cs.position !== state.lastPosition) set({ lastPosition: cs.position });
+    // A new champ select with an assigned role replaces a role picked by hand earlier (even when
+    // it's the same role as last time, so a browsed role never leaks into this game's build).
+    if (fresh && cs?.position && state.settings.srRole && currentView === "main") void actions.updateSettings({ srRole: "" });
     if (cs?.me) {
       rememberChampion(cs.me.id);
       // Warm the stats cache now so augment ratings are instant once the game starts.

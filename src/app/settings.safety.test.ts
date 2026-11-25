@@ -166,3 +166,12 @@ describe("Discord status (settings.discord)", () => {
     expect(normalizeSettings({ discord: { enabled: true, appId: "123" } } as never).discord).toEqual({ enabled: true, appId: "123" });
   });
 });
+
+describe("Rift role keys (mid / middle)", () => {
+  it("adds the normalized key next to an old client-spelled one", () => {
+    const s = normalizeSettings({ buildChoices: { "sr:Ahri:middle": { core: "a" }, "sr:Jinx:adc": { core: "b" } } } as never);
+    expect(s.buildChoices["sr:Ahri:mid"]).toEqual({ core: "a" });
+    expect(s.buildChoices["sr:Ahri:middle"]).toEqual({ core: "a" });
+    expect(s.buildChoices["sr:Jinx:adc"]).toEqual({ core: "b" });
+  });
+});

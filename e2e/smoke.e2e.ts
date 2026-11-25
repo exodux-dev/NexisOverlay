@@ -649,3 +649,14 @@ test("Build tab: '/' focuses the champion search", async ({ start }) => {
   await page.keyboard.press("/");
   await expect(page.getByRole("combobox", { name: "Search champions for a build" })).toBeFocused();
 });
+
+test("a role picked by hand doesn't leak into the next champ select (same assigned role)", async ({ start }) => {
+  const page = await start({ settings: { mode: "sr" } });
+  const mid = { ...champSelect, myTeam: champSelect.myTeam.map((m, i) => (i === 0 ? { ...m, assignedPosition: "middle" } : m)) };
+  await emit(page, "champ-select", mid);
+  await emit(page, "champ-select", null);
+  await act(page, "setSrRole", "support");
+  await expect.poll(() => storeValue<string>(page, "(s) => s.settings.srRole")).toBe("support");
+  await emit(page, "champ-select", mid);
+  await expect.poll(() => storeValue<string>(page, "(s) => s.settings.srRole")).toBe("");
+});
