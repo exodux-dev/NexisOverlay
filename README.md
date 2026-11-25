@@ -181,7 +181,6 @@ Issues and pull requests are welcome. Good first areas: champion traits (`src/da
 
 - Built with [Claude](https://claude.ai) by Anthropic, as an AI pair programmer.
 - Stats from [HexMayhem](https://hexmayhem.com) and [OP.GG](https://op.gg); game data from Riot Data Dragon and [CommunityDragon](https://communitydragon.org).
-- Thanks to **Evo** for the idea of the more transparent in-game overlay (the HUD that fades during play).
 - Inspired by u.gg, Blitz, Porofessor and Mobalytics.
 
 ## Support
