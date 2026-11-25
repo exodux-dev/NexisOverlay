@@ -2,6 +2,7 @@
 // a champion search that opens the build, favorites, recent champions, your recent form,
 // this patch's top picks and quick actions.
 
+import { PatchDigest } from "./PatchDigest";
 import { poolSuggestions } from "../engine/poolCoach";
 import { searchChampions } from "../engine/championSearch";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
@@ -803,6 +804,7 @@ export function HomeView({ d }: { d: Derived }) {
         <div className="home-col">
           <FormCard data={data} mode={mode} />
           <PoolCoach data={data} mode={mode} rows={rows} position={mode === "sr" ? position : undefined} />
+          <PatchDigest data={data} />
           {webStats && <PatchMovers data={data} mode={mode} rows={rows} patch={shortPatch(tl?.patch)} prev={prev} status={tl?.status ?? "loading"} position={position} />}
           <QuickActions mode={mode} />
         </div>

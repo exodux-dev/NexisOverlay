@@ -921,3 +921,46 @@
   font-size: 13.5px;
   color: var(--text);
 }
+
+/* Home: Patch changes for you */
+.digest-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.digest-entry {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.digest-body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.digest-body strong {
+  font-size: 13.5px;
+}
+.digest-changes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.digest-chip {
+  font-size: 11.5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--fr-line-2);
+}
+.digest-chip.is-buff {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.4);
+  background: rgba(52, 211, 153, 0.08);
+}
+.digest-chip.is-nerf {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.08);
+}

@@ -589,3 +589,12 @@ test("Home: Grow your pool suggests champions in your style", async ({ start }) 
   await expect(card.locator(".pool-item").first()).toBeVisible();
   await expect(card).not.toContainText(/^Ahri$/);
 });
+
+test("Home: Patch changes for you compares with the previous patch", async ({ start }) => {
+  const page = await start({ settings: { favorites: ["Ahri"] } });
+  const card = page.locator(".home-digest");
+  await expect(card).toBeVisible();
+  await expect(card).toContainText("26.23 vs 26.22");
+  // The test copies of both patches are identical.
+  await expect(card).toContainText("No changes to your favorites");
+});

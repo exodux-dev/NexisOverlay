@@ -7,7 +7,7 @@ import type { Archetype, Champion, ChampionSpell, DamageType, Item, Rune, Static
 import { norm } from "./text";
 import { abilityCost, abilityRange, cleanGameText, type DDSpellLike } from "./tooltipText";
 
-const DD = "https://ddragon.leagueoflegends.com";
+export const DD = "https://ddragon.leagueoflegends.com";
 
 export const AP_ARCHETYPES: Archetype[] = ["mage_burst", "mage_poke", "mage_dps", "ap_assassin", "ap_bruiser", "ap_onhit", "enchanter", "tank"];
 
