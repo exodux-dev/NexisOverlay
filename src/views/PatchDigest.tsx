@@ -19,12 +19,15 @@ export function PatchDigest({ data }: { data: StaticData }) {
   const favorites = useApp((s) => s.settings.favorites);
   const last = useApp((s) => s.settings.lastChampion);
   const history = useApp((s) => s.history);
-  const champs = useMemo(() => (favorites.length ? favorites : last ? [last] : []).slice(0, 6), [favorites, last]);
-  const items = useMemo(() => {
+  // Keyed by content: settings saves rebuild the arrays, which must not refetch everything.
+  const champsKey = (favorites.length ? favorites : last ? [last] : []).slice(0, 6).join(",");
+  const champs = useMemo(() => (champsKey ? champsKey.split(",") : []), [champsKey]);
+  const itemsKey = useMemo(() => {
     const count = new Map<number, number>();
     for (const m of history.slice(-30)) for (const id of m.items) if ((data.items.get(id)?.cost ?? 0) >= 1600) count.set(id, (count.get(id) ?? 0) + 1);
-    return [...count.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([id]) => String(id));
+    return [...count.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([id]) => String(id)).join(",");
   }, [history, data]);
+  const items = useMemo(() => (itemsKey ? itemsKey.split(",") : []), [itemsKey]);
   const [st, setSt] = useState<State>({ status: "loading" });
 
   useEffect(() => {

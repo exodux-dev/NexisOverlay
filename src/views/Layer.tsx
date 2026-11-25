@@ -178,10 +178,12 @@ function PickedNotice() {
   const prev = useRef<string[] | null>(null);
   const [name, setName] = useState<string | null>(null);
   const timer = useRef<number | undefined>(undefined);
+  // The HUD window can start mid-game: the main window's first sync isn't a new pick.
+  const mountedAt = useRef(Date.now());
   useEffect(() => {
     const before = prev.current;
     prev.current = mine;
-    if (!before) return; // first render: nothing new
+    if (!before || Date.now() - mountedAt.current < 3000) return; // first render / initial sync: nothing new
     const added = mine.find((a) => !before.includes(a));
     if (!added) return;
     setName(added);

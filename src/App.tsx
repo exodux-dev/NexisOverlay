@@ -158,10 +158,13 @@ export default function App() {
   useEscToHide();
   useDiscordStatus(derived);
   // Main window on top of other windows only when asked (Settings → General); off by default.
+  // The compact champ-select window always stays on top: it sits beside the League client and is
+  // only useful while visible (it would otherwise open behind the client).
   const onTop = useApp((s) => s.settings.alwaysOnTop);
+  const miniOn = useMiniMode();
   useEffect(() => {
-    if (status === "ready") void bridge.setAlwaysOnTop(onTop).catch(() => {});
-  }, [onTop, status]);
+    if (status === "ready") void bridge.setAlwaysOnTop(onTop || miniOn).catch(() => {});
+  }, [onTop, miniOn, status]);
   useLeaveHomeForGame(status === "ready", derived.mode);
 
   const ready = status === "ready";
@@ -169,7 +172,7 @@ export default function App() {
   // Language: set before rendering; the keys below remount the UI when it changes.
   const lang = useApp((s) => s.settings.language);
   setLanguage(lang);
-  const mini = useMiniMode();
+  const mini = miniOn;
   if (mini)
     return (
       <div className="shell shell-mini">

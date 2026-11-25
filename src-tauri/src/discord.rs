@@ -70,8 +70,18 @@ fn connect(client_id: &str) -> Result<Conn, String> {
     Ok(Conn { client_id: client_id.to_string(), pipe })
 }
 
+/// Never waits for the lock: if a previous update is stuck (Discord accepted the pipe but stopped
+/// answering), this update is skipped instead of blocking. A poisoned lock is recovered.
+fn lock_now() -> Result<std::sync::MutexGuard<'static, Option<Conn>>, String> {
+    match CONN.try_lock() {
+        Ok(g) => Ok(g),
+        Err(std::sync::TryLockError::Poisoned(p)) => Ok(p.into_inner()),
+        Err(std::sync::TryLockError::WouldBlock) => Err("Discord isn't answering; will retry".into()),
+    }
+}
+
 fn send(client_id: &str, activity: Value) -> Result<(), String> {
-    let mut guard = CONN.lock().map_err(|_| "Discord connection busy".to_string())?;
+    let mut guard = lock_now()?;
     if guard.as_ref().map(|c| c.client_id != client_id).unwrap_or(true) {
         *guard = Some(connect(client_id)?);
     }
@@ -115,10 +125,11 @@ pub async fn discord_set_activity(client_id: String, activity: Option<Activity>)
     tauri::async_runtime::spawn_blocking(move || send(&id, value)).await.map_err(|e| e.to_string())?
 }
 
-/// Drop the connection (clears the status: Discord removes it when the pipe closes).
+/// Drop the connection (clears the status: Discord removes it when the pipe closes). Async and
+/// non-blocking, so a stuck Discord can never freeze the app's main thread.
 #[tauri::command]
-pub fn discord_disconnect() {
-    if let Ok(mut g) = CONN.lock() {
+pub async fn discord_disconnect() {
+    if let Ok(mut g) = lock_now() {
         *g = None;
     }
 }

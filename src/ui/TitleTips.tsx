@@ -15,16 +15,20 @@ interface Tip {
 const DELAY_MS = 350;
 const MARGIN = 8;
 
+/** While hovered, the title moves to data-nx-title (no native tooltip); `giveBack` restores it. */
 function takeTitle(el: Element): string | undefined {
   const t = el.getAttribute("title");
-  if (t !== null) {
-    el.removeAttribute("title");
-    if (t.trim()) {
-      el.setAttribute("data-nx-title", t);
-      if (!el.hasAttribute("aria-label") && !el.textContent?.trim()) el.setAttribute("aria-label", t);
-    } else el.removeAttribute("data-nx-title");
-  }
-  return el.getAttribute("data-nx-title") ?? undefined;
+  if (t === null || !t.trim()) return undefined;
+  el.removeAttribute("title");
+  el.setAttribute("data-nx-title", t);
+  return t;
+}
+/** Put the title back on leave, so React stays the owner of it (a later change / removal works). */
+function giveBack(el: Element | null) {
+  if (!el) return;
+  const t = el.getAttribute("data-nx-title");
+  el.removeAttribute("data-nx-title");
+  if (t !== null && !el.hasAttribute("title")) el.setAttribute("title", t);
 }
 
 export function TitleTips() {
@@ -35,6 +39,7 @@ export function TitleTips() {
     let current: Element | null = null;
     const hide = () => {
       window.clearTimeout(timer);
+      giveBack(current);
       current = null;
       setTip(null);
     };
@@ -50,9 +55,10 @@ export function TitleTips() {
       if (!el || el === current) return;
       // A styled <Tip> (rich tooltip) already covers this element: leave it alone.
       if (el.closest(".tip-anchor, .nl-root")) return;
-      const text = takeTitle(el);
       window.clearTimeout(timer);
+      giveBack(current);
       setTip(null);
+      const text = takeTitle(el);
       current = el;
       if (text) timer = window.setTimeout(() => current === el && show(el), DELAY_MS);
     };

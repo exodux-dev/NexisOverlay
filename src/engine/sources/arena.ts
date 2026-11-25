@@ -186,13 +186,14 @@ const SECTIONS = ["Prism items", "Core builds", "Boots", "Starter items", "Final
 type Section = (typeof SECTIONS)[number];
 const SECTION_RE = new RegExp(
   `\\b(${SECTIONS.join("|")})\\b(?:\\s+(?:${[...SECTIONS, "Synergies"].join("|")}))*\\s+Avg\\. place 1st place Pick rate Win rate`,
-  "g",
+  "gi", // OP.GG changes the case of its labels now and then ("Games" → "games")
 );
+const canonicalSection = (s: string): Section => SECTIONS.find((x) => x.toLowerCase() === s.toLowerCase()) ?? (s as Section);
 /** "<avg place> <1st %|-> <pick %> <n> Games <win %>" */
 const ROW_RE = /(\d+(?:\.\d+)?)\s+(?:(\d+(?:\.\d+)?)\s*%|-)\s+(\d+(?:\.\d+)?)\s*%\s+([\d,]+)\s*Games\s+(\d+(?:\.\d+)?)\s*%/gi;
 
 function sectionRows(text: string): Array<{ section: Section; items: number[]; rate: ArenaRate }> {
-  const heads = [...text.matchAll(SECTION_RE)].map((m) => ({ section: m[1] as Section, start: m.index! + m[0].length, at: m.index! }));
+  const heads = [...text.matchAll(SECTION_RE)].map((m) => ({ section: canonicalSection(m[1]), start: m.index! + m[0].length, at: m.index! }));
   const out: Array<{ section: Section; items: number[]; rate: ArenaRate }> = [];
   heads.forEach((h, i) => {
     const body = text.slice(h.start, i + 1 < heads.length ? heads[i + 1].at : undefined);
@@ -237,7 +238,7 @@ export function parseArenaChampionPage(html: string): ArenaChampion | undefined 
     if (rsc) res.augments = parseArenaAugments(rsc);
 
     const text = flattenHtml(html);
-    const head = text.slice(0, Math.max(0, text.search(/Avg\. place 1st place Pick rate Win rate/)) || text.length);
+    const head = text.slice(0, Math.max(0, text.search(/Avg\. place 1st place Pick rate Win rate/i)) || text.length);
     res.avgPlace = headerNumber(head, "Avg\\. place");
     res.firstRate = headerNumber(head, "1st place");
     res.banRate = headerNumber(head, "Ban rate");

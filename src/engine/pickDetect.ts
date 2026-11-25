@@ -1,6 +1,7 @@
 // Infers which augment you picked from the background OCR scans alone (no mouse / input reading).
 // After a 3-card offer, the game closes or dims the cards you didn't take: when exactly one card of
-// the offer is still read in two scans in a row, that one is taken as your pick. A screen that
+// the offer is still read in three scans in a row (~1.8 s), that one is taken as your pick (two
+// was too few: a hover tooltip over the other cards could fake it). A screen that
 // just closes (no single card seen) leaves the pick unknown — the reminder covers that case.
 
 export interface PickTracker {
@@ -14,6 +15,9 @@ export interface PickTracker {
 }
 
 export const NEW_TRACKER: PickTracker = { offer: [], singleCount: 0, empty: 0 };
+
+/** Scans in a row that must show only the picked card. */
+export const PICK_SCANS = 3;
 
 /** Scans with no card before the offer is dropped (~3 s at one scan every 0.6 s). */
 const FORGET_AFTER = 5;
@@ -29,7 +33,7 @@ export function stepPick(t: PickTracker, names: string[]): { tracker: PickTracke
   if (inOffer.length === 1 && names.length === 1) {
     const name = inOffer[0];
     const count = t.single === name ? t.singleCount + 1 : 1;
-    if (count >= 2) return { tracker: NEW_TRACKER, picked: name };
+    if (count >= PICK_SCANS) return { tracker: NEW_TRACKER, picked: name };
     return { tracker: { ...t, single: name, singleCount: count, empty: 0 } };
   }
   if (!inOffer.length) {

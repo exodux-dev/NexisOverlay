@@ -322,6 +322,7 @@ test("detects the augment pick from the screen and shows it on the HUD", async (
   await emit(page, "augment-scan", scanOf(offer));
   await emit(page, "augment-scan", scanOf(["Clown College"]));
   await emit(page, "augment-scan", scanOf(["Clown College"]));
+  await emit(page, "augment-scan", scanOf(["Clown College"]));
   await expect.poll(() => storeValue<string[]>(page, "(s) => s.myAugments")).toContain("Clown College");
   // HUD window: receives the synced list (sync-augments) and shows "✓ Picked".
   const hud = await context.newPage();
@@ -329,6 +330,8 @@ test("detects the augment pick from the screen and shows it on the HUD", async (
   await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
   await emit(hud, "live-game", liveGame());
   await emit(hud, "sync-augments", []);
+  // A pick mid-game (the first seconds after the HUD opens are its initial sync, not a pick).
+  await hud.waitForTimeout(3200);
   await emit(hud, "sync-augments", ["Clown College"]);
   await expect(hud.locator(".nl-picked")).toContainText("Picked Clown College");
 });
@@ -477,6 +480,8 @@ test("hover text uses the styled tip, not the plain browser tooltip", async ({ s
   await expect(share).not.toHaveAttribute("title", /.+/);
   await page.mouse.move(5, 700);
   await expect(tip).toHaveCount(0);
+  // The title is given back when the mouse leaves (React keeps owning it).
+  await expect(share).toHaveAttribute("title", "Copy a code with this build's picks to share");
   if (process.env.SHOT) {
     await share.hover();
     await expect(tip).toBeVisible();
