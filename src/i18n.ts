@@ -371,7 +371,7 @@ const DICT: Record<string, [string, string]> = {
   "Matchup": ["Enfrentamiento", "Confronto"],
   "Max order": ["Orden de maximización", "Ordem de maximização"],
   "Most played": ["Más jugados", "Mais jogados"],
-  "Names are hidden in this queue's champ select (ranked solo / duo). Scouting starts at the loading screen.": ["Los nombres están ocultos en esta cola (clasificatoria solo/dúo). El análisis empieza en la pantalla de carga.", "Os nomes ficam ocultos nesta fila (ranqueada solo/duo). A análise começa na tela de carregamento."],
+  "League hides teammate names in this champ select. Scouting starts at the loading screen.": ["League oculta los nombres de tus aliados en esta selección. El análisis empieza en la pantalla de carga.", "O League oculta os nomes dos aliados nesta seleção. A análise começa na tela de carregamento."],
   "New Nexis build": ["Nueva build de Nexis", "Nova build do Nexis"],
   "Nexis only uses what Riot allows third-party apps to use.": ["Nexis solo usa lo que Riot permite a las apps de terceros.", "O Nexis só usa o que a Riot permite a apps de terceiros."],
   "Nexis scan region — augment names must be inside": ["Región de escaneo de Nexis: los nombres de los aumentos deben quedar dentro", "Região de escaneamento do Nexis: os nomes dos aumentos devem ficar dentro"],

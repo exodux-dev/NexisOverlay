@@ -528,7 +528,7 @@ test("champ select scouts teammates when their names are visible", async ({ star
   await expect(page.locator(".view-build")).toContainText("Powder");
   // Hidden names (ranked solo / duo): a short note instead.
   await emit(page, "champ-select", { ...named, myTeam: named.myTeam.map((m) => ({ ...m, nameVisibilityType: "HIDDEN" })) });
-  await expect(page.locator(".cs-scout-hidden")).toContainText("Names are hidden");
+  await expect(page.locator(".cs-scout-hidden")).toContainText("hides teammate names");
 });
 
 test("champ select lists your best picks from your own games", async ({ start }) => {

@@ -85,81 +85,6 @@
   color: var(--muted);
 }
 
-/* ---------- rune page */
-.rs-page {
-  display: flex;
-  align-items: center;
-  gap: var(--rs-gap);
-}
-.rs-keystone {
-  flex: none;
-  display: grid;
-  place-items: center;
-  padding: 3px;
-  border-radius: 50%;
-  border: 1px solid var(--rs-frame);
-  background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%);
-  box-shadow: 0 0 0 1px rgba(var(--shade-rgb), 0.4), 0 0 14px color-mix(in srgb, var(--accent) 22%, transparent);
-}
-.rs-trees {
-  display: flex;
-  flex-direction: column;
-  gap: calc(6px * var(--density, 1));
-  min-width: 0;
-}
-.rs-tree {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.rs-style {
-  opacity: 0.85;
-  margin-right: 2px;
-}
-.rs-rune {
-  display: inline-grid;
-  place-items: center;
-  border-radius: 50%;
-  border: 1px solid var(--rs-frame-lo);
-  background: rgba(var(--shade-rgb), 0.25);
-}
-.rs-tree-sub .rs-rune {
-  opacity: 0.92;
-}
-.rs-shards {
-  display: inline-flex;
-  gap: 3px;
-  margin-left: 6px;
-  padding-left: 8px;
-  border-left: 1px solid var(--rs-frame-lo);
-}
-.rs-shard {
-  display: inline-grid;
-  place-items: center;
-  border-radius: 50%;
-  background: rgba(var(--shade-rgb), 0.35);
-}
-.rs-names {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-top: calc(8px * var(--density, 1));
-  font-size: 12px;
-  min-width: 0;
-}
-.rs-names b {
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-}
-.rs-names span {
-  color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 /* ---------- summoner spells */
 .rs-spells {
   list-style: none;
@@ -207,97 +132,6 @@
   color: var(--muted);
   white-space: nowrap;
 }
-.rs-tabs {
-  display: grid;
-  gap: 4px;
-  padding: 3px;
-  margin-bottom: calc(10px * var(--density, 1));
-  border-radius: var(--r-md, 10px);
-  background: rgba(var(--shade-rgb), calc(0.28 * var(--shade-k, 1)));
-  border: 1px solid var(--border);
-}
-.rs-tab {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-  padding: 5px 7px;
-  border: 1px solid transparent;
-  border-radius: var(--r-sm, 8px);
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-}
-.rs-tab:disabled {
-  cursor: default;
-}
-.rs-tab:not(.is-on):not(:disabled):hover {
-  background: var(--panel-2);
-  color: var(--text);
-}
-.rs-tab.is-on {
-  color: var(--text);
-  border-color: color-mix(in srgb, var(--rs-frame-hi) 55%, transparent);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--rs-frame-hi) 16%, transparent), color-mix(in srgb, var(--rs-frame-hi) 5%, transparent));
-  box-shadow: 0 1px 2px rgba(var(--shade-rgb), calc(0.3 * var(--shade-k, 1))), inset 0 1px 0 color-mix(in srgb, var(--rs-frame-hi) 22%, transparent);
-}
-.rs-tab-icons {
-  position: relative;
-  flex: none;
-  display: inline-grid;
-  place-items: center;
-}
-.rs-tab:not(.is-on) .rs-tab-icons {
-  opacity: 0.8;
-}
-.rs-tab-icons .rs-tab-sub {
-  position: absolute;
-  right: -4px;
-  bottom: -3px;
-  border-radius: 50%;
-  background: rgb(var(--bg-rgb));
-  box-shadow: 0 0 0 1px var(--rs-frame-lo);
-}
-.rs-tab-text {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-}
-.rs-tab-label {
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.rs-tab.is-on .rs-tab-label {
-  color: var(--rs-title);
-}
-.rs-tab-wr {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--text);
-}
-.rs-tab-wr.rs-good {
-  color: var(--green, #34d399);
-}
-.rs-tab-wr.rs-bad {
-  color: var(--red, #f87171);
-}
-.rs-tab-pr {
-  font-size: 10px;
-  color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .rs-spell-row.rs-pickable {
   position: relative;
   margin: 0 -6px;
@@ -335,12 +169,6 @@
   outline: 2px solid var(--focus, var(--accent));
   outline-offset: 1px;
 }
-/* Narrow rune block: tabs drop the "Page n" label row to stay on one line. */
-@container (max-width: 300px) {
-  .rs-tab-label {
-    display: none;
-  }
-}
 .rs-block {
   container-type: inline-size;
 }
@@ -357,4 +185,215 @@
   border-radius: 999px;
   padding: 1px 8px;
   white-space: nowrap;
+}
+
+/* ---------- rune pages: one readable row per page */
+.rs-pages {
+  list-style: none;
+  margin: 0 0 calc(10px * var(--density, 1));
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rs-page-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm, 8px);
+  transition: background 0.15s, border-color 0.15s;
+}
+.rs-page-row.rs-pickable {
+  cursor: pointer;
+}
+.rs-page-row:not(.is-on):hover {
+  background: var(--panel-2);
+}
+.rs-page-row:not(.is-on) .rs-page-icons {
+  opacity: 0.8;
+}
+.rs-page-row.is-on {
+  border-color: color-mix(in srgb, var(--rs-frame-hi) 45%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--rs-frame-hi) 14%, transparent), transparent 90%);
+}
+.rs-page-row.is-on::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--rs-frame-hi);
+}
+.rs-page-row:focus-visible {
+  outline: 2px solid var(--focus, var(--accent));
+  outline-offset: 1px;
+}
+.rs-page-icons {
+  position: relative;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+}
+.rs-page-icons .rs-page-sub {
+  position: absolute;
+  right: -5px;
+  bottom: -4px;
+  border-radius: 50%;
+  background: rgb(var(--bg-rgb));
+  box-shadow: 0 0 0 1px var(--rs-frame-lo);
+}
+.rs-page-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+.rs-page-name {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rs-page-trees {
+  font-size: 11.5px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rs-page-row .rs-rates {
+  flex: none;
+}
+.rs-single {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 6px;
+}
+
+/* ---------- the selected page, laid out like League's rune screen */
+.rs-sheet {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(12px * var(--density, 1));
+  padding-top: calc(10px * var(--density, 1));
+  border-top: 1px solid var(--border);
+}
+@container (max-width: 330px) {
+  .rs-sheet {
+    grid-template-columns: 1fr;
+  }
+}
+.rs-col {
+  --tree: var(--rs-frame-hi);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.rs-col[data-tree="precision"] {
+  --tree: #c8aa6e;
+}
+.rs-col[data-tree="domination"] {
+  --tree: #d44242;
+}
+.rs-col[data-tree="sorcery"] {
+  --tree: #9faafc;
+}
+.rs-col[data-tree="resolve"] {
+  --tree: #a1d586;
+}
+.rs-col[data-tree="inspiration"] {
+  --tree: #49aab9;
+}
+.rs-col-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-bottom: 4px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tree);
+  border-bottom: 1px solid color-mix(in srgb, var(--tree) 35%, transparent);
+  white-space: nowrap;
+}
+.rs-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  border-radius: var(--r-sm, 8px);
+}
+.rs-line-name {
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--text-2, var(--text));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rs-line-key .rs-line-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+.rs-keystone,
+.rs-rune {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.rs-keystone {
+  padding: 2px;
+  border: 1px solid color-mix(in srgb, var(--tree) 70%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--tree) 30%, transparent);
+}
+.rs-rune {
+  border: 1px solid color-mix(in srgb, var(--tree) 45%, transparent);
+  background: rgba(var(--shade-rgb), 0.25);
+}
+.rs-shards {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border);
+}
+.rs-shard {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rs-shard .gicon {
+  flex: none;
+  border-radius: 50%;
+  background: rgba(var(--shade-rgb), 0.35);
+}
+/* Readable rates everywhere in this card. */
+.rs-wr {
+  font-size: 11.5px;
+}
+.rs-wr b {
+  font-size: 14px;
+}
+.rs-pr {
+  font-size: 11px;
 }

@@ -210,7 +210,7 @@ export function BootsOptions({ plan, onChoose, top4 }: { plan: BuildPlan; onChoo
             >
               <Icons items={[o.item]} size={26} />
               <span className="bo-name">
-                {o.item.name}
+                <span className="bo-name-text">{o.item.name}</span>
                 {on && <span className={`bo-badge ${plan.bootsIndex === i ? "bo-badge-pick" : ""}`}>{plan.bootsIndex === i ? "Pick" : "Auto"}</span>}
               </span>
               <OptRates stat={o.stat} top4={top4} />

@@ -1021,7 +1021,7 @@ img.gicon {
 
 .kind-badge {
   display: inline-block;
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1636,7 +1636,7 @@ img.gicon {
   font-size: 13.5px;
 }
 .counter-chip {
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 700;
   padding: 2px 7px;
   border-radius: 5px;
@@ -1699,7 +1699,7 @@ img.gicon {
   gap: 3px;
 }
 .starter-cost {
-  font-size: 10.5px;
+  font-size: 11.5px;
   color: var(--gold);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
@@ -3500,7 +3500,7 @@ img.gicon {
 }
 
 .slot-name-long {
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: -0.015em;
 }
 :root[data-theme="light"] .rar-text-prismatic,

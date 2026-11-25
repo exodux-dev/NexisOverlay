@@ -1,4 +1,4 @@
-import type { ChampionStats, StaticData, WinStat } from "../engine/types";
+import type { ChampionStats, Rune, StaticData, WinStat } from "../engine/types";
 import { choiceIndex, resolveRuneChoice, runeKey, runeOptions, spellKey, spellOptions, winRateOf, type BuildChoice } from "../engine/options";
 import { GameIcon } from "./GameIcon";
 import { RuneTooltip, SHARDS, ShardTooltip, SummonerTooltip, shardIcon } from "./GameTips";
@@ -26,8 +26,24 @@ function Rates({ stat, label = "WR" }: { stat: WinStat; label?: string }) {
   );
 }
 
+/** Rune tree name → accent key (Precision gold, Domination red, Sorcery violet, Resolve green, Inspiration teal). */
+const treeKey = (name?: string) => (name ?? "").toLowerCase().replace(/[^a-z]/g, "") || undefined;
+
+function RuneLine({ id, r }: { id: number; r?: Rune }) {
+  return (
+    <Tip content={<RuneTooltip rune={r} id={id} />}>
+      <div className="rs-line gt-focus" tabIndex={0}>
+        <span className="rs-rune">
+          <GameIcon src={r?.icon} name={r?.name ?? String(id)} size={28} round />
+        </span>
+        <span className="rs-line-name">{r?.name ?? `Rune ${id}`}</span>
+      </div>
+    </Tip>
+  );
+}
+
 /**
- * Rune pages (tabs when the source has several) and summoner spell pairs. The picked page / pair
+ * Rune pages (a list when the source has several) and summoner spell pairs. The picked page / pair
  * is stored per champion + mode (`choice`); the picked page is what "Import to League" writes.
  */
 export function RunesSpells({
@@ -73,90 +89,94 @@ export function RunesSpells({
                 Runes: OP.GG
               </span>
             )}
-            <Rates stat={page} label={wrLabel} />
+            {pages.length > 1 && <span className="rs-hint">{canPick ? "Click a page to pick" : `${pages.length} pages`}</span>}
           </div>
-          {pages.length > 1 && (
-            <div className="rs-tabs" role="tablist" aria-label="Rune pages" style={{ gridTemplateColumns: `repeat(${pages.length}, minmax(0, 1fr))` }}>
+          {pages.length > 1 ? (
+            <ul className="rs-pages" role="radiogroup" aria-label="Rune pages">
               {pages.map((p, i) => {
-                const wr = winRateOf(p);
                 const ks = rune(p.perks[0]);
+                const on = i === pageIdx;
+                const pick = () => onChoose?.({ rune: i === 0 ? undefined : runeKey(p) });
                 return (
-                  <button
+                  <li
                     key={runeKey(p)}
-                    type="button"
-                    role="tab"
-                    aria-selected={i === pageIdx}
-                    className={`rs-tab ${i === pageIdx ? "is-on" : ""}`}
-                    disabled={!canPick}
-                    onClick={() => onChoose?.({ rune: i === 0 ? undefined : runeKey(p) })}
-                    title={`Rune page ${i + 1}: ${ks?.name ?? "Keystone"} + ${rune(p.sub)?.name ?? "secondary"}${p.shards?.length ? ` (${p.shards.map((id) => SHARDS[id]?.name ?? id).join(", ")})` : ""} · ${pct(wr, 1)} ${wrLabel} · ${gamesText(p.games)} games`}
+                    role="radio"
+                    aria-checked={on}
+                    tabIndex={canPick ? 0 : undefined}
+                    className={`rs-page-row ${on ? "is-on" : ""} ${canPick ? "rs-pickable" : ""}`}
+                    onClick={canPick ? pick : undefined}
+                    onKeyDown={(e) => {
+                      if (canPick && (e.key === "Enter" || e.key === " ")) {
+                        e.preventDefault();
+                        pick();
+                      }
+                    }}
+                    title={`${ks?.name ?? "Keystone"} + ${rune(p.sub)?.name ?? "secondary"}${p.shards?.length ? ` (${p.shards.map((id) => SHARDS[id]?.name ?? id).join(", ")})` : ""}`}
                     data-testid={`rune-tab-${i}`}
                   >
-                    <span className="rs-tab-icons">
-                      <GameIcon src={ks?.icon} name={ks?.name ?? `Rune ${p.perks[0]}`} size={24} round />
-                      <GameIcon className="rs-tab-sub" src={rune(p.sub)?.icon} name={rune(p.sub)?.name ?? "Secondary"} size={13} round />
+                    <span className="rs-page-icons">
+                      <GameIcon src={ks?.icon} name={ks?.name ?? `Rune ${p.perks[0]}`} size={30} round />
+                      <GameIcon className="rs-page-sub" src={rune(p.sub)?.icon} name={rune(p.sub)?.name ?? "Secondary"} size={16} round />
                     </span>
-                    <span className="rs-tab-text">
-                      <span className="rs-tab-label">Page {i + 1}</span>
-                      <span className={`rs-tab-wr ${wrTone(wr)}`}>{pct(wr, 1)}</span>
-                      <span className="rs-tab-pr">{p.pickRate !== undefined ? `${pct(p.pickRate, p.pickRate < 0.1 ? 1 : 0)} pick` : `${gamesText(p.games)} games`}</span>
+                    <span className="rs-page-text">
+                      <span className="rs-page-name">{ks?.name ?? `Page ${i + 1}`}</span>
+                      <span className="rs-page-trees">
+                        {rune(p.primary)?.name ?? "Primary"} + {rune(p.sub)?.name ?? "Secondary"}
+                      </span>
                     </span>
-                  </button>
+                    <Rates stat={p} label={wrLabel} />
+                  </li>
                 );
               })}
+            </ul>
+          ) : (
+            <div className="rs-single">
+              <Rates stat={page} label={wrLabel} />
             </div>
           )}
-          <div className="rs-page" role={pages.length > 1 ? "tabpanel" : undefined}>
-            <Tip content={<RuneTooltip rune={rune(keystone)} id={keystone} />}>
-              <div className="rs-keystone gt-focus" tabIndex={0}>
-                <GameIcon src={rune(keystone)?.icon} name={rune(keystone)?.name ?? `Rune ${keystone}`} size={52} round />
-              </div>
-            </Tip>
-            <div className="rs-trees">
-              <div className="rs-tree">
-                <Tip content={<RuneTooltip rune={rune(page.primary)} id={page.primary} />}>
-                  <GameIcon className="rs-style" src={rune(page.primary)?.icon} name={rune(page.primary)?.name ?? "Primary"} size={18} round />
-                </Tip>
-                {primaryRunes.map((id) => (
-                  <Tip key={id} content={<RuneTooltip rune={rune(id)} id={id} />}>
-                    <span className="rs-rune gt-focus" tabIndex={0}>
-                      <GameIcon src={rune(id)?.icon} name={rune(id)?.name ?? String(id)} size={30} round />
-                    </span>
-                  </Tip>
-                ))}
-              </div>
-              <div className="rs-tree rs-tree-sub">
-                <Tip content={<RuneTooltip rune={rune(page.sub)} id={page.sub} />}>
-                  <GameIcon className="rs-style" src={rune(page.sub)?.icon} name={rune(page.sub)?.name ?? "Secondary"} size={18} round />
-                </Tip>
-                {secondaryRunes.map((id) => (
-                  <Tip key={id} content={<RuneTooltip rune={rune(id)} id={id} />}>
-                    <span className="rs-rune gt-focus" tabIndex={0}>
-                      <GameIcon src={rune(id)?.icon} name={rune(id)?.name ?? String(id)} size={26} round />
-                    </span>
-                  </Tip>
-                ))}
-                {shards.length > 0 && (
-                  <span className="rs-shards">
-                    {shards.map((id, i) => (
-                      <Tip key={`${id}-${i}`} content={<ShardTooltip id={id} />}>
-                        <span className="rs-shard gt-focus" tabIndex={0}>
-                          <GameIcon src={shardIcon(id)} name={SHARDS[id]?.name ?? String(id)} size={16} round />
-                        </span>
-                      </Tip>
-                    ))}
+          <div className="rs-sheet" role={pages.length > 1 ? "group" : undefined} aria-label="Selected rune page">
+            <div className="rs-col" data-tree={treeKey(rune(page.primary)?.name)}>
+              <Tip content={<RuneTooltip rune={rune(page.primary)} id={page.primary} />}>
+                <div className="rs-col-head gt-focus" tabIndex={0}>
+                  <GameIcon src={rune(page.primary)?.icon} name={rune(page.primary)?.name ?? "Primary"} size={20} round />
+                  <span>{rune(page.primary)?.name ?? "Primary"}</span>
+                </div>
+              </Tip>
+              <Tip content={<RuneTooltip rune={rune(keystone)} id={keystone} />}>
+                <div className="rs-line rs-line-key gt-focus" tabIndex={0}>
+                  <span className="rs-keystone">
+                    <GameIcon src={rune(keystone)?.icon} name={rune(keystone)?.name ?? `Rune ${keystone}`} size={40} round />
                   </span>
-                )}
-              </div>
+                  <span className="rs-line-name">{rune(keystone)?.name ?? "Keystone"}</span>
+                </div>
+              </Tip>
+              {primaryRunes.map((id) => (
+                <RuneLine key={id} id={id} r={rune(id)} />
+              ))}
             </div>
-          </div>
-          <div className="rs-names">
-            <b>{rune(keystone)?.name ?? "Keystone"}</b>
-            {rune(page.primary) && rune(page.sub) && (
-              <span>
-                {rune(page.primary)!.name} + {rune(page.sub)!.name}
-              </span>
-            )}
+            <div className="rs-col rs-col-sub" data-tree={treeKey(rune(page.sub)?.name)}>
+              <Tip content={<RuneTooltip rune={rune(page.sub)} id={page.sub} />}>
+                <div className="rs-col-head gt-focus" tabIndex={0}>
+                  <GameIcon src={rune(page.sub)?.icon} name={rune(page.sub)?.name ?? "Secondary"} size={20} round />
+                  <span>{rune(page.sub)?.name ?? "Secondary"}</span>
+                </div>
+              </Tip>
+              {secondaryRunes.map((id) => (
+                <RuneLine key={id} id={id} r={rune(id)} />
+              ))}
+              {shards.length > 0 && (
+                <div className="rs-shards" aria-label="Stat shards">
+                  {shards.map((id, i) => (
+                    <Tip key={`${id}-${i}`} content={<ShardTooltip id={id} />}>
+                      <span className="rs-shard gt-focus" tabIndex={0}>
+                        <GameIcon src={shardIcon(id)} name={SHARDS[id]?.name ?? String(id)} size={18} round />
+                        <span>{SHARDS[id]?.name ?? id}</span>
+                      </span>
+                    </Tip>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

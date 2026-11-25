@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-26.5",
+    title: "Runes, redone",
+    items: [
+      "Rune pages are now a clear list (keystone, trees, win rate, pick rate and games) instead of cramped tabs that cut off the numbers.",
+      "The selected page is laid out like League's rune screen: every rune and stat shard with its name, colored by tree. Hover any rune for its full description.",
+    ],
+  },
+  {
     id: "2026-11-26.4",
     title: "CS per minute",
     items: [
