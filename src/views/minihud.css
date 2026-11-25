@@ -1168,3 +1168,37 @@ body.nl-editing .tip {
     animation: none;
   }
 }
+
+/* Farming: CS per minute, colored against the role target */
+.nl-farm {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.nl-farm > .nl-label {
+  margin-right: auto;
+}
+.nl-farm-rate {
+  font-size: 0.95em;
+  font-weight: 800;
+}
+.nl-farm-good {
+  color: var(--ok);
+}
+.nl-farm-ok {
+  color: #fbbf24;
+}
+.nl-farm-low {
+  color: #f87171;
+}
+.nl-farm-cs,
+.nl-farm-goal {
+  font-size: 0.72em;
+  color: var(--muted);
+}
+.nl-farm-goal {
+  padding-left: 0.55em;
+  border-left: 1px solid color-mix(in srgb, var(--frame) 70%, transparent);
+}

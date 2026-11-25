@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Champion, PlayerState } from "../engine/types";
 import { damageSplit, nextSkill, pendingPoints, powerOf, shopOf } from "./hudLogic";
-import { HUD_DEFAULTS, HUD_WIDGETS, dragToFrac, fracToPx, hudFrac, moveWidget, normalizeHud, normalizeOrder, presetFrac } from "./hudSettings";
+import { HUD_DEFAULTS, HUD_WIDGETS, dragToFrac, fracToPx, hudFrac, hudPreset, moveWidget, normalizeHud, normalizeOrder, presetFrac } from "./hudSettings";
 
 const SCREEN = { width: 1920, height: 1080 };
 const M = 14;
@@ -39,7 +39,7 @@ describe("hud settings migration", () => {
   });
 
   it("normalizes and reorders widgets", () => {
-    expect(normalizeOrder(["skill", "bogus", "skill", "shop"])).toEqual(["skill", "shop", "path", "threats", "augments", "power"]);
+    expect(normalizeOrder(["skill", "bogus", "skill", "shop"])).toEqual(["skill", "shop", "path", "threats", "augments", "power", "farm"]);
     expect(moveWidget(["shop", "path", "skill"], "path", -1)).toEqual(["path", "shop", "skill"]);
     expect(moveWidget(["shop", "path"], "shop", -1)).toEqual(["shop", "path"]);
     expect(moveWidget(["shop", "path"], "path", 1)).toEqual(["shop", "path"]);
@@ -186,7 +186,7 @@ describe("death shop view", () => {
     const d = deathView(minimal);
     expect(d).toMatchObject({ collapsed: false, compact: false, showNextItem: true });
     expect(d.order[0]).toBe("shop");
-    expect(d.order).toHaveLength(6);
+    expect(d.order).toHaveLength(7);
     expect(normalizeHud({}).deathShop).toBe(true);
   });
 });
@@ -218,5 +218,14 @@ describe("level-up arrow position", () => {
     expect(q.y).toBeCloseTo(972);
     expect((q.x + r.x) / 2).toBeCloseTo(960);
     expect(abilitySlot(cal, "W", 1920, 1080).x - q.x).toBeCloseTo(54);
+  });
+});
+
+describe("farming widget", () => {
+  it("is off by default, on in Full, and old settings get it appended", () => {
+    expect(HUD_DEFAULTS.showFarm).toBe(false);
+    expect(hudPreset("full").showFarm).toBe(true);
+    expect(normalizeHud({ order: ["shop", "skill"] }).order.at(-1)).toBe("farm");
+    expect(normalizeHud({ showFarm: true }).showFarm).toBe(true);
   });
 });

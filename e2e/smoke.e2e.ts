@@ -61,7 +61,7 @@ test("champ select switches to Build with pick helper and team comp", async ({ s
 
 test("live game shows the HUD mini panel and team power", async ({ start, context }) => {
   const game = liveGame();
-  const page = await start({ settings: { hud: { showPower: true } } });
+  const page = await start({ settings: { hud: { showPower: true, showFarm: true } } });
   await emit(page, "live-game", game);
   await expect(tab(page, "build")).toHaveAttribute("aria-current", "page");
   await tab(page, "enemies").click();
@@ -75,6 +75,10 @@ test("live game shows the HUD mini panel and team power", async ({ start, contex
   await emit(hud, "live-game", game);
   await expect(hud.locator(".nl-hud")).toBeVisible();
   await expect(hud.locator(".nl-power")).toBeVisible();
+  // Farming: 44 CS at 12:22 (Mayhem: no role target, so no color / goal).
+  await expect(hud.locator(".nl-farm")).toContainText("3.6");
+  await expect(hud.locator(".nl-farm")).toContainText("44 CS");
+  await expect(hud.locator(".nl-farm-goal")).toHaveCount(0);
 });
 
 test("augment offer (Mayhem) shows ranked augments", async ({ start }) => {
@@ -132,6 +136,10 @@ test("game end shows the post-game summary with timeline", async ({ start }) => 
   // Esc closes the summary (and doesn't hide the overlay).
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
+  // History: CS/min from the recorded timeline (1 CS every 20 s → 3.0).
+  await tab(page, "history").click();
+  await expect(page.locator(".hi-sum-cs")).toContainText("3.0");
+  await expect(page.locator(".hi-m-kda").first()).toContainText("3.0 CS/m");
 });
 
 test("settings sections render, including mocked diagnostics", async ({ start }) => {

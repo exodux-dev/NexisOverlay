@@ -134,6 +134,9 @@ span.hi-sub:not(:only-child) {
   border-left: 1px solid var(--border);
   justify-content: center;
 }
+.hi-summary:has(.hi-sum-cs) {
+  grid-template-columns: auto auto auto auto;
+}
 .hi-sum-form {
   grid-column: 1 / -1;
   padding-top: 12px;
@@ -900,4 +903,13 @@ span.hi-sub:not(:only-child) {
   grid-column: 1 / -1;
   padding-top: 10px;
   border-top: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+.hi-col-cs {
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .hi-col-cs {
+    display: none;
+  }
 }

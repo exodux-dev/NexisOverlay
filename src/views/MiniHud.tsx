@@ -31,6 +31,7 @@ import {
 import { actions, getState, useApp, useDerived } from "../app/store";
 import * as bridge from "../bridge";
 import { findAugment } from "../engine/augments";
+import { farmPace, type FarmPace } from "../engine/farm";
 import type { SkillKey } from "../engine/guide";
 import { findItem } from "../engine/staticData";
 import { nextStackGoal } from "../data/stackGoals";
@@ -121,6 +122,8 @@ export interface HudModel {
   augments: Array<{ name: string; rarity?: AugmentRarity }>;
   /** Team item-gold diff and your lane diff (derived.power, scoreboard only). */
   power?: HudPower;
+  /** Your CS per minute (scoreboard), with a role target on the Rift. */
+  farm?: FarmPace;
   /** Stacking champions: the next stack milestone to aim for by this game time (reference pace). */
   stack?: {
     name: string;
@@ -147,6 +150,14 @@ export function useHudModel(): HudModel {
   const ranks = game?.skills;
   const gold = game?.source === "live" ? Math.floor(game.gold) : undefined;
   const gameMode = derived.gameMode;
+  const cs = game?.me.creepScore;
+  const gameTimeS = game?.gameTime ?? 0;
+  const position = game?.me.position;
+  const farm = useMemo(
+    () => farmPace({ cs, gameTime: gameTimeS, mode: gameMode, position }),
+    // Re-evaluated when CS changes or every 10 s of game time.
+    [cs, Math.floor(gameTimeS / 10), gameMode, position], // eslint-disable-line react-hooks/exhaustive-deps
+  );
   const minute =
     game?.source === "live" ? Math.floor((game.gameTime ?? 0) / 60) : 0;
   const baseId = derived.baseChampion?.id;
@@ -206,13 +217,11 @@ export function useHudModel(): HudModel {
             ...(plan.next.goldUnknown ? { goldUnknown: true } : {}),
           }
         : undefined,
-      path: (plan?.order ?? [])
-        .slice(0, 6)
-        .map((r) => ({
-          item: r.item,
-          owned: r.owned,
-          next: r.item.id === nextId && !r.owned,
-        })),
+      path: (plan?.order ?? []).slice(0, 6).map((r) => ({
+        item: r.item,
+        owned: r.owned,
+        next: r.item.id === nextId && !r.owned,
+      })),
       skill: skillPlan
         ? {
             max: skillPlan.max as Basic[],
@@ -240,6 +249,7 @@ export function useHudModel(): HudModel {
         rarity: findAugment(name)?.rarity,
       })),
       power,
+      farm,
       stack,
       aphelios: game?.apheliosMain,
     };
@@ -257,6 +267,7 @@ export function useHudModel(): HudModel {
     gold,
     champion,
     power,
+    farm,
     stack,
     game?.apheliosMain,
   ]);
@@ -343,6 +354,7 @@ export function sampleHudModel(data: StaticData | null | undefined): HudModel {
       { name: "Jeweled Gauntlet", rarity: "prismatic" },
     ],
     power: { team: -2100, lane: { label: "Mid", diff: 450, vs: "Zed" } },
+    farm: { cs: 142, perMin: 7.1, target: 7, tone: "good" },
   };
 }
 
@@ -367,6 +379,8 @@ function widgetHasContent(w: HudWidget, m: HudModel): boolean {
       return m.augments.length > 0;
     case "power":
       return !!m.power;
+    case "farm":
+      return !!m.farm;
   }
 }
 
@@ -847,6 +861,7 @@ const WIDGET_LABEL: Record<HudWidget, string> = {
   threats: "Enemy",
   augments: "Augments",
   power: "Team power",
+  farm: "Farming",
 };
 
 interface CardProps {
@@ -962,6 +977,8 @@ function renderWidget(w: HudWidget, m: HudModel, c: boolean): ReactNode {
       return <AugmentWidget m={m} c={c} />;
     case "power":
       return m.power ? <PowerWidget p={m.power} c={c} /> : null;
+    case "farm":
+      return m.farm ? <FarmWidget f={m.farm} c={c} /> : null;
   }
 }
 
@@ -1321,6 +1338,27 @@ function ThreatWidget({ m, c }: { m: HudModel; c: boolean }) {
             </span>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+/** Your CS per minute (scoreboard), colored against the role target on the Rift. */
+function FarmWidget({ f, c }: { f: FarmPace; c: boolean }) {
+  const title = f.target
+    ? `${f.cs} CS · ${f.perMin} per minute (target ${f.target}+)`
+    : `${f.cs} CS · ${f.perMin} per minute`;
+  return (
+    <div className="nl-farm" title={title}>
+      {!c && <span className="nl-label">{t("CS / MIN")}</span>}
+      <b className={`nl-farm-rate${f.tone ? ` nl-farm-${f.tone}` : ""}`}>
+        {f.perMin.toFixed(1)}
+      </b>
+      {!c && <span className="nl-farm-cs">{f.cs} CS</span>}
+      {!c && f.target !== undefined && (
+        <span className="nl-farm-goal">
+          {tx("goal")} {f.target}+
+        </span>
       )}
     </div>
   );

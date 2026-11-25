@@ -547,6 +547,7 @@ const HUD_WIDGET_INFO: Record<HudWidget, { label: string; sub: string }> = {
   skill: { label: "Skill order", sub: "Max order — and the next ability to level when a skill point is free" },
   threats: { label: "Enemy damage & threats", sub: "AD / AP / true damage split, plus flags like healing, tanks or heavy CC" },
   augments: { label: "Augments", sub: "The augments you've taken this game (ARAM: Mayhem / Arena)" },
+  farm: { label: "Farming (CS/min)", sub: "Your CS per minute — green at 7+ for lanes, 6+ for jungle on Summoner's Rift" },
   power: { label: "Team power", sub: "Team item-gold difference and your lane's (Summoner's Rift), from the scoreboard" },
 };
 

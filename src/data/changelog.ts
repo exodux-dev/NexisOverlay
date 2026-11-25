@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-26.4",
+    title: "CS per minute",
+    items: [
+      "New HUD line (off by default): your CS per minute, green at 7+ in lane or 6+ in jungle on Summoner's Rift, yellow when close, red when behind. Turn it on in Settings → In-game overlay → Farming, or pick the Full look.",
+      "History: average CS/min and CS at 10 minutes in the summary, a sortable CS/min column per champion, and CS/min on each game.",
+    ],
+  },
+  {
     id: "2026-11-26.3",
     title: "Level-up arrow on your ability bar",
     items: [

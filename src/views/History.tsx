@@ -1,5 +1,6 @@
 // Match history: your personal profile (u.gg / op.gg style) built from games Nexis recorded on this PC.
 
+import { avgCsPerMin, csAt10, gameCsPerMin } from "../engine/farm";
 import { t as tx } from "../i18n";
 import { championMatchScore } from "../engine/championSearch";
 import { historyCsv, historyTsv } from "../engine/historyExport";
@@ -21,7 +22,7 @@ import "./history.css";
 
 type ModeFilter = "all" | GameModeKind;
 type ResultFilter = "all" | "Win" | "Lose";
-type SortKey = "games" | "wr" | "kda" | "recent";
+type SortKey = "games" | "wr" | "kda" | "cs" | "recent";
 
 const MODE_SHORT: Record<GameModeKind, string> = { mayhem: "Mayhem", aram: "ARAM", sr: "Rift", arena: "Arena" };
 const MATCH_PAGE = 20;
@@ -242,6 +243,8 @@ function SummaryCard({ games, data }: { games: MatchRecord[]; data: StaticData }
   const form = games.slice(-20);
   const formWins = form.filter((m) => m.result === "Win").length;
   const avgDur = games.reduce((s, m) => s + m.durationSec, 0) / n;
+  const farm = avgCsPerMin(games);
+  const at10 = games.map(csAt10).filter((v): v is number => v !== undefined);
   return (
     <section className="card hi-summary" aria-label="Summary">
       <div className="hi-sum-wr">
@@ -273,6 +276,13 @@ function SummaryCard({ games, data }: { games: MatchRecord[]; data: StaticData }
           {streak?.result === "Win" ? "Win streak" : "Loss streak"} · best {best}W
         </span>
       </div>
+      {farm && (
+        <div className="hi-sum-cell hi-sum-cs" title={`Average over ${farm.games} game${farm.games === 1 ? "" : "s"} with a recorded timeline`}>
+          <span className="stat-label">{tx("CS / min")}</span>
+          <span className="hi-mid-num tnum">{farm.perMin.toFixed(1)}</span>
+          <span className="hi-sub tnum">{at10.length ? `${Math.round(at10.reduce((a, b) => a + b, 0) / at10.length)} ${tx("at 10 min")}` : `${farm.games} ${farm.games === 1 ? "game" : "games"}`}</span>
+        </div>
+      )}
       <div className="hi-sum-form">
         <span className="hi-form-head">
           <span className="stat-label">Last {form.length}</span>
@@ -406,6 +416,8 @@ function TrendChart({ games, data }: { games: MatchRecord[]; data: StaticData })
 interface ChampRow extends ChampionSummary {
   rate: number;
   ratio: number;
+  /** Average CS/min over this champion's games with a timeline. */
+  cs?: number;
   topAug?: string;
   topItems: Item[];
 }
@@ -436,7 +448,8 @@ function ChampionTable({ games, data, focus, onFocus }: { games: MatchRecord[]; 
         .sort((a, b) => b.games - a.games || b.wins - a.wins)
         .slice(0, 3)
         .map((x) => x.it);
-      return { ...c, rate: c.wins / c.games, ratio: kdaRatio(c.kills, c.deaths, c.assists), topAug: augs[0]?.[0] ?? anyAug?.[0], topItems: items };
+      const cs = avgCsPerMin(games.filter((m) => m.champion === c.champion))?.perMin;
+      return { ...c, rate: c.wins / c.games, ratio: kdaRatio(c.kills, c.deaths, c.assists), ...(cs !== undefined ? { cs } : {}), topAug: augs[0]?.[0] ?? anyAug?.[0], topItems: items };
     });
   }, [games, data]);
   const sorted = useMemo(() => {
@@ -444,10 +457,12 @@ function ChampionTable({ games, data, focus, onFocus }: { games: MatchRecord[]; 
       games: (a, b) => b.games - a.games || b.rate - a.rate,
       wr: (a, b) => b.rate - a.rate || b.games - a.games,
       kda: (a, b) => b.ratio - a.ratio || b.games - a.games,
+      cs: (a, b) => (b.cs ?? -1) - (a.cs ?? -1) || b.games - a.games,
       recent: (a, b) => b.lastPlayed.localeCompare(a.lastPlayed),
     };
     return [...rows].sort(by[sort]);
   }, [rows, sort]);
+  const hasCs = rows.some((r) => r.cs !== undefined);
 
   return (
     <Card title="Champions" icon="user" pad={false} className="hi-champs" extra={<span className="hi-sub">{rows.length} played · click to focus</span>}>
@@ -465,6 +480,11 @@ function ChampionTable({ games, data, focus, onFocus }: { games: MatchRecord[]; 
               <SortTh k="kda" sort={sort} setSort={setSort} className="num">
                 KDA
               </SortTh>
+              {hasCs && (
+                <SortTh k="cs" sort={sort} setSort={setSort} className="num hi-col-cs">
+                  CS/min
+                </SortTh>
+              )}
               <th className="hi-col-aug">Top augment</th>
               <th className="hi-col-items">Core items</th>
             </tr>
@@ -511,6 +531,7 @@ function ChampionTable({ games, data, focus, onFocus }: { games: MatchRecord[]; 
                       </span>
                     </span>
                   </td>
+                  {hasCs && <td className="num tnum hi-col-cs">{c.cs !== undefined ? c.cs.toFixed(1) : <span className="hi-sub">—</span>}</td>}
                   <td className="hi-col-aug">{c.topAug ? <AugChip name={c.topAug} size="sm" /> : <span className="hi-sub">—</span>}</td>
                   <td className="hi-col-items">
                     <span className="hi-slots">
@@ -603,6 +624,7 @@ function MatchRow({ m, data, open, onToggle, onSummary }: { m: MatchRecord; data
   const ch = data.championsById.get(m.champion);
   const win = m.result === "Win";
   const ratio = kda(m.kills, m.deaths, m.assists);
+  const csMin = gameCsPerMin(m);
   return (
     <li className={`hi-match ${win ? "hi-match-win" : "hi-match-loss"} ${open ? "open" : ""}`}>
       <button type="button" className="hi-match-row" onClick={onToggle} aria-expanded={open}>
@@ -623,7 +645,10 @@ function MatchRow({ m, data, open, onToggle, onSummary }: { m: MatchRecord; data
           <span className="hi-m-kda-line">
             {m.kills} / <span className="hi-death">{m.deaths}</span> / {m.assists}
           </span>
-          <span className="hi-sub">{ratio === "Perfect" ? "Perfect" : `${ratio} KDA`}</span>
+          <span className="hi-sub">
+            {ratio === "Perfect" ? "Perfect" : `${ratio} KDA`}
+            {csMin !== undefined && ` · ${csMin.toFixed(1)} CS/m`}
+          </span>
         </span>
         <span className="hi-m-items">
           <ItemSlots data={data} ids={m.items} size={24} />
