@@ -988,3 +988,15 @@
   font-weight: 700;
   white-space: nowrap;
 }
+
+/* Champion search at the top of the guide (explore), same look as the Build tab */
+.gd-search {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+.gd-search-hint {
+  margin: 0;
+  font-size: 13px;
+  text-align: center;
+}

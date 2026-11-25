@@ -433,14 +433,27 @@ test("Summoner's Rift role picker loads that role's build", async ({ start }) =>
   await expect(page.getByRole("radiogroup", { name: "Role" })).toHaveCount(0);
 });
 
-test("Guide: change champion", async ({ start }) => {
+test("Guide: champion search and All champions", async ({ start }) => {
   const page = await start();
-  await act(page, "setExploreChampion", "Ahri");
   await act(page, "setTab", "guide");
-  await page.getByRole("button", { name: "Change champion" }).click();
-  await page.keyboard.type("Jinx");
+  // No champion yet: the big search is the starting point.
+  const search = page.getByRole("combobox", { name: "Search champions for a guide" });
+  await expect(search).toBeVisible();
+  await search.fill("jinx");
   await page.keyboard.press("Enter");
   await expect(page.locator(".gd-hero-name")).toContainText("Jinx");
+  // All champions opens the grid; closing it goes back to the search.
+  await page.getByRole("button", { name: "All champions" }).click();
+  const grid = page.getByRole("dialog", { name: "Show the guide for…" });
+  await expect(grid).toBeVisible();
+  await grid.getByRole("button", { name: "Close" }).click();
+  await expect(grid).toBeHidden();
+  await expect(search).toBeVisible();
+  // Picking from the grid switches the guide.
+  await page.getByRole("button", { name: "All champions" }).click();
+  await page.keyboard.type("Ahri");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".gd-hero-name")).toContainText("Ahri");
 });
 
 test("Augments: Look for next lists the best picks left per rarity", async ({ start }) => {

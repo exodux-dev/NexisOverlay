@@ -5,9 +5,11 @@ import { t as tx } from "../i18n";
 import { Fragment, useState, type CSSProperties } from "react";
 import { actions, useApp, useChampionSpells, useDerived, type Derived } from "../app/store";
 import { ChampionPicker } from "../ui/ChampionPicker";
+import { ChampionSearch } from "../ui/ChampionSearch";
+import { FavStar } from "../ui/FavStar";
 import type { ChampionGuide, CoachAdvice, SkillKey } from "../engine/guide";
 import type { Archetype, ChampionSpell } from "../engine/types";
-import { Card, Empty, Pill, Segmented, type Tone } from "../ui/controls";
+import { Card, Pill, Segmented, type Tone } from "../ui/controls";
 import { ARCHETYPE_LABEL, gold } from "../ui/format";
 import { GameIcon } from "../ui/GameIcon";
 import { Icon } from "../ui/icons";
@@ -690,18 +692,32 @@ function GuidePicker({ open, onClose }: { open: boolean; onClose: () => void }) 
   );
 }
 
+/** Big champion search + "All champions" (same as the Build tab); the grid closes back to the search. */
+function GuideSearch({ hint }: { hint?: string }) {
+  const champions = useApp((s) => s.data?.champions ?? []);
+  const base = useDerived().baseChampion;
+  const [picking, setPicking] = useState(false);
+  return (
+    <div className="explore explore-v2 gd-search">
+      <div className="explore-pick">
+        <ChampionSearch champions={champions} current={base} onPick={(c) => actions.setExploreChampion(c.id)} label="Search champions for a guide" slashFocus />
+        <button type="button" className="btn explore-all" onClick={() => setPicking(true)} title="Browse every champion">
+          <Icon name="grid" size={15} />
+          {tx("All champions")}
+        </button>
+        {base && <FavStar id={base.id} name={base.name} size={18} className="explore-fav" />}
+      </div>
+      {hint && <p className="gd-search-hint dim">{hint}</p>}
+      <GuidePicker open={picking} onClose={() => setPicking(false)} />
+    </div>
+  );
+}
+
 function Hero({ d }: { d: Derived }) {
   const base = d.baseChampion!;
   const v = d.variant;
-  const [picking, setPicking] = useState(false);
   return (
     <div className="gd-hero">
-      {d.mode === "explore" && (
-        <button type="button" className="btn btn-sm gd-hero-change" onClick={() => setPicking(true)} title="Show another champion's guide">
-          Change champion
-        </button>
-      )}
-      <GuidePicker open={picking} onClose={() => setPicking(false)} />
       <GameIcon src={base.icon} name={base.name} size={48} className="gd-hero-icon" />
       <div className="gd-hero-text">
         <span className="eyebrow">{tx("Champion guide")}</span>
@@ -731,32 +747,11 @@ export default function Guide() {
   const d = useDerived();
   const spells = useChampionSpells(d.baseChampion?.id);
   const base = d.baseChampion;
-  const [picking, setPicking] = useState(false);
 
   if (!base) {
     return (
       <div className="view view-guide">
-        <Card>
-          <Empty
-            title="Pick a champion to see a guide"
-            icon="book"
-            action={
-              <>
-                <button type="button" className="btn btn-sm" onClick={() => setPicking(true)}>
-                  <Icon name="build" size={13} />
-                  Choose a champion
-                </button>
-                <button type="button" className="btn btn-sm btn-ghost" onClick={() => actions.setDemo(true)}>
-                  <Icon name="play" size={13} />
-                  Try demo game
-                </button>
-              </>
-            }
-          >
-            Skill order, combos and matchup tips for the champion you play.
-          </Empty>
-        </Card>
-        <GuidePicker open={picking} onClose={() => setPicking(false)} />
+        <GuideSearch hint={tx("Skill order, combos and matchup tips for the champion you play.")} />
       </div>
     );
   }
@@ -767,6 +762,7 @@ export default function Guide() {
   const showCoach = d.advice.length > 0 || (d.game?.enemies.length ?? 0) > 0;
   return (
     <div className="view view-guide">
+      {d.mode === "explore" && <GuideSearch />}
       <Hero d={d} />
       <SkillOrder d={d} spells={spells} />
       {showCoach && <Coach d={d} />}

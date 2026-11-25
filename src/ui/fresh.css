@@ -376,11 +376,6 @@
 }
 
 /* Guide: change champion (outside a game) */
-.gd-hero-change {
-  order: 99;
-  margin-left: auto;
-  align-self: center;
-}
 
 /* ---------- text boxes: soft field, clear focus ring, calm placeholder */
 .search,
