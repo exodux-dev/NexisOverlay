@@ -6,6 +6,7 @@
 // Riot policy: the HUD only shows static reference info (what to build next, the usual
 // skill order). It never issues real-time combat prompts.
 
+import { setLanguage, t } from "../i18n";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { actions, devHooks, getState, registerDemo, useApp, useDerived } from "../app/store";
 import { rerollAdvice, type AugmentScore } from "../engine/augments";
@@ -38,8 +39,11 @@ export default function Layer() {
     return () => root.classList.remove("nexis-layer");
   }, []);
 
+  // The HUD window has its own copy of the settings: follow the language too (remount on change).
+  const lang = useApp((s) => s.settings.language);
+  setLanguage(lang);
   return (
-    <div className="nl-root" aria-hidden="true">
+    <div className="nl-root" aria-hidden="true" key={lang}>
       <AugmentBadges />
       <PickReminder />
       <PickedNotice />
@@ -95,7 +99,7 @@ function AugmentBadges() {
         <TopNotice order={1}>
           <div className="nl-reroll">
             <RerollIcon />
-            Consider a reroll
+            {t("Consider a reroll")}
             <small>{advice.reason.replace(/ — consider rerolling\.$| — a reroll will likely do better\.$/, "")}</small>
           </div>
         </TopNotice>
@@ -159,7 +163,7 @@ function PickReminder() {
   return (
     <TopNotice>
       <div className={`nl-pick-reminder ${visible ? "nl-in" : "nl-out"}`} role="status">
-        Mark your augment pick in Nexis · <b>{hotkey}</b>
+        {t("Mark your augment pick in Nexis")} · <b>{hotkey}</b>
       </div>
     </TopNotice>
   );
@@ -188,7 +192,7 @@ function PickedNotice() {
   return (
     <TopNotice>
       <div className="nl-pick-reminder nl-picked nl-in" role="status">
-        ✓ Picked <b>{name}</b>
+        ✓ {t("Picked")} <b>{name}</b>
       </div>
     </TopNotice>
   );

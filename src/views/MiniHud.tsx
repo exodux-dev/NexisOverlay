@@ -14,6 +14,7 @@
 // (hudSettings.ts). Click-through always comes back: Done, the hotkey, Esc, a timeout, or a focus
 // change all end edit mode (src-tauri/src/hud.rs), and this window has its own timeout too.
 
+import { t } from "../i18n";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from "react";
 import { actions, getState, useApp, useDerived } from "../app/store";
 import * as bridge from "../bridge";
@@ -237,7 +238,8 @@ export function MiniHud() {
       const banner = (
         <div className="nl-dead" role="status">
           <span className="nl-dead-dot" />
-          Dead{live.respawnIn ? ` · ${live.respawnIn}s` : ""} · shop now
+          {t("Dead")}
+          {live.respawnIn ? ` · ${live.respawnIn}s` : ""} · {t("shop now")}
         </div>
       );
       return <HoverFade hud={deathView(hud)} model={model} hotkey={hotkey} banner={banner} />;
@@ -552,7 +554,7 @@ export function HudCard({ hud, model, hotkey, inline = false, editing = false, p
       {hud.showHint && hotkey && !c && (
         <div className="nl-hint">
           <span className="nl-kbd">{hotkey}</span>
-          <span>full view</span>
+          <span>{t("full view")}</span>
         </div>
       )}
       {resizeHandle}
@@ -629,7 +631,7 @@ function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
           {shop.buyNow.map((b, i) => (
             <div key={i} className="nl-icon-wrap" title={b.name}>
               <Icon src={b.icon} name={b.name} />
-              <span className="nl-gold-pill nl-ok">BUY</span>
+              <span className="nl-gold-pill nl-ok">{t("BUY")}</span>
             </div>
           ))}
           {save && (
@@ -645,7 +647,7 @@ function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
         {shop.buyNow.length > 0 && (
           <>
             <div className="nl-row-head">
-              <span className="nl-label nl-label-ok">BUY NOW</span>
+              <span className="nl-label nl-label-ok">{t("BUY NOW")}</span>
             </div>
             {shop.buyNow.map((b, i) => (
               <div key={i} className="nl-buy">
@@ -667,7 +669,7 @@ function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
             <div className="nl-buy-body">
               <div className="nl-buy-top">
                 <span className="nl-save-label">
-                  <span className="nl-label">SAVE FOR</span> <span className="nl-buy-name">{save.name}</span>
+                  <span className="nl-label">{t("SAVE FOR")}</span> <span className="nl-buy-name">{save.name}</span>
                 </span>
                 <span className="nl-cost">{save.need.toLocaleString("en-US")} more</span>
               </div>
@@ -691,14 +693,14 @@ function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
         <div className="nl-icon-wrap">
           <Icon src={next.item.icon} name={next.item.name} />
         </div>
-        <span className={`nl-gold-pill ${next.affordable ? "nl-ok" : ""}`}>{next.affordable ? "BUY" : next.goldUnknown ? "NEXT" : `−${fmtGold(next.missingGold)}`}</span>
+        <span className={`nl-gold-pill ${next.affordable ? "nl-ok" : ""}`}>{next.affordable ? t("BUY") : next.goldUnknown ? t("NEXT") : `−${fmtGold(next.missingGold)}`}</span>
       </div>
     );
   return (
     <div className="nl-next">
       <Icon src={next.item.icon} name={next.item.name} />
       <div className="nl-next-body">
-        <div className={`nl-label ${next.affordable ? "nl-label-ok" : ""}`}>{next.affordable ? "BUY NOW" : "NEXT ITEM"}</div>
+        <div className={`nl-label ${next.affordable ? "nl-label-ok" : ""}`}>{next.affordable ? t("BUY NOW") : t("NEXT ITEM")}</div>
         <div className="nl-next-name">{next.item.name}</div>
         <div className={`nl-gold ${next.affordable ? "nl-ok" : ""}`}>
           {next.affordable
@@ -718,7 +720,7 @@ function PathWidget({ m, c }: { m: HudModel; c: boolean }) {
     <div className="nl-path-wrap">
       {!c && (
         <div className="nl-row-head">
-          <span className="nl-label">CORE BUILD</span>
+          <span className="nl-label">{t("CORE BUILD")}</span>
           <span className="nl-count">
             {owned}/{m.path.length}
           </span>
@@ -740,7 +742,7 @@ function ApheliosRow({ w, c }: { w: ApheliosWeapon; c: boolean }) {
   const info = APHELIOS_INFO[w];
   return (
     <div className="nl-aph" title={`${w}: ${info.role}. Pairs well with ${info.pairs.join(" or ")} (reference). League only shares your main-hand weapon with apps.`}>
-      {!c && <span className="nl-label">MAIN</span>}
+      {!c && <span className="nl-label">{t("MAIN")}</span>}
       <span className="nl-aph-gun" style={{ color: info.color }}>
         ● {w}
       </span>
@@ -760,7 +762,7 @@ function ApheliosRow({ w, c }: { w: ApheliosWeapon; c: boolean }) {
 function StackGoalRow({ s, c }: { s: NonNullable<HudModel["stack"]>; c: boolean }) {
   return (
     <div className="nl-stack" title={`${s.name}: ${s.stacks} stacks — ${s.unlock}. A rough pace; Nexis can't see your actual stacks.`}>
-      {!c && <span className="nl-label">STACKS</span>}
+      {!c && <span className="nl-label">{t("STACKS")}</span>}
       <span className="nl-stack-goal">
         <b>{s.stacks}</b>
         {!c && <span className="nl-stack-by">{s.late ? `(was due ~${s.by}:00)` : `by ~${s.by}:00`}</span>}
@@ -773,7 +775,7 @@ function StackGoalRow({ s, c }: { s: NonNullable<HudModel["stack"]>; c: boolean 
 function SkillWidget({ s, c }: { s: NonNullable<HudModel["skill"]>; c: boolean }) {
   return (
     <div className="nl-skill">
-      {!c && <span className="nl-label">MAX</span>}
+      {!c && <span className="nl-label">{t("MAX")}</span>}
       <span className="nl-keys">
         {s.max.map((k, i) => (
           <span key={k} className="nl-key-group">
@@ -786,7 +788,7 @@ function SkillWidget({ s, c }: { s: NonNullable<HudModel["skill"]>; c: boolean }
       </span>
       {s.levelUp ? (
         <span className="nl-levelup" title="A skill point is available — this is the ability the build levels next">
-          {!c && <span className="nl-label nl-label-ok">LEVEL UP</span>}
+          {!c && <span className="nl-label nl-label-ok">{t("LEVEL UP")}</span>}
           <KeyAbilityTip k={s.levelUp}>
             <span className="nl-key nl-key-up">{s.levelUp}</span>
           </KeyAbilityTip>
@@ -801,7 +803,7 @@ function SkillWidget({ s, c }: { s: NonNullable<HudModel["skill"]>; c: boolean }
         </span>
       ) : !c && s.start.length > 0 ? (
         <span className="nl-upcoming">
-          <span className="nl-label nl-label-dim">START</span>
+          <span className="nl-label nl-label-dim">{t("START")}</span>
           <span className="nl-start-keys">{s.start.join(" ")}</span>
         </span>
       ) : null}
@@ -817,7 +819,7 @@ function ThreatWidget({ m, c }: { m: HudModel; c: boolean }) {
         <div className="nl-split">
           {!c && (
             <div className="nl-row-head">
-              <span className="nl-label">ENEMY DAMAGE</span>
+              <span className="nl-label">{t("ENEMY DAMAGE")}</span>
               <span className="nl-split-legend">
                 <span className="nl-ad">AD {pct(d.ad)}</span>
                 <span className="nl-ap">AP {pct(d.ap)}</span>
@@ -853,7 +855,7 @@ function PowerWidget({ p, c }: { p: HudPower; c: boolean }) {
   const fmt = (d: number) => (Math.abs(d) < 300 ? "even" : `${d > 0 ? "+" : "−"}${fmtGold(Math.abs(Math.round(d)))}`);
   return (
     <div className="nl-power" title="Item gold difference from the scoreboard (your side − enemy side)">
-      {!c && <span className="nl-label">ITEM GOLD</span>}
+      {!c && <span className="nl-label">{t("ITEM GOLD")}</span>}
       {p.team !== undefined && (
         <span className="nl-pw">
           <small>Team</small>
@@ -870,12 +872,12 @@ function PowerWidget({ p, c }: { p: HudPower; c: boolean }) {
         <span className="nl-spike" title="Your next item and enemies close to finishing one (scoreboard items only)">
           {p.spike.next && (
             <span>
-              <small>Next spike</small> <b>{c ? fmtGold(p.spike.next.need) : `${p.spike.next.name} · ${fmtGold(p.spike.next.need)}`}</b>
+              <small>{t("Next spike")}</small> <b>{c ? fmtGold(p.spike.next.need) : `${p.spike.next.name} · ${fmtGold(p.spike.next.need)}`}</b>
             </span>
           )}
           {p.spike.enemyClose.length > 0 && (
             <span className="nl-spike-enemy">
-              <small>Enemy</small> <b>{c ? p.spike.enemyClose.length : `${p.spike.enemyClose.length} item${p.spike.enemyClose.length > 1 ? "s" : ""} almost done`}</b>
+              <small>{t("Enemy")}</small> <b>{c ? p.spike.enemyClose.length : `${p.spike.enemyClose.length} ${t(p.spike.enemyClose.length > 1 ? "items almost done" : "item almost done")}`}</b>
             </span>
           )}
         </span>
@@ -887,7 +889,7 @@ function PowerWidget({ p, c }: { p: HudPower; c: boolean }) {
 function AugmentWidget({ m, c }: { m: HudModel; c: boolean }) {
   return (
     <div className="nl-augs">
-      {!c && <span className="nl-label">AUGMENTS</span>}
+      {!c && <span className="nl-label">{t("AUGMENTS")}</span>}
       <div className="nl-aug-list">
         {m.augments.map((a) => (
           <AugmentTip key={a.name} name={a.name}>

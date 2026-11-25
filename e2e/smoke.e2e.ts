@@ -632,3 +632,12 @@ test("About: check for updates (dev build says so)", async ({ start }) => {
   await page.getByRole("button", { name: "Check for updates" }).click();
   await expect(page.locator(".view-settings")).toContainText("Development build");
 });
+
+test("in-game HUD follows the language", async ({ start, context }) => {
+  await start({ settings: { language: "es" } });
+  const hud = await context.newPage();
+  await hud.goto("/?view=hud");
+  await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
+  await emit(hud, "live-game", liveGame());
+  await expect(hud.locator(".nl-hud")).toContainText("BUILD PRINCIPAL");
+});
