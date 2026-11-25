@@ -13,7 +13,9 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 
 [![Support on Ko-fi](https://img.shields.io/badge/support-Ko--fi-ff5e5b?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/exoduxdev)
 
-![Nexis Overlay — Build tab](docs/screenshots/build.png)
+<a href="docs/trailer/nexis-trailer.mp4"><img src="docs/trailer/poster.png" alt="Watch the Nexis Overlay trailer (41 s, with sound)" width="820" /></a>
+
+<sub>▶ <a href="docs/trailer/nexis-trailer.mp4">Watch the trailer</a> (41 s, with sound)</sub>
 
 </div>
 
@@ -33,6 +35,7 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 
 | | |
 | --- | --- |
+| ![](docs/screenshots/build.png) | **Builds that adapt.** The most-played core build, runes, spells, starting items and boots for your champion, mode and role, with win rate and pick rate, plus counter items for the enemy team. |
 | ![](docs/screenshots/hud.png) | **A calm in-game HUD.** Your next buy, skills and augments in a small panel that fades to see-through while you play and comes back when you're dead, can afford your next item or have a skill point. A glowing arrow marks the ability to level on League's own ability bar, and an optional line shows your CS per minute. |
 | ![](docs/screenshots/layer.png) | **Augment tier badges, in game.** When the augment cards pop up, Nexis reads them and places an S–D grade, win rate and pick rate under each card, ranked for your champion. |
 | ![](docs/screenshots/augments.png) | **Augments for your champion.** Per-champion augment ranking for ARAM: Mayhem and Arena, combo highlights, reroll advice and a searchable augment tier list. |
@@ -183,7 +186,7 @@ Issues and pull requests are welcome. Good first areas: champion traits (`src/da
 
 ## Support
 
-<a href="https://ko-fi.com/exoduxdev"><img src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" alt="Support Nexis on Ko-fi" height="40" align="right" /></a>
+<a href="https://ko-fi.com/exoduxdev"><img src="docs/screenshots/kofi-banner.png" alt="Support Nexis on Ko-fi" width="820" /></a>
 
 Nexis is free and always will be. Supporting the project helps with development: new features, updates every patch and quick fixes when the stats sites change. If Nexis helped you win a few games, a coffee on [Ko-fi](https://ko-fi.com/exoduxdev) means a lot. Thank you! 💜
 
