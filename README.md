@@ -41,27 +41,41 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 ## Features
 
 **Builds that adapt**
-- Highest win-rate core build per champion, mode and role, with u.gg-style options: rune pages, summoner spells, core builds, starting items and boots, each with win rate, pick rate and games.
+- The most played core build per champion, mode and role (as the stats sites list it), with u.gg-style options: rune pages, summoner spells, core builds (including the highest win-rate one), starting items and boots, each with win rate, pick rate and games.
+- **Pick the data source** per mode (HexMayhem, OP.GG, your own games, your Riot dataset or the baseline) and your **role** on the Rift.
+- **Share a build** with a short code a friend pastes into Nexis.
 - Situational counters for the enemy team: anti-heal against healers, penetration against tanks, MR or armor against the damage you face.
 - **Shop now:** what to buy with your current gold, what to save for and how far you are, plus tips for the game phase.
 - Build styles such as Full AP / Full AD Varus or Red / Blue Kayn.
 - Hover tooltips for every item, ability, rune, stat shard, summoner spell and augment.
+- ARAM: Mayhem runes from OP.GG's Mayhem rune pages (HexMayhem has none).
 - Optional **Import to League:** saves your chosen rune page and item set to the client (off by default; only ever replaces entries named *Nexis:*).
 
 **Always-on mini HUD**
 - A compact, League-styled panel in game: next buy, build progress, the skill to level, enemy damage split, your augments and optional team gold.
 - Drag and resize it anywhere (Ctrl+Shift+L); toggle, reorder or collapse each widget; fade or hide it when your mouse is over it.
+- **Shop view while dead:** opens up with the shop first and your respawn time.
+- **Augment badges** appear about half a second after the cards, above them; your pick is detected from the screen ("✓ Picked") and a short reminder covers the rest.
+- Optional power spike line: your next item spike and enemies close to finishing an item.
+- Minimal / Full presets and a separate layout per mode.
 - Never takes focus from the game, and clicks always pass through.
 
+**Champ select & loading screen**
+- Teammate scouting (when the queue shows names), **your best picks** from your own games for this team, duo partners (Arena, Rift bot lane).
+- Loading-screen **game plan**: win condition, first power spike, the threat to respect.
+- Summoner's Rift **roles**: fix swapped lanes with two clicks; lanes, matchups and your build follow.
+
 **After the game**
-- Post-game summary with your build vs the recommended one.
+- Post-game summary with your build vs the recommended one, and a shareable recap image.
 - Game timeline: item timings, an item-gold chart against both teams, CS/min and KDA trends.
-- Match history with win-rate trends, per-champion stats and export / import.
+- Match history with win-rate trends, per-champion stats, CSV / spreadsheet export and backup / import.
 
 **Polished app**
-- Home dashboard: favourites, recent champions, recent form, top picks this patch.
+- Home dashboard: favorites, recent form, top picks, **patch changes for you** and **grow your pool** suggestions.
+- Champion search that understands short names and typos (yas, tahm, mf, j4, yasou).
+- English, Español and Português; streamer mode; optional Discord status; update check with what's new.
 - Auto-detects ARAM: Mayhem, ARAM, Arena and Summoner's Rift from your queue (or pick one manually).
-- Themes, accent colour, UI scale, window size presets, Ctrl+K command palette, tray menu, start hidden, launch with Windows.
+- Themes (new graphite + violet default, Classic League look), accent color, UI scale, window size presets, Ctrl+K command palette, tray menu, start hidden, launch with Windows.
 - Settings → Diagnostics: live status of every component, an event log and a one-click report for bug reports.
 
 ## Install
@@ -100,6 +114,7 @@ See [SECURITY.md](SECURITY.md) for exactly what Nexis accesses. Nexis isn't endo
 | ARAM: Mayhem | [HexMayhem](https://hexmayhem.com): per-champion augments, builds, skill orders |
 | ARAM, Summoner's Rift | [OP.GG](https://op.gg): builds, items, runes, spells, counters (per role on the Rift) |
 | Arena | [OP.GG](https://op.gg) Arena stats + [CommunityDragon](https://communitydragon.org) augment catalogue |
+| Duo partners | [OP.GG](https://op.gg) synergies (Arena, Summoner's Rift) |
 | Static data | Riot [Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon) (updates automatically each patch) |
 
 Pages are cached and refreshed every few hours; old cache files are cleaned up automatically. You can also point Nexis at your own dataset built from the Riot API ([docs/STATS.md](docs/STATS.md)). None of these sites are affiliated with Nexis; credit for the data goes to them.
