@@ -677,3 +677,18 @@ test("Build tab: type to add enemies", async ({ start }) => {
   await page.keyboard.press("Enter");
   await expect.poll(() => storeValue<string[]>(page, "(s) => s.explore.enemies")).toEqual(["Zed", "MissFortune"]);
 });
+
+test("Settings search finds settings across tabs", async ({ start }) => {
+  const page = await start();
+  await tab(page, "settings").click();
+  const search = page.getByRole("textbox", { name: "Search settings" });
+  await search.fill("streamer");
+  await expect(page.getByText("Streamer mode", { exact: true })).toBeVisible();
+  await expect(page.getByText("Start hidden in the tray", { exact: true })).toBeHidden();
+  await search.fill("badge position");
+  await expect(page.getByText("Badge position", { exact: true })).toBeVisible();
+  await search.fill("zzzzqq");
+  await expect(page.locator(".view-settings")).toContainText("No settings match");
+  await search.fill("");
+  await expect(page.locator('[data-section="general"]')).toHaveAttribute("aria-selected", "true");
+});

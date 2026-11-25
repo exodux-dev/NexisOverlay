@@ -430,6 +430,9 @@ const DICT: Record<string, [string, string]> = {
   "Your pick is saved per champion and mode.": ["Tu elección se guarda por campeón y modo.", "Sua escolha é salva por campeão e modo."],
   "Your team": ["Tu equipo", "Seu time"],
 
+  "Search settings": ["Buscar ajustes", "Buscar configurações"],
+  "No settings match": ["Ningún ajuste coincide con", "Nenhuma configuração corresponde a"],
+
   // Hover tips & misc
   "Browse every champion": ["Ver todos los campeones", "Ver todos os campeões"],
   "Show another champion's guide": ["Ver la guía de otro campeón", "Ver o guia de outro campeão"],

@@ -1399,10 +1399,39 @@ export function SettingsView() {
     return SECTIONS.some((s) => s.id === fromUrl) ? (fromUrl as Section) : lastSection;
   });
   const errors = useApp((st) => st.hotkeyErrors.length);
+  const [q, setQ] = useState("");
+  const searching = q.trim().length > 0;
+  const grid = useRef<HTMLDivElement>(null);
+  const [noMatch, setNoMatch] = useState(false);
   const pick = (s: Section) => {
     lastSection = s;
     setSection(s);
+    setQ("");
   };
+  // Search: every section is shown and filtered by text — a card whose title matches stays whole,
+  // otherwise only its matching rows stay. (The grid remounts per query, so styles start clean.)
+  useEffect(() => {
+    if (!searching || !grid.current) return setNoMatch(false);
+    const needle = q.trim().toLowerCase();
+    let any = false;
+    for (const card of Array.from(grid.current.querySelectorAll<HTMLElement>(":scope > .card"))) {
+      const title = card.querySelector(".card-title")?.textContent?.toLowerCase() ?? "";
+      if (title.includes(needle)) {
+        any = true;
+        continue;
+      }
+      const rows = Array.from(card.querySelectorAll<HTMLElement>(".toggle-row, .field-row, .field, .kb-row, .hudset-mod"));
+      let hit = false;
+      for (const r of rows) {
+        const ok = (r.textContent ?? "").toLowerCase().includes(needle);
+        r.style.display = ok ? "" : "none";
+        hit ||= ok;
+      }
+      card.style.display = hit ? "" : "none";
+      any ||= hit;
+    }
+    setNoMatch(!any);
+  }, [q, searching]);
   const body: Record<Section, ReactNode> = {
     general: <GeneralSection />,
     hotkeys: (
@@ -1425,8 +1454,8 @@ export function SettingsView() {
             key={s.id}
             type="button"
             role="tab"
-            aria-selected={section === s.id}
-            className={`settings-tab ${section === s.id ? "active" : ""}`}
+            aria-selected={!searching && section === s.id}
+            className={`settings-tab ${!searching && section === s.id ? "active" : ""}`}
             onClick={() => pick(s.id)}
             data-section={s.id}
           >
@@ -1435,10 +1464,25 @@ export function SettingsView() {
             {s.id === "hotkeys" && errors > 0 && <span className="tab-alert" />}
           </button>
         ))}
+        <label className="search search-sm settings-search">
+          <Icon name="search" size={14} />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={tr("Search settings")} aria-label="Search settings" spellCheck={false} />
+        </label>
       </div>
-      <div className={`settings-grid settings-${section}`} key={section}>
-        {body[section]}
-      </div>
+      {searching ? (
+        <div className="settings-grid settings-search-results" key={`search-${q}`} ref={grid}>
+          <GeneralSection />
+          <HotkeysSection />
+          <AppearanceSection />
+          <OverlaySection />
+          <DataSection />
+          {noMatch && <p className="dim">{tr("No settings match")} “{q}”.</p>}
+        </div>
+      ) : (
+        <div className={`settings-grid settings-${section}`} key={section}>
+          {body[section]}
+        </div>
+      )}
     </div>
   );
 }

@@ -1030,3 +1030,10 @@
 .enemy-search .csearch-field input {
   font-size: 13px;
 }
+.settings-tabs {
+  align-items: center;
+}
+.settings-search {
+  margin-left: auto;
+  width: 200px;
+}
