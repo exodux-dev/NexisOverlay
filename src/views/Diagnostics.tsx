@@ -5,7 +5,7 @@
 
 import { t as tx } from "../i18n";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { BUILD, DEFAULT_SETTINGS, actions, getState, useApp, type Settings } from "../app/store";
+import { BUILD, DEFAULT_SETTINGS, REPO_URL, actions, getState, useApp, type Settings } from "../app/store";
 import {
   getAppInfo,
   getDiagnostics,
@@ -14,6 +14,7 @@ import {
   leagueWindowMode,
   on,
   openDataDir,
+  openUrl,
   setHudPreview,
   testAugmentScan,
   type AppInfo,
@@ -239,9 +240,27 @@ export function DiagnosticsSection() {
     try {
       await navigator.clipboard.writeText(text);
       toast("Diagnostics copied", "good", { id: "diag", detail: "No names or Riot IDs included. Paste it into your bug report." });
+      return true;
     } catch {
       toast("Couldn't copy to the clipboard", "bad", { id: "diag" });
+      return false;
     }
+  };
+  /** Copies the (redacted) report and opens a pre-filled GitHub issue to paste it into. */
+  const report = async () => {
+    const copied = await copy();
+    const body = [
+      "**What happened?**",
+      "",
+      "",
+      "**What did you expect?**",
+      "",
+      "",
+      "**Diagnostics**",
+      copied ? "<!-- Diagnostics are on your clipboard: paste them below (Ctrl+V). -->" : "<!-- Settings → Diagnostics → Copy diagnostics, then paste below. -->",
+      "",
+    ].join("\n");
+    void openUrl(`${REPO_URL}/issues/new?title=${encodeURIComponent("Bug: ")}&body=${encodeURIComponent(body)}`);
   };
 
   return (
@@ -255,6 +274,9 @@ export function DiagnosticsSection() {
             <button type="button" className="btn btn-sm" onClick={copy}>
               <Icon name="check" size={13} />
               Copy diagnostics
+            </button>
+            <button type="button" className="btn btn-sm btn-ghost" onClick={() => void report()} title="Copies diagnostics and opens a GitHub issue to paste them into">
+              Report a problem
             </button>
             {isTauri && (
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => void openDataDir().catch((e) => toast(`Couldn't open the folder: ${e}`, "bad"))}>
