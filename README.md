@@ -31,6 +31,7 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 
 | | |
 | --- | --- |
+| ![](docs/screenshots/hud.png) | **A calm in-game HUD.** Your next buy, skills and augments in a small panel that fades to see-through while you play and comes back when you're dead, can afford your next item or have a skill point. A glowing arrow marks the ability to level on League's own ability bar, and an optional line shows your CS per minute. |
 | ![](docs/screenshots/layer.png) | **Augment tier badges, in game.** When the augment cards pop up, Nexis reads them and places an S–D grade, win rate and pick rate under each card, ranked for your champion. |
 | ![](docs/screenshots/augments.png) | **Augments for your champion.** Per-champion augment ranking for ARAM: Mayhem and Arena, combo highlights, reroll advice and a searchable augment tier list. |
 | ![](docs/screenshots/pick-helper.png) | **Champ select that helps.** Auto-detects your champion and mode, compares bench and teammate picks by win rate, and analyses your team comp (damage split, frontline, engage, scaling). |
@@ -52,12 +53,15 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 - Optional **Import to League:** saves your chosen rune page and item set to the client (off by default; only ever replaces entries named *Nexis:*).
 
 **Always-on mini HUD**
-- A compact, League-styled panel in game: next buy, build progress, the skill to level, enemy damage split, your augments and optional team gold.
+- A compact panel in game. The default (Standard) look shows only your next buy, what you're saving for, your skills and your augments. Core build, enemy damage, team gold, tips and CS/min are one switch away (or pick the Full look).
+- **Fades during play:** mostly see-through while you play, fully visible when you're dead, can afford your next item, have a skill point or augments are on screen (opacity is adjustable).
+- **Level-up arrow** on League's own ability bar over the ability to level next (line it up once in Settings).
+- **CS per minute** (optional), colored against a target for your role on Summoner's Rift.
 - Drag and resize it anywhere (Ctrl+Shift+L); toggle, reorder or collapse each widget; fade or hide it when your mouse is over it.
 - **Shop view while dead:** opens up with the shop first and your respawn time.
 - **Augment badges** appear about half a second after the cards, above them; your pick is detected from the screen ("✓ Picked") and a short reminder covers the rest.
 - Optional power spike line: your next item spike and enemies close to finishing an item.
-- Minimal / Full presets and a separate layout per mode.
+- Minimal / Standard / Full looks and a separate layout per mode.
 - Never takes focus from the game, and clicks always pass through.
 
 **Champ select & loading screen**
@@ -68,7 +72,7 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 **After the game**
 - Post-game summary with your build vs the recommended one, and a shareable recap image.
 - Game timeline: item timings, an item-gold chart against both teams, CS/min and KDA trends.
-- Match history with win-rate trends, per-champion stats, CSV / spreadsheet export and backup / import.
+- Match history with win-rate trends, per-champion stats (win rate, KDA, CS/min, CS at 10), CSV / spreadsheet export and backup / import.
 
 **Polished app**
 - Home dashboard: favorites, recent form, top picks, **patch changes for you** and **grow your pool** suggestions.
@@ -172,6 +176,7 @@ Issues and pull requests are welcome. Good first areas: champion traits (`src/da
 
 - Built with [Claude](https://claude.ai) by Anthropic, as an AI pair programmer.
 - Stats from [HexMayhem](https://hexmayhem.com) and [OP.GG](https://op.gg); game data from Riot Data Dragon and [CommunityDragon](https://communitydragon.org).
+- Thanks to **Evo** for the idea of the more transparent in-game overlay (the HUD that fades during play).
 - Inspired by u.gg, Blitz, Porofessor and Mobalytics.
 
 ## License

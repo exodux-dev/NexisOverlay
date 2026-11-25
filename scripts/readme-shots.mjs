@@ -25,8 +25,11 @@ await ctx.route("https://hexmayhem.com/**", async (r) => {
   const res = await r.fetch();
   await r.fulfill({ response: res, headers: { ...res.headers(), "access-control-allow-origin": "*" } });
 });
-// Skip the first-run welcome tour so it doesn't cover the screenshots.
-await ctx.addInitScript(() => localStorage.setItem("nexis:onboarding.json", JSON.stringify({ done: true, version: 1 })));
+// Skip the first-run welcome tour and "What's new" so they don't cover the screenshots.
+await ctx.addInitScript(() => {
+  localStorage.setItem("nexis:onboarding.json", JSON.stringify({ done: true, version: 1 }));
+  localStorage.setItem("nexis:whatsnew.json", JSON.stringify({ seen: "9999" }));
+});
 const page = await ctx.newPage();
 page.on("pageerror", (e) => console.error("pageerror", e.message));
 await page.goto(process.env.NEXIS_URL ?? "http://localhost:1420/");
@@ -45,7 +48,7 @@ const shot = async (name) => {
 await page.addStyleTag({
   content: `html.nx-browser, html { background: linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.35)), url(https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${process.env.SPLASH ?? "Ahri_0"}.jpg) center/cover fixed !important; }`,
 });
-await act("n.actions.updateTheme({ preset: 'league' }); n.actions.updateSettings({ hotkeyToggle: 'Ctrl+Shift+Space' }); n.actions.setDemo(true); n.actions.setTab('build')");
+await act("n.actions.updateSettings({ hotkeyToggle: 'Ctrl+Shift+Space' }); n.actions.setDemo(true); n.actions.setTab('build')");
 await shot("build");
 await act("n.actions.setTab('augments')");
 await shot("augments");

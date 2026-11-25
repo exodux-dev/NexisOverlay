@@ -1,7 +1,7 @@
 // Screenshots the in-game layer (hud window) over fake game art.
 // Prereq: `npx vite --port 1421 --strictPort` running. Usage:
 //   node scripts/screenshot-layer.mjs [outDir]
-// Env: LAYER_URL (default http://localhost:1421/?view=hud)
+// Env: LAYER_URL (default http://localhost:1421/?view=hud), BACKDROP_FILE, REAL_IMAGES=1
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
@@ -88,6 +88,7 @@ async function shoot(browser, width, height, name, { stats = false, clear = fals
   page.on("response", (r) => r.status() >= 400 && errors.push(`HTTP ${r.status()} ${r.url()}`));
   await page.route("https://ddragon.leagueoflegends.com/**", (route) => {
     const path = new globalThis.URL(route.request().url()).pathname;
+    if (/\.(png|jpe?g|webp)$/i.test(path) && process.env.REAL_IMAGES) return route.continue();
     if (/\.(png|jpe?g|webp)$/i.test(path)) return route.fulfill({ status: 200, contentType: "image/png", body: PNG });
     const hit = Object.entries(fixture).find(([suffix]) => path.endsWith(suffix));
     if (!hit) return route.fulfill({ status: 404, body: "not in fixture" });
@@ -161,7 +162,9 @@ async function shoot(browser, width, height, name, { stats = false, clear = fals
   console.log("wrote", file);
 }
 
-const browser = await chromium.launch();
+// REAL_IMAGES=1: load real Data Dragon icons (needs internet; honours HTTPS_PROXY).
+const proxy = process.env.REAL_IMAGES && (process.env.HTTPS_PROXY || process.env.https_proxy);
+const browser = await chromium.launch(proxy ? { proxy: { server: proxy, bypass: "localhost,127.0.0.1" } } : {});
 try {
   await shoot(browser, 1920, 1080, "1080p");
   await shoot(browser, 1920, 1080, "1080p-winrate", { stats: true });

@@ -27,7 +27,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     id: "2026-11-26.2",
     title: "A calmer in-game HUD",
     items: [
-      "The HUD fades to see-through during normal play and comes back when you're dead, have gold for your next item, have a skill point, see augments, in the first 90 s, or hover it (Settings → In-game overlay → Fade during play).",
+      "The HUD fades to see-through during normal play and comes back when you're dead, have gold for your next item, have a skill point, see augments, in the first 90 s, or hover it (Settings → In-game overlay → Fade during play). Thanks to Evo for the idea!",
       "Leaner HUD by default (Standard): next buy, skills and augments only. Core build, enemy damage, tips and the hint line are in the Full preset or their own switches.",
       "Skills: Q W E R with your points, and the one to level next highlighted (glowing when a point is waiting).",
     ],
