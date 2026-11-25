@@ -277,6 +277,10 @@ const DICT: Record<string, [string, string]> = {
   "Toggle in-game HUD": ["Activar/desactivar HUD", "Ligar/desligar HUD"],
   "Never covers your screen at spawn — reopen any time with": ["Nunca tapa tu pantalla al aparecer; vuelve a abrirlo cuando quieras con", "Nunca cobre sua tela no início; reabra quando quiser com"],
 
+  "Discord status": ["Estado de Discord", "Status do Discord"],
+  "Show on Discord": ["Mostrar en Discord", "Mostrar no Discord"],
+  "Discord application ID": ["ID de aplicación de Discord", "ID do aplicativo do Discord"],
+
   // Hover tips & misc
   "Browse every champion": ["Ver todos los campeones", "Ver todos os campeões"],
   "Show another champion's guide": ["Ver la guía de otro campeón", "Ver o guia de outro campeão"],

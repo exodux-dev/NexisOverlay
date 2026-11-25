@@ -10,6 +10,7 @@
 mod autostart;
 mod capture;
 mod diag;
+mod discord;
 mod hotkey_poll;
 mod hud;
 mod lcu;
@@ -872,7 +873,9 @@ pub fn run() {
             get_hud_preview,
             league_import::lcu_status,
             league_import::lcu_apply_runes,
-            league_import::lcu_apply_item_set
+            league_import::lcu_apply_item_set,
+            discord::discord_set_activity,
+            discord::discord_disconnect
         ])
         .run(context)
         .expect("error while running Nexis Overlay");

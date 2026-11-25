@@ -165,6 +165,8 @@ export interface Settings {
   hudPerMode: boolean;
   /** Stored HUD layouts of the modes not currently active. */
   hudByMode: Partial<Record<GameModeKind, HudSettings>>;
+  /** Optional Discord status (off by default; needs your own Discord application ID). */
+  discord: { enabled: boolean; appId: string };
   /** UI language (see i18n.ts). */
   language: Lang;
   /** Keep the main window above every other window (the in-game HUD is always on top). */
@@ -234,6 +236,7 @@ export const DEFAULT_SETTINGS: Settings = {
   srRole: "",
   alwaysOnTop: false,
   language: "en",
+  discord: { enabled: false, appId: "" },
   hudPerMode: false,
   hudByMode: {},
   theme: DEFAULT_THEME,
@@ -280,6 +283,10 @@ function finishNormalize(s: Settings): Settings {
   if (typeof s.srRole !== "string") s.srRole = "";
   if (typeof s.alwaysOnTop !== "boolean") s.alwaysOnTop = false;
   if (!LANGUAGES.some((l) => l.value === s.language)) s.language = "en";
+  {
+    const d = s.discord as Partial<Settings["discord"]> | undefined;
+    s.discord = { enabled: d?.enabled === true, appId: typeof d?.appId === "string" ? d.appId : "" };
+  }
   if (typeof s.hudPerMode !== "boolean") s.hudPerMode = false;
   if (!s.hudByMode || typeof s.hudByMode !== "object" || Array.isArray(s.hudByMode)) s.hudByMode = {};
   if (!Array.isArray(s.favorites)) s.favorites = [];

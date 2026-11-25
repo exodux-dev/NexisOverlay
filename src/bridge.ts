@@ -353,6 +353,16 @@ export async function setAutostart(on: boolean): Promise<boolean> {
   return tauriInvoke<boolean>("set_autostart", { on });
 }
 
+/** Discord status (Rich Presence) through the local Discord app; `null` clears it. */
+export async function discordSetActivity(clientId: string, activity: { details?: string; state?: string; start?: number } | null): Promise<void> {
+  if (!isTauri) return;
+  await tauriInvoke("discord_set_activity", { clientId, activity });
+}
+export async function discordDisconnect(): Promise<void> {
+  if (!isTauri) return;
+  await tauriInvoke("discord_disconnect");
+}
+
 /** Show the scan region + sample tier badges on the in-game layer (click-through, auto-off after 3 min). */
 export async function setHudPreview(on: boolean): Promise<void> {
   if (isTauri) return tauriInvoke("set_hud_preview", { on });

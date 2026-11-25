@@ -611,3 +611,16 @@ test("language: Spanish translates the menus and settings", async ({ start }) =>
   await page.getByRole("combobox", { name: "Language" }).selectOption("en");
   await expect(tab(page, "settings")).toContainText("Settings");
 });
+
+test("Discord status settings: off by default, app ID validated", async ({ start }) => {
+  const page = await start();
+  await tab(page, "settings").click();
+  const id = page.getByRole("textbox", { name: "Discord application ID" });
+  await expect(id).toHaveValue("");
+  expect(await storeValue<boolean>(page, "(s) => s.settings.discord.enabled")).toBe(false);
+  await id.fill("abc");
+  await expect(page.locator(".view-settings")).toContainText("doesn't look like an application ID");
+  await id.fill("123456789012345678");
+  await id.blur();
+  await expect.poll(() => storeValue<string>(page, "(s) => s.settings.discord.appId")).toBe("123456789012345678");
+});

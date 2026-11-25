@@ -159,3 +159,10 @@ describe("language (settings.language)", () => {
     expect(normalizeSettings({ language: "xx" } as never).language).toBe("en");
   });
 });
+
+describe("Discord status (settings.discord)", () => {
+  it("is off with no app ID by default and keeps a stored one", () => {
+    expect(normalizeSettings({}).discord).toEqual({ enabled: false, appId: "" });
+    expect(normalizeSettings({ discord: { enabled: true, appId: "123" } } as never).discord).toEqual({ enabled: true, appId: "123" });
+  });
+});

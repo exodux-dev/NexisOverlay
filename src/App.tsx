@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useState, type ComponentType } from "react";
+import { useDiscordStatus } from "./app/discordStatus";
 import { setLanguage } from "./i18n";
 import { actions, getState, useApp, useDerived, useLeagueAutoImport, useMigrateBuildChoice, type Derived, type Tab } from "./app/store";
 import { opggPosition } from "./engine/sources/opgg";
@@ -155,6 +156,7 @@ export default function App() {
   useLeagueAutoImport(derived);
   useMigrateBuildChoice(derived);
   useEscToHide();
+  useDiscordStatus(derived);
   // Main window on top of other windows only when asked (Settings → General); off by default.
   const onTop = useApp((s) => s.settings.alwaysOnTop);
   useEffect(() => {

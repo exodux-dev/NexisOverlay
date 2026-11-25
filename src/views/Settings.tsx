@@ -939,7 +939,45 @@ function GeneralSection() {
         </ul>
         <p className="dim small no-margin">The overlay opens automatically when a game starts; it never sends inputs to the game.</p>
       </Card>
+      <DiscordCard />
     </>
+  );
+}
+
+/** Optional Discord status. Needs the user's own (free) Discord application ID. */
+function DiscordCard() {
+  const d = useApp((st) => st.settings.discord);
+  const [id, setId] = useState(d.appId);
+  const valid = /^\d{15,22}$/.test(id.trim());
+  return (
+    <Card title="Discord status" icon="user">
+      <Toggle
+        checked={d.enabled}
+        onChange={(v) => update({ discord: { ...d, enabled: v } })}
+        label="Show on Discord"
+        sub="Your Discord profile shows “Playing Ahri · ARAM: Mayhem” during games and champ select. Off by default; only talks to the Discord app on this PC."
+      />
+      <div className="field">
+        <span className="field-label">{tr("Discord application ID")}</span>
+        <div className="discord-id-row">
+          <input
+            className="input"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+            onBlur={() => update({ discord: { ...d, appId: id.trim() } })}
+            placeholder="e.g. 1234567890123456789"
+            aria-label="Discord application ID"
+            inputMode="numeric"
+            spellCheck={false}
+          />
+        </div>
+        <span className={`field-hint ${id && !valid ? "err" : ""}`}>
+          {id && !valid
+            ? tr("That doesn't look like an application ID (15–22 digits).")
+            : tr("One-time setup: open discord.com/developers/applications, click New Application, name it “Nexis Overlay”, then copy its Application ID here.")}
+        </span>
+      </div>
+    </Card>
   );
 }
 
