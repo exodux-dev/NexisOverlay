@@ -665,3 +665,15 @@ test("a role picked by hand doesn't leak into the next champ select (same assign
   await emit(page, "champ-select", mid);
   await expect.poll(() => storeValue<string>(page, "(s) => s.settings.srRole")).toBe("");
 });
+
+test("Build tab: type to add enemies", async ({ start }) => {
+  const page = await start();
+  await act(page, "setExploreChampion", "Ahri");
+  await act(page, "setTab", "build");
+  const add = page.getByRole("combobox", { name: "Add an enemy champion" });
+  await add.fill("zed");
+  await page.keyboard.press("Enter");
+  await add.fill("mf");
+  await page.keyboard.press("Enter");
+  await expect.poll(() => storeValue<string[]>(page, "(s) => s.explore.enemies")).toEqual(["Zed", "MissFortune"]);
+});

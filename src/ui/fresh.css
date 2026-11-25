@@ -1018,3 +1018,15 @@
   border-radius: 5px;
   padding: 0 6px;
 }
+.enemy-search {
+  margin-top: 8px;
+  flex: 0 1 auto;
+  width: 280px;
+}
+.enemy-search .csearch-field {
+  height: 36px;
+  border-radius: 10px;
+}
+.enemy-search .csearch-field input {
+  font-size: 13px;
+}

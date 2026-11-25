@@ -391,6 +391,16 @@ function ExplorePanel({ d }: { d: Derived }) {
             );
           })}
         </div>
+        {enemies.length < 5 && (
+          <ChampionSearch
+            className="enemy-search"
+            champions={data.champions}
+            exclude={[...explore.enemies, ...(me ? [me.id] : [])]}
+            onPick={(c) => actions.setExploreEnemies([...explore.enemies, c.id].slice(0, 5))}
+            placeholder="Add an enemy…"
+            label="Add an enemy champion"
+          />
+        )}
       </div>
       {pick && (
         <ChampionPicker
