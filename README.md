@@ -183,7 +183,9 @@ Issues and pull requests are welcome. Good first areas: champion traits (`src/da
 
 ## Support
 
-Nexis is free and always will be. If it helped you win a few games, you can support development on [Ko-fi](https://ko-fi.com/exoduxdev). Thank you!
+<a href="https://ko-fi.com/exoduxdev"><img src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" alt="Support Nexis on Ko-fi" height="40" align="right" /></a>
+
+Nexis is free and always will be. Supporting the project helps with development: new features, updates every patch and quick fixes when the stats sites change. If Nexis helped you win a few games, a coffee on [Ko-fi](https://ko-fi.com/exoduxdev) means a lot. Thank you! 💜
 
 ## License
 

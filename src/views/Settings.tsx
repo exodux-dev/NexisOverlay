@@ -1193,6 +1193,24 @@ const CREDITS: Array<{ name: string; what: string; url: string }> = [
 ];
 
 /** External link. The desktop webview can't open a browser on its own, so there it copies the URL instead. */
+/** Ko-fi style coffee cup with a heart (drawn here, no external image). */
+function KofiCup() {
+  return (
+    <svg className="kofi-cup" viewBox="0 0 64 64" aria-hidden="true">
+      <defs>
+        <linearGradient id="kofi-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#e8e6f5" />
+        </linearGradient>
+      </defs>
+      <path d="M24 8c-2 3 2 5 0 8M32 6c-2 3 2 5 0 8M40 8c-2 3 2 5 0 8" fill="none" stroke="#a99bff" strokeWidth="2.4" strokeLinecap="round" opacity="0.8" />
+      <path d="M10 22h36v16c0 9-7 16-16 16h-4c-9 0-16-7-16-16z" fill="url(#kofi-g)" />
+      <path d="M46 26h3a8 8 0 0 1 0 16h-4" fill="none" stroke="#e8e6f5" strokeWidth="5" />
+      <path d="M28 44s-9-5.2-9-11a4.8 4.8 0 0 1 9-2.4 4.8 4.8 0 0 1 9 2.4c0 5.8-9 11-9 11z" fill="#ff5e5b" />
+    </svg>
+  );
+}
+
 function ExtLink({ href, children, className = "" }: { href: string; children: ReactNode; className?: string }) {
   return (
     <a
@@ -1340,13 +1358,23 @@ function AboutSection() {
             <ExtLink href={REPO_URL} className="btn btn-ghost btn-sm">
               GitHub
             </ExtLink>
-            <ExtLink href={KOFI_URL} className="btn btn-ghost btn-sm about-kofi">
-              <Icon name="heart" size={13} />
-              {tx("Support on Ko-fi")}
-            </ExtLink>
           </div>
         </div>
         <UpdateCheck />
+      </Card>
+      <Card className="about-kofi-card span-2">
+        <div className="kofi-row">
+          <KofiCup />
+          <div className="kofi-text">
+            <span className="kofi-title">{tx("Support Nexis")}</span>
+            <span className="kofi-body">
+              {tx("Nexis is free and always will be. Supporting the project helps with development: new features, updates every patch and quick fixes when stats sites change.")}
+            </span>
+          </div>
+          <ExtLink href={KOFI_URL} className="btn kofi-btn">
+            {tx("Support on Ko-fi")}
+          </ExtLink>
+        </div>
       </Card>
       <Card title="Fair play" icon="shield" className="about-card">
         <ul className="fair">

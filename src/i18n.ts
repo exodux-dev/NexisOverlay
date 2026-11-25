@@ -81,6 +81,8 @@ const DICT: Record<string, [string, string]> = {
   Import: ["Importar", "Importar"],
   "All champions": ["Todos los campeones", "Todos os campeões"],
   "Support on Ko-fi": ["Apoyar en Ko-fi", "Apoiar no Ko-fi"],
+  "Support Nexis": ["Apoya Nexis", "Apoie o Nexis"],
+  "Nexis is free and always will be. Supporting the project helps with development: new features, updates every patch and quick fixes when stats sites change.": ["Nexis es gratis y siempre lo será. Apoyar el proyecto ayuda al desarrollo: funciones nuevas, actualizaciones cada parche y arreglos rápidos cuando cambian las webs de estadísticas.", "O Nexis é grátis e sempre será. Apoiar o projeto ajuda no desenvolvimento: recursos novos, atualizações a cada patch e correções rápidas quando os sites de estatísticas mudam."],
   "Change champion": ["Cambiar campeón", "Trocar campeão"],
   Reset: ["Restablecer", "Redefinir"],
   "Got it": ["Entendido", "Entendi"],

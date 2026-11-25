@@ -1131,6 +1131,61 @@
   display: grid;
   gap: 6px;
 }
-.about-kofi .icon {
-  color: #ff5e5b;
+/* Settings → About: Ko-fi support card */
+.about-kofi-card {
+  background:
+    radial-gradient(420px 140px at 0% 50%, rgba(255, 94, 91, 0.12), transparent 70%),
+    radial-gradient(520px 160px at 100% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%),
+    var(--box-bg);
+}
+.kofi-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.kofi-cup {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 6px 16px rgba(255, 94, 91, 0.25));
+}
+.kofi-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.kofi-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.kofi-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.btn.kofi-btn {
+  flex: none;
+  gap: 8px;
+  padding: 0 18px;
+  height: 40px;
+  border: none;
+  border-radius: 999px;
+  background: #ff5e5b;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(255, 94, 91, 0.3);
+}
+.btn.kofi-btn:hover {
+  background: #ff7472;
+}
+.btn.kofi-btn .ext-icon {
+  opacity: 0.85;
+}
+@media (max-width: 720px) {
+  .kofi-row {
+    flex-wrap: wrap;
+  }
 }
