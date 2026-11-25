@@ -728,3 +728,19 @@ test("HUD highlights the ability to level up next", async ({ start, context }) =
   await expect(skill.locator(".nl-ab-hot")).toHaveCount(1);
   await expect(skill.locator(".nl-ab")).toHaveCount(4);
 });
+
+test("level-up arrow over League's ability bar when a point is waiting", async ({ start, context }) => {
+  await start();
+  const hud = await context.newPage();
+  await hud.goto("/?view=hud");
+  await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
+  const game = liveGame() as ReturnType<typeof liveGame> & { activePlayer: Record<string, unknown> };
+  game.activePlayer.abilities = { Q: { abilityLevel: 5 }, W: { abilityLevel: 1 }, E: { abilityLevel: 2 }, R: { abilityLevel: 2 } };
+  await emit(hud, "live-game", game);
+  await expect(hud.locator(".nl-lvl-arrow")).toHaveCount(1);
+  if (process.env.SHOT) await hud.screenshot({ path: process.env.SHOT });
+  // Point spent: no arrow.
+  game.activePlayer.abilities = { Q: { abilityLevel: 5 }, W: { abilityLevel: 2 }, E: { abilityLevel: 2 }, R: { abilityLevel: 2 } };
+  await emit(hud, "live-game", game);
+  await expect(hud.locator(".nl-lvl-arrow")).toHaveCount(0);
+});

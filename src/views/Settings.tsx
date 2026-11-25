@@ -16,7 +16,7 @@ import {
   type ThemeSettings,
 } from "../app/store";
 import type { Playstyle } from "../engine/types";
-import { getAppInfo, getAutostart, isTauri, type AppInfo, openUrl, setAutostart, setHudEdit } from "../bridge";
+import { getAppInfo, getAutostart, isTauri, type AppInfo, openUrl, setAutostart, setHudEdit, setHudPreview } from "../bridge";
 import { Card, Kbd, Pill, Segmented, Toggle } from "../ui/controls";
 import { showOnboarding } from "../ui/Onboarding";
 import { toast } from "../ui/Toasts";
@@ -27,7 +27,7 @@ import { Icon, type IconName } from "../ui/icons";
 import { HudCard, hudHasContent, sampleHudModel, useHudModel } from "./MiniHud";
 import { useLeagueClientConnected } from "../ui/ImportToLeague";
 import { DiagnosticsSection } from "./Diagnostics";
-import { HUD_DEFAULTS, HUD_HOVER_OPACITY, HUD_IDLE_OPACITY, HUD_OPACITY, HUD_POSITIONS, HUD_SCALE, WIDGET_FLAG, activeHudPreset, hudFrac, hudOf, hudPreset, moveWidget, presetFrac, type HudPosition, type HudPreset, type HudSettings, type HudWidget } from "./hudSettings";
+import { BAR, HUD_DEFAULTS, HUD_HOVER_OPACITY, HUD_IDLE_OPACITY, HUD_OPACITY, HUD_POSITIONS, HUD_SCALE, WIDGET_FLAG, activeHudPreset, hudFrac, hudOf, hudPreset, moveWidget, presetFrac, type HudPosition, type HudPreset, type HudSettings, type HudWidget } from "./hudSettings";
 
 const update = (patch: Partial<Settings>) => void actions.updateSettings(patch);
 const updateTheme = (patch: Partial<ThemeSettings>) => void actions.updateTheme(patch);
@@ -562,6 +562,9 @@ function HudLayoutCard() {
   const [opacity, setOpacity] = useDebounced(hud.opacity, (v) => updateHud({ opacity: v }), 150);
   const [hoverOpacity, setHoverOpacity] = useDebounced(hud.hoverOpacity, (v) => updateHud({ hoverOpacity: v }), 150);
   const [idleOpacity, setIdleOpacity] = useDebounced(hud.idleOpacity, (v) => updateHud({ idleOpacity: v }), 150);
+  const [barX, setBarX] = useDebounced(hud.barX, (v) => updateHud({ barX: v }), 120);
+  const [barY, setBarY] = useDebounced(hud.barY, (v) => updateHud({ barY: v }), 120);
+  const [barGap, setBarGap] = useDebounced(hud.barGap, (v) => updateHud({ barGap: v }), 120);
   const view: HudSettings = { ...hud, scale, opacity };
   const usingLive = hudHasContent({ ...hud, collapsed: false }, live) && (live.path.length > 0 || !!live.next || !!live.shop);
   const model = usingLive ? live : sampleHudModel(data);
@@ -696,6 +699,24 @@ function HudLayoutCard() {
             sub="Mostly see-through while you play; fully visible when you're dead, have gold for your next item, have a skill point, see augments, in the first 90 s, or hover it"
           />
           {hud.idleDim && <Slider label="Opacity while faded" value={idleOpacity} min={HUD_IDLE_OPACITY.min} max={HUD_IDLE_OPACITY.max} step={0.05} format={pct0} onChange={setIdleOpacity} />}
+          <Toggle
+            checked={hud.levelArrows}
+            onChange={(v) => updateHud({ levelArrows: v })}
+            label="Level-up arrow on League's ability bar"
+            sub="When you have a skill point, a glowing arrow appears over the ability your build levels next, on the game's own bottom bar"
+          />
+          {hud.levelArrows && (
+            <div className="field-stack">
+              <Slider label="Ability bar: left / right" value={barX} min={BAR.x.min} max={BAR.x.max} step={0.001} format={(v) => `${(v * 100).toFixed(1)}%`} onChange={setBarX} />
+              <Slider label="Ability bar: up / down" value={barY} min={BAR.y.min} max={BAR.y.max} step={0.001} format={(v) => `${(v * 100).toFixed(1)}%`} onChange={setBarY} />
+              <Slider label="Ability bar: spacing" value={barGap} min={BAR.gap.min} max={BAR.gap.max} step={0.001} format={(v) => `${(v * 100).toFixed(1)}%`} onChange={setBarGap} hint="Match League's HUD scale (Settings → Interface)." />
+              {isTauri && (
+                <button type="button" className="btn btn-sm" onClick={() => void setHudPreview(true)}>
+                  {tr("Line up on the game screen")}
+                </button>
+              )}
+            </div>
+          )}
           <Toggle checked={hud.showTips} onChange={(v) => updateHud({ showTips: v })} label="Show tips" sub="Shop tips, why each item is suggested and the game phase on the HUD" />
           <Toggle checked={hud.collapsed} onChange={(v) => updateHud({ collapsed: v })} label="Collapse to a pill" sub="Just the next buy (and a skill point reminder) in a tiny pill" />
           <Toggle checked={hud.compact} onChange={(v) => updateHud({ compact: v })} label="Compact" sub="Icons only — a narrow strip with no labels" />

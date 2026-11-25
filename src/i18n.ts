@@ -443,6 +443,12 @@ const DICT: Record<string, [string, string]> = {
   Standard: ["Estándar", "Padrão"],
   "Show tips": ["Mostrar consejos", "Mostrar dicas"],
 
+  "Level-up arrow on League's ability bar": ["Flecha de subida en la barra de habilidades", "Seta de evolução na barra de habilidades"],
+  "Line up on the game screen": ["Alinear en la pantalla del juego", "Alinhar na tela do jogo"],
+  "Ability bar: left / right": ["Barra de habilidades: izquierda / derecha", "Barra de habilidades: esquerda / direita"],
+  "Ability bar: up / down": ["Barra de habilidades: arriba / abajo", "Barra de habilidades: cima / baixo"],
+  "Ability bar: spacing": ["Barra de habilidades: separación", "Barra de habilidades: espaçamento"],
+
   // Hover tips & misc
   "Browse every champion": ["Ver todos los campeones", "Ver todos os campeões"],
   "Show another champion's guide": ["Ver la guía de otro campeón", "Ver o guia de outro campeão"],

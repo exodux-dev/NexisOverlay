@@ -9,8 +9,16 @@ import { parseChampionPage } from "../src/engine/sources/hexmayhem";
 import { mergeOpggChampion, parseOpggChampionPage, parseOpggSynergies } from "../src/engine/sources/opgg";
 
 const UA = "NexisOverlay/0.1 (+open-source)";
+/** The site couldn't be reached (blocked, rate-limited, down): not a format change, so it only warns. */
+class Unreachable extends Error {}
 const get = async (url: string) => {
-  const r = await fetch(url, { headers: { "User-Agent": UA } });
+  let r: Response;
+  try {
+    r = await fetch(url, { headers: { "User-Agent": UA } });
+  } catch (e) {
+    throw new Unreachable(`network error for ${url}: ${e instanceof Error ? e.message : String(e)}`);
+  }
+  if (r.status === 403 || r.status === 429 || r.status >= 500) throw new Unreachable(`HTTP ${r.status} for ${url}`);
   if (!r.ok) throw new Error(`HTTP ${r.status} for ${url}`);
   return r.text();
 };
@@ -88,8 +96,13 @@ for (const c of checks) {
   try {
     console.log(`✔ ${c.name}: ${await c.run()}`);
   } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (e instanceof Unreachable) {
+      console.log(`⚠ ${c.name}: skipped, site unreachable (${msg})`);
+      continue;
+    }
     failed++;
-    console.log(`✘ ${c.name}: ${e instanceof Error ? e.message : String(e)}`);
+    console.log(`✘ ${c.name}: ${msg}`);
   }
   await new Promise((r) => setTimeout(r, 1500)); // be gentle with the sites
 }

@@ -208,3 +208,15 @@ describe("HUD fade during play", () => {
     expect(normalizeHud({ idleDim: false, idleOpacity: 9 })).toMatchObject({ idleDim: false, idleOpacity: 0.6 });
   });
 });
+
+describe("level-up arrow position", () => {
+  it("places Q W E R symmetrically around the bar center, scaled by height", async () => {
+    const { abilitySlot } = await import("./hudSettings");
+    const cal = { barX: 0.5, barY: 0.9, barGap: 0.05 };
+    const q = abilitySlot(cal, "Q", 1920, 1080);
+    const r = abilitySlot(cal, "R", 1920, 1080);
+    expect(q.y).toBeCloseTo(972);
+    expect((q.x + r.x) / 2).toBeCloseTo(960);
+    expect(abilitySlot(cal, "W", 1920, 1080).x - q.x).toBeCloseTo(54);
+  });
+});

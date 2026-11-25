@@ -8,12 +8,12 @@
 
 import { t as tx } from "../i18n";
 import { setLanguage, t } from "../i18n";
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { actions, devHooks, getState, registerDemo, useApp, useDerived } from "../app/store";
 import { rerollAdvice, type AugmentScore } from "../engine/augments";
 import type { OcrMatch } from "../engine/ocrMatch";
-import { MiniHud } from "./MiniHud";
-import { hudOf } from "./hudSettings";
+import { MiniHud, useHudModel } from "./MiniHud";
+import { abilitySlot, hudOf } from "./hudSettings";
 import * as bridge from "../bridge";
 import "./layer.css";
 
@@ -48,6 +48,7 @@ export default function Layer() {
       <AugmentBadges />
       <PickReminder />
       <PickedNotice />
+      <LevelUpArrow />
       <CalibrationPreview />
       <MiniHud />
     </div>
@@ -201,6 +202,40 @@ function PickedNotice() {
   );
 }
 
+// ------------------------------------------------------------------ level-up arrow
+
+/**
+ * A glowing arrow over League's own ability bar on the ability your build levels next, while a
+ * skill point is waiting (like other companion apps). Position from the calibration in Settings.
+ */
+function LevelUpArrow() {
+  const settingsObj = useApp((s) => s.settings);
+  const hud = useMemo(() => hudOf(settingsObj), [settingsObj]);
+  const live = useApp((s) => s.live);
+  const model = useHudModel();
+  const key = model.skill?.levelUp;
+  const [size, setSize] = useState({ w: window.innerWidth, h: window.innerHeight });
+  useEffect(() => {
+    const on = () => setSize({ w: window.innerWidth, h: window.innerHeight });
+    window.addEventListener("resize", on);
+    return () => window.removeEventListener("resize", on);
+  }, []);
+  if (!hud.levelArrows || !live || live.loading || !key) return null;
+  return <AbilityArrow slot={abilitySlot(hud, key, size.w, size.h)} label={key} />;
+}
+
+function AbilityArrow({ slot, label, sample = false }: { slot: { x: number; y: number; size: number }; label: string; sample?: boolean }) {
+  return (
+    <div className={`nl-lvl-arrow ${sample ? "nl-lvl-sample" : ""}`} style={{ left: slot.x, top: slot.y, width: slot.size, height: slot.size }} aria-hidden="true">
+      <span className="nl-lvl-ring" />
+      <svg className="nl-lvl-chevron" viewBox="0 0 24 16">
+        <path d="M2 2l10 11L22 2" />
+      </svg>
+      {sample && <span className="nl-lvl-key">{label}</span>}
+    </div>
+  );
+}
+
 // ------------------------------------------------------------------ calibration preview
 
 /** Where sample badges sit (centres of three cards across the scan region). */
@@ -215,6 +250,8 @@ function CalibrationPreview() {
   const region = useApp((s) => s.settings.scanRegion);
   const badgeOffset = useApp((s) => s.settings.badgeOffset);
   const placement = useApp((s) => s.settings.badgePlacement);
+  const settingsObj = useApp((s) => s.settings);
+  const hud = useMemo(() => hudOf(settingsObj), [settingsObj]);
   const realCards = useApp((s) => s.cards.length > 0);
   useEffect(() => {
     let alive = true;
@@ -238,6 +275,9 @@ function CalibrationPreview() {
       <div className="nl-calib-region" style={{ left: `${region.x * 100}vw`, top: `${region.y * 100}vh`, width: `${region.w * 100}vw`, height: `${region.h * 100}vh` }}>
         <span>{tx("Nexis scan region \u2014 augment names must be inside")}</span>
       </div>
+      {(["Q", "W", "E", "R"] as const).map((k) => (
+        <AbilityArrow key={k} slot={abilitySlot(hud, k, window.innerWidth, window.innerHeight)} label={k} sample />
+      ))}
       {!realCards &&
         SAMPLE_CARDS.map((x, i) => (
           <Badge key={i} name={`Sample augment ${i + 1}`} best={false} style={{ left: `${(region.x + x * region.w) * 100}vw`, ...anchor }} />

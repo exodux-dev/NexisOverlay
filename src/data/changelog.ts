@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-26.3",
+    title: "Level-up arrow on your ability bar",
+    items: [
+      "When you have a skill point, a glowing arrow appears over the ability to level on League's own ability bar.",
+      "Line it up once: Settings → In-game overlay → Level-up arrow → Line up on the game screen, then move the sliders until the markers sit on Q W E R.",
+    ],
+  },
+  {
     id: "2026-11-26.2",
     title: "A calmer in-game HUD",
     items: [

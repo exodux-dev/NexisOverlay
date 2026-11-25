@@ -34,6 +34,13 @@ export interface HudSettings {
   idleDim: boolean;
   /** Panel opacity while faded, 0.05..0.6. */
   idleOpacity: number;
+  /** Glowing arrow over League's own ability bar on the ability to level next. */
+  levelArrows: boolean;
+  /** Where League's Q W E R sit: horizontal center (fraction of width), vertical center (fraction
+   *  of height) and the distance between two abilities (fraction of height; League's HUD scales with height). */
+  barX: number;
+  barY: number;
+  barGap: number;
   /** Extra text: shop tips, why an item is suggested, the game phase label. Off by default. */
   showTips: boolean;
   /** While you're dead: expand the HUD with the shop first ("shop now"). */
@@ -55,6 +62,14 @@ export interface HudSettings {
 export type HudHoverMode = "off" | "fade" | "hide";
 export const HUD_HOVER_OPACITY = { min: 0.05, max: 0.9 } as const;
 export const HUD_IDLE_OPACITY = { min: 0.05, max: 0.6 } as const;
+export const BAR = { x: { min: 0.3, max: 0.7 }, y: { min: 0.75, max: 0.995 }, gap: { min: 0.025, max: 0.09 } } as const;
+
+/** Screen position (px) of League's Q / W / E / R from the calibration (`barX` / `barY` / `barGap`). */
+export function abilitySlot(h: Pick<HudSettings, "barX" | "barY" | "barGap">, key: "Q" | "W" | "E" | "R", width: number, height: number): { x: number; y: number; size: number } {
+  const i = ["Q", "W", "E", "R"].indexOf(key);
+  const gap = h.barGap * height;
+  return { x: h.barX * width + (i - 1.5) * gap, y: h.barY * height, size: gap * 0.85 };
+}
 
 export const HUD_WIDGETS: HudWidget[] = ["shop", "path", "skill", "threats", "augments", "power"];
 
@@ -74,6 +89,10 @@ export const HUD_DEFAULTS: HudSettings = {
   pickReminder: true,
   deathShop: true,
   showTips: false,
+  levelArrows: true,
+  barX: 0.497,
+  barY: 0.935,
+  barGap: 0.05,
   idleDim: true,
   idleOpacity: 0.2,
   order: [...HUD_WIDGETS],
@@ -191,6 +210,10 @@ export function normalizeHud(raw: unknown): HudSettings {
     pickReminder: bool("pickReminder"),
     deathShop: bool("deathShop"),
     showTips: bool("showTips"),
+    levelArrows: bool("levelArrows"),
+    barX: clampNum(r.barX, BAR.x.min, BAR.x.max, HUD_DEFAULTS.barX),
+    barY: clampNum(r.barY, BAR.y.min, BAR.y.max, HUD_DEFAULTS.barY),
+    barGap: clampNum(r.barGap, BAR.gap.min, BAR.gap.max, HUD_DEFAULTS.barGap),
     idleDim: bool("idleDim"),
     idleOpacity: clampNum(r.idleOpacity, HUD_IDLE_OPACITY.min, HUD_IDLE_OPACITY.max, HUD_DEFAULTS.idleOpacity),
     order: normalizeOrder(r.order),
