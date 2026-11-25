@@ -624,3 +624,11 @@ test("Discord status settings: off by default, app ID validated", async ({ start
   await id.blur();
   await expect.poll(() => storeValue<string>(page, "(s) => s.settings.discord.appId")).toBe("123456789012345678");
 });
+
+test("About: check for updates (dev build says so)", async ({ start }) => {
+  const page = await start();
+  await tab(page, "settings").click();
+  await page.locator('[data-section="about"]').click();
+  await page.getByRole("button", { name: "Check for updates" }).click();
+  await expect(page.locator(".view-settings")).toContainText("Development build");
+});

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useId, type MouseEvent } from "react";
 import { MODE_LABEL, actions, getState, useApp, type Derived, type GameModeKind } from "../app/store";
 import { openUrl, startDrag } from "../bridge";
@@ -77,15 +78,45 @@ function ModeSelect({ d }: { d: Derived }) {
   );
 }
 
-/** Shown when a newer build exists on GitHub; opens the download page. */
+/** Shown when a newer build exists on GitHub: what changed, and where to download it. */
 function UpdatePill() {
   const update = useApp((s) => s.update);
+  const [open, setOpen] = useState(false);
   if (!update) return null;
   return (
-    <button type="button" className="update-pill" title={`Update available — ${update.message}. Click to open the download page.`} onClick={() => void openUrl(update.url)}>
-      <span className="update-dot" />
-      Update
-    </button>
+    <span className="update-wrap">
+      <button type="button" className="update-pill" aria-expanded={open} onClick={() => setOpen((v) => !v)} title="A newer Nexis build is available">
+        <span className="update-dot" />
+        Update
+      </button>
+      {open && (
+        <div className="update-panel" role="dialog" aria-label="Update available">
+          <strong>New Nexis build</strong>
+          {update.changes.length > 0 ? (
+            <ul>
+              {update.changes.map((c, i) => (
+                <li key={i}>{c}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="dim small">{update.message}</p>
+          )}
+          <p className="dim small">
+            {update.kind === "release"
+              ? "Download the zip, close Nexis and replace Nexis Overlay.exe. Your data folder stays as it is."
+              : "On the build page, download NexisOverlay-portable under Artifacts (sign in to GitHub), close Nexis and replace Nexis Overlay.exe. Your data folder stays as it is."}
+          </p>
+          <div className="update-actions">
+            <button type="button" className="btn btn-sm btn-ghost" onClick={() => setOpen(false)}>
+              Later
+            </button>
+            <button type="button" className="btn btn-sm btn-primary" onClick={() => void openUrl(update.url)}>
+              {update.kind === "release" ? "Download" : "Open download page"}
+            </button>
+          </div>
+        </div>
+      )}
+    </span>
   );
 }
 

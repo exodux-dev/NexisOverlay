@@ -27,6 +27,7 @@ import { activeRoles, applyRoles, assignRole, NO_OVERRIDES, playerKey, roleGameK
 import type { Lane } from "../engine/power";
 import { NEW_TRACKER, stepPick, type PickTracker } from "../engine/pickDetect";
 import { decodeBuild } from "../engine/shareCode";
+import { pickUpdate, type ReleaseLite, type RunLite, type UpdateOffer } from "../engine/update";
 import { defaultWebSource, fallbackNotice, resolveSource, selectedSource, sourcesForMode, type DataSourceId, type SourceResolution } from "../engine/dataSource";
 import { parseLiveGame, type AllGameDataRaw } from "../engine/live";
 import { stabilizeSnapshot } from "../engine/liveStable";
@@ -58,12 +59,7 @@ export interface TierListState {
   fetchedAt?: number;
 }
 
-export interface UpdateInfo {
-  sha: string;
-  date: string;
-  message: string;
-  url: string; // where to download the new build
-}
+export type UpdateInfo = UpdateOffer;
 
 export interface ClientInfo {
   phase?: string | null;
@@ -892,6 +888,10 @@ export const actions = {
     else delete next[key];
     return actions.updateSettings({ buildChoices: next });
   },
+  /** Settings → About → Check for updates. */
+  checkForUpdates() {
+    return checkForUpdate(true);
+  },
   /** Pick your Summoner's Rift role ("" = auto). In a live game this sets your lane too. */
   setSrRole(role: string) {
     const lane = ({ top: "TOP", jungle: "JUNGLE", mid: "MIDDLE", adc: "BOTTOM", support: "UTILITY" } as Record<string, Lane>)[role];
@@ -1478,19 +1478,32 @@ async function scoutRiotIds(ids: string[], gameKey: string) {
 
 // ------------------------------------------------------------------ update check
 
-/** Compares this build's commit with the latest commit on main (GitHub API, public repos only). */
-async function checkForUpdate() {
-  if (currentView !== "main" || BUILD.sha === "dev") return;
+const GH_API = "https://api.github.com/repos/exodux-dev/NexisOverlay";
+
+/**
+ * Newer successful build on main (or a newer release zip) than the one running, with the commit
+ * titles since this build. GitHub API, public repo; cached 6 h unless `force`. Never replaces the
+ * exe itself: an unsigned app swapping its own exe is what antivirus flags.
+ */
+async function checkForUpdate(force = false): Promise<"latest" | "available" | "error" | "dev"> {
+  if (currentView !== "main" || BUILD.sha === "dev") return "dev";
+  const age = force ? 0 : 6;
   try {
-    const c = await bridge.fetchJson<{ sha: string; commit: { message: string; committer: { date: string } } }>(
-      "https://api.github.com/repos/exodux-dev/NexisOverlay/commits/main",
-      "update-check.json",
-      6,
-    );
-    if (c?.sha && c.sha !== BUILD.sha && c.commit.committer.date > BUILD.date)
-      set({ update: { sha: c.sha, date: c.commit.committer.date, message: c.commit.message.split("\n")[0], url: `${REPO_URL}/actions/workflows/build.yml?query=branch%3Amain` } });
+    const runs = await bridge.fetchJson<{ workflow_runs?: RunLite[] }>(`${GH_API}/actions/workflows/build.yml/runs?branch=main&status=success&per_page=1`, "update-runs.json", age);
+    const run = runs?.workflow_runs?.[0];
+    const release = await bridge.fetchJson<ReleaseLite>(`${GH_API}/releases/latest`, "update-release.json", age).catch(() => undefined);
+    let changes: string[] = [];
+    if (run && run.head_sha !== BUILD.sha) {
+      const cmp = await bridge
+        .fetchJson<{ commits?: Array<{ commit?: { message?: string } }> }>(`${GH_API}/compare/${BUILD.sha}...${run.head_sha}`, `update-compare-${BUILD.sha.slice(0, 7)}-${run.head_sha.slice(0, 7)}.json`, 24)
+        .catch(() => undefined);
+      changes = (cmp?.commits ?? []).map((c) => c.commit?.message ?? "").reverse();
+    }
+    const offer = pickUpdate({ buildSha: BUILD.sha, buildDate: BUILD.date, run, release, changes });
+    set({ update: offer ?? null });
+    return offer ? "available" : "latest";
   } catch {
-    /* offline or private repo: no update notice */
+    return "error"; // offline or GitHub unreachable: no notice
   }
 }
 

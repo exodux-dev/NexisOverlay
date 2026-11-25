@@ -281,6 +281,10 @@ const DICT: Record<string, [string, string]> = {
   "Show on Discord": ["Mostrar en Discord", "Mostrar no Discord"],
   "Discord application ID": ["ID de aplicación de Discord", "ID do aplicativo do Discord"],
 
+  Updates: ["Actualizaciones", "Atualizações"],
+  "Check for updates": ["Buscar actualizaciones", "Verificar atualizações"],
+  "Nexis checks GitHub for a newer build every few hours.": ["Nexis busca una build más nueva en GitHub cada pocas horas.", "O Nexis procura uma build mais nova no GitHub a cada poucas horas."],
+
   // Hover tips & misc
   "Browse every champion": ["Ver todos los campeones", "Ver todos os campeões"],
   "Show another champion's guide": ["Ver la guía de otro campeón", "Ver o guia de outro campeão"],

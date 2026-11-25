@@ -972,3 +972,41 @@
   font: inherit;
   color: var(--text);
 }
+
+/* Top bar: update panel */
+.update-wrap {
+  position: relative;
+}
+.update-panel {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 340px;
+  padding: 14px;
+  display: grid;
+  gap: 8px;
+  border-radius: 14px;
+  background: rgb(var(--panel-rgb));
+  border: 1px solid var(--fr-line-2);
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.75);
+  font-size: 13px;
+  -webkit-app-region: no-drag;
+}
+.update-panel ul {
+  margin: 0;
+  padding-left: 18px;
+  max-height: 200px;
+  overflow: auto;
+  display: grid;
+  gap: 3px;
+  color: var(--text-2);
+}
+.update-panel p {
+  margin: 0;
+}
+.update-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

@@ -1251,6 +1251,32 @@ function DataSafetyCard({ info }: { info: AppInfo | null | undefined }) {
   );
 }
 
+/** Settings → About: manual update check. */
+function UpdateCheck() {
+  const [st, setSt] = useState<"idle" | "checking" | "latest" | "available" | "error" | "dev">("idle");
+  const update = useApp((x) => x.update);
+  const label = { idle: "", checking: "Checking…", latest: "You're on the newest build.", available: "A newer build is available: see Update in the top bar.", error: "Couldn't reach GitHub. Try again later.", dev: "Development build: updates aren't checked." }[st];
+  return (
+    <div className="field-row">
+      <div className="field-text">
+        <span className="field-label">{tr("Updates")}</span>
+        <span className="field-hint">{label || (update ? tr("A newer build is available: see Update in the top bar.") : tr("Nexis checks GitHub for a newer build every few hours."))}</span>
+      </div>
+      <button
+        type="button"
+        className="btn btn-sm"
+        disabled={st === "checking"}
+        onClick={() => {
+          setSt("checking");
+          void actions.checkForUpdates().then(setSt);
+        }}
+      >
+        {tr("Check for updates")}
+      </button>
+    </div>
+  );
+}
+
 function AboutSection() {
   const s = useApp((st) => st.settings);
   const patch = useApp((st) => st.data?.version);
@@ -1282,6 +1308,7 @@ function AboutSection() {
             </ExtLink>
           </div>
         </div>
+        <UpdateCheck />
       </Card>
       <Card title="Fair play" icon="shield" className="about-card">
         <ul className="fair">

@@ -11,6 +11,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     id: "2026-11-25.3",
     title: "Español and Português",
     items: [
+      "Updates: the Update button in the top bar shows what's new and opens the exact download; Settings → About → Check for updates.",
       "Settings → General → Discord status (off by default): shows “Playing Ahri · ARAM: Mayhem” on your Discord profile. One-time setup: create a free Discord application and paste its ID.",
       "Settings → General → Language: English, Español or Português (BR) for menus, cards and settings. Champion, item and augment names stay in English.",
     ],
