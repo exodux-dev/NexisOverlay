@@ -1,6 +1,7 @@
 // Team composition UI (engine/comp.ts): your team's profile in champ select — with a preview of
 // how the highlighted pick-helper candidate changes it — and a two-team comparison on the Players tab.
 
+import { t as tx } from "../i18n";
 import { useMemo, type ReactNode } from "react";
 import { AXIS_HINT, AXIS_LABEL, analyzeComp, compareComps, pickImpact, type CompAxis, type CompNote, type CompProfile } from "../engine/comp";
 import type { GameModeKind } from "../engine/mode";
@@ -168,7 +169,7 @@ export function TeamCompSection({ mode, team, me, candidate, hovered, hint }: Te
   return (
     <div className="tc-section" aria-label="Team composition">
       <div className="tc-section-head">
-        <span className="eyebrow">Team comp</span>
+        <span className="eyebrow">{tx("Team comp")}</span>
         <span className="tc-roster">
           {roster.map((c) => (
             <GameIcon key={c.id} src={c.icon} name={c.name} size={20} round />
@@ -182,7 +183,7 @@ export function TeamCompSection({ mode, team, me, candidate, hovered, hint }: Te
       <div className="tc-section-body">
         <div className="tc-bars">
           <div className="tc-row tc-row-dmg">
-            <span className="tc-row-label">Damage</span>
+            <span className="tc-row-label">{tx("Damage")}</span>
             <span className="tc-dmg-stack">
               <DamageBar p={profile} label="Your team" />
               {preview && <DamageBar p={preview} thin label={`With ${cand!.name}`} />}
@@ -340,7 +341,7 @@ export function TeamCompVersusCard({ mode, allies, enemies }: { mode: GameModeKi
               <DamageLegend p={ally} />
             </div>
             <span className="tc-vs-mid">
-              <span className="tc-vs-label">Damage</span>
+              <span className="tc-vs-label">{tx("Damage")}</span>
             </span>
             <div className="tc-vs-dmg-side tc-right">
               <DamageBar p={enemy} label="Enemy team" />
@@ -354,11 +355,11 @@ export function TeamCompVersusCard({ mode, allies, enemies }: { mode: GameModeKi
       </div>
       <div className="tc-vs-notes">
         <div>
-          <div className="eyebrow">Matchup</div>
+          <div className="eyebrow">{tx("Matchup")}</div>
           <NoteList notes={vs} empty="Comps are evenly matched on paper." />
         </div>
         <div>
-          <div className="eyebrow">Your comp</div>
+          <div className="eyebrow">{tx("Your comp")}</div>
           <NoteList notes={own.slice(0, 5)} empty="No obvious gaps." />
         </div>
       </div>

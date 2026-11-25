@@ -1,5 +1,6 @@
 // Summoner's Rift matchups: your lane opponent and your best / worst matchups (OP.GG counters).
 
+import { t as tx } from "../i18n";
 import { useApp, type Derived } from "../app/store";
 import { resolveChampionId } from "../engine/sources/tierlists";
 import type { Champion, StaticData } from "../engine/types";
@@ -75,7 +76,7 @@ export function MatchupsCard({ d }: { d: Derived }) {
         <div className={`mu-lane ${oppRow ? (oppRow.winRate >= 0.5 ? "mu-good" : "mu-bad") : ""}`}>
           <GameIcon src={opp.icon} name={opp.name} size={42} round />
           <div className="mu-lane-text">
-            <span className="eyebrow">Lane opponent</span>
+            <span className="eyebrow">{tx("Lane opponent")}</span>
             <strong>{opp.name}</strong>
           </div>
           {oppRow ? (
@@ -83,14 +84,14 @@ export function MatchupsCard({ d }: { d: Derived }) {
               {pct(oppRow.winRate)} · {oppRow.winRate >= 0.5 ? "favoured" : "tough lane"}
             </Pill>
           ) : (
-            <span className="dim small">No matchup data</span>
+            <span className="dim small">{tx("No matchup data")}</span>
           )}
         </div>
       )}
       <div className="mu-cols">
         {weak.length > 0 && (
           <div>
-            <div className="eyebrow mu-h">Toughest matchups</div>
+            <div className="eyebrow mu-h">{tx("Toughest matchups")}</div>
             <div className="mu-list">
               {weak.map((r) => (
                 <MatchupChip key={r.champion.id} row={r} me={me} />
@@ -100,7 +101,7 @@ export function MatchupsCard({ d }: { d: Derived }) {
         )}
         {strong.length > 0 && (
           <div>
-            <div className="eyebrow mu-h">Best matchups</div>
+            <div className="eyebrow mu-h">{tx("Best matchups")}</div>
             <div className="mu-list">
               {strong.map((r) => (
                 <MatchupChip key={r.champion.id} row={r} me={me} />

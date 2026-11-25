@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { t as tx } from "../i18n";
 import { augmentTargets, RARITY_ORDER } from "../engine/augmentPlan";
 import { DataSourceBar } from "../ui/DataSourceBar";
 import { MODE_LABEL as GAME_MODE_LABEL, actions, useApp, webKey, type Derived } from "../app/store";
@@ -136,7 +137,7 @@ function RerollBanner({ offered }: { offered: AugmentScore[] }) {
         <Icon name="swap" size={16} />
       </span>
       <div className="reroll-text">
-        <strong>Consider a reroll</strong>
+        <strong>{tx("Consider a reroll")}</strong>
         <span>{advice.reason}</span>
       </div>
     </div>
@@ -151,7 +152,7 @@ function LookForNext({ ranked, ctx }: { ranked: AugmentScore[]; ctx: SynCtx }) {
   const targets = useMemo(() => augmentTargets(ranked, ctx), [ranked, ctx]);
   if (!RARITY_ORDER.some((r) => targets[r].length)) return null;
   return (
-    <Card title="Look for next" icon="spark" className="lfn-card" extra={<span className="dim small">Best picks left for this champion and what you own</span>}>
+    <Card title="Look for next" icon="spark" className="lfn-card" extra={<span className="dim small">{tx("Best picks left for this champion and what you own")}</span>}>
       <div className="lfn-grid">
         {RARITY_ORDER.map((r) =>
           targets[r].length ? (
@@ -339,7 +340,7 @@ function TierList({ ranked, ctx }: { ranked: AugmentScore[]; ctx: SynCtx }) {
         </div>
       }
     >
-      <p className="dim small tier-help">Click augments to add them to “Offered now” and compare — handy when you want to enter what's on screen by hand.</p>
+      <p className="dim small tier-help">{tx("Click augments to add them to \u201cOffered now\u201d and compare \u2014 handy when you want to enter what's on screen by hand.")}</p>
       {total === 0 ? (
         <Empty
           title="No augments match"
@@ -555,7 +556,7 @@ export function AugmentsView({ d }: { d: Derived }) {
       </Card>
       <Card title="Your augments this game" icon="check" extra={<span className="dim small">{mine.length} taken</span>}>
         {mine.length === 0 ? (
-          <p className="dim small no-margin">None yet — press “Take” on an offered augment. Owned augments influence the next recommendations.</p>
+          <p className="dim small no-margin">{tx("None yet \u2014 press \u201cTake\u201d on an offered augment. Owned augments influence the next recommendations.")}</p>
         ) : (
           <div className="my-augs">
             {mine.map((name) => {

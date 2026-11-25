@@ -1,6 +1,7 @@
 // "Shop now": gold-aware purchase advice for the current phase (engine/phase.ts → derived.shop).
 // Replaces the old "Next buy" card: buy-now list, "save for" progress and short shop tips.
 
+import { t as tx } from "../i18n";
 import { useApp, type Derived } from "../app/store";
 import type { BuildPlan, ItemRec } from "../engine/build";
 import type { GamePhase, ShopAdvice, ShopBuy } from "../engine/phase";
@@ -65,7 +66,7 @@ function GoldChip({ shop, startGold, arena }: { shop: ShopAdvice; startGold: num
   if (arena) return null;
   return (
     <span className="shop-gold shop-gold-start" title="Starting gold">
-      <span className="dim">Start</span>
+      <span className="dim">{tx("Start")}</span>
       <Icon name="coin" size={14} />
       <span className="tnum">{gold(startGold)}</span>
     </span>
@@ -105,7 +106,7 @@ function SaveFor({ shop, plan, items }: { shop: ShopAdvice; plan?: BuildPlan; it
   const progress = Math.round((have / Math.max(1, cost)) * 100);
   return (
     <div className="shop-save">
-      <div className="shop-sub">Save for</div>
+      <div className="shop-sub">{tx("Save for")}</div>
       <div className="shop-save-main">
         <Tip content={<ItemTooltip item={item} rec={rec} fallbackName={s.name} />}>
           <span className="shop-save-icon" tabIndex={0}>
@@ -157,7 +158,7 @@ function SaveFallback({ shop, plan, arena, items }: { shop: ShopAdvice; plan?: B
     const it = next.rec.item;
     return (
       <div className="shop-save">
-        <div className="shop-sub">First target</div>
+        <div className="shop-sub">{tx("First target")}</div>
         <div className="shop-save-main">
           <Tip content={<ItemTooltip item={it} rec={next.rec} />}>
             <span className="shop-save-icon" tabIndex={0}>
@@ -265,7 +266,7 @@ export function ShopCard({ d }: { d: Derived }) {
 
         {shop.tips.length > 0 && (
           <div className="shop-col shop-col-tips">
-            <div className="shop-sub">Shop tips</div>
+            <div className="shop-sub">{tx("Shop tips")}</div>
             <ul className="shop-tips">
               {shop.tips.map((t) => (
                 <li key={t}>

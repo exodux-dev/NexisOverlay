@@ -1,5 +1,6 @@
 // Duo partners (OP.GG synergies): Arena — your 2v2 partner; Summoner's Rift — your bot-lane partner
 // (ADC ↔ support). Shows your current partner's numbers when known, and the best partners.
+import { t as tx } from "../i18n";
 import { useEffect, useState } from "react";
 import { useApp, type Derived } from "../app/store";
 import * as bridge from "../bridge";
@@ -58,7 +59,7 @@ export function DuoCard({ d }: { d: Derived }) {
   return (
     <Card title="Duo partners" icon="user" className="duo-card" extra={<span className="dim small">OP.GG {arena ? "Arena" : "bot lane"}</span>}>
       {rows === "loading" ? (
-        <span className="dim small">Loading partners…</span>
+        <span className="dim small">{tx("Loading partners\u2026")}</span>
       ) : (
         <>
           {partner && (

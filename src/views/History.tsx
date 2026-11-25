@@ -1,5 +1,6 @@
 // Match history: your personal profile (u.gg / op.gg style) built from games Nexis recorded on this PC.
 
+import { t as tx } from "../i18n";
 import { championMatchScore } from "../engine/championSearch";
 import { historyCsv, historyTsv } from "../engine/historyExport";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type PointerEvent, type ReactNode, type RefObject } from "react";
@@ -172,7 +173,7 @@ function ClearButton() {
     );
   return (
     <div className="hi-confirm" role="alertdialog" aria-label="Confirm clearing history">
-      <span className="small">Delete all recorded games?</span>
+      <span className="small">{tx("Delete all recorded games?")}</span>
       <button
         type="button"
         className="btn btn-danger btn-sm"
@@ -246,7 +247,7 @@ function SummaryCard({ games, data }: { games: MatchRecord[]; data: StaticData }
       <div className="hi-sum-wr">
         <Donut rate={wr} />
         <div>
-          <span className="stat-label">Win rate</span>
+          <span className="stat-label">{tx("Win rate")}</span>
           <span className={`hi-big hi-${wrTone(wr)}`}>{winRate(wr)}</span>
           <span className="hi-sub tnum">
             {wins}W {n - wins}L · {n} game{n === 1 ? "" : "s"}
@@ -254,14 +255,14 @@ function SummaryCard({ games, data }: { games: MatchRecord[]; data: StaticData }
         </div>
       </div>
       <div className="hi-sum-cell">
-        <span className="stat-label">Avg KDA</span>
+        <span className="stat-label">{tx("Avg KDA")}</span>
         <span className="hi-mid-num">{kda(k, d, a)}</span>
         <span className="hi-sub tnum">
           {(k / n).toFixed(1)} / <span className="hi-death">{(d / n).toFixed(1)}</span> / {(a / n).toFixed(1)}
         </span>
       </div>
       <div className="hi-sum-cell">
-        <span className="stat-label">Streak</span>
+        <span className="stat-label">{tx("Streak")}</span>
         {streak && (
           <span className={`hi-mid-num ${streak.result === "Win" ? "hi-good" : "hi-bad"}`}>
             {streak.count}
@@ -382,7 +383,7 @@ function TrendChart({ games, data }: { games: MatchRecord[]; data: StaticData })
             {hover === null && <circle cx={x(values.length - 1)} cy={y(last)} r={4} className="hi-dot" />}
           </svg>
         ) : (
-          <div className="hi-trend-empty dim small">Play a couple more games to see your trend.</div>
+          <div className="hi-trend-empty dim small">{tx("Play a couple more games to see your trend.")}</div>
         )}
         {h && hover !== null && (
           <div className="hi-chart-tip" style={{ left: Math.min(Math.max(x(hover), 90), W - 90) }}>
@@ -576,7 +577,7 @@ function BestItems({ games, data, scope }: { games: MatchRecord[]; data: StaticD
   return (
     <Card title="Your best items" icon="build" className="hi-best" extra={<span className="hi-scope">{scope}</span>}>
       {rows.length === 0 ? (
-        <p className="hi-sub no-margin">Finish an item in at least 2 games to see how it performs for you.</p>
+        <p className="hi-sub no-margin">{tx("Finish an item in at least 2 games to see how it performs for you.")}</p>
       ) : (
         <ul className="hi-best-list hi-best-items">
           {rows.map((s) => (
@@ -643,9 +644,9 @@ function MatchRow({ m, data, open, onToggle, onSummary }: { m: MatchRecord; data
       {open && (
         <div className="hi-match-detail">
           <div className="hi-md-sec">
-            <span className="stat-label">Final build</span>
+            <span className="stat-label">{tx("Final build")}</span>
             <span className="hi-md-items">
-              {m.items.length === 0 && <span className="hi-sub">No items recorded</span>}
+              {m.items.length === 0 && <span className="hi-sub">{tx("No items recorded")}</span>}
               {m.items.map((id, i) => {
                 const it = data.items.get(id);
                 return (
@@ -658,13 +659,13 @@ function MatchRow({ m, data, open, onToggle, onSummary }: { m: MatchRecord; data
             </span>
           </div>
           <div className="hi-md-sec">
-            <span className="stat-label">Augments</span>
-            <span className="hi-md-augs">{m.augments.length ? m.augments.map((a) => <AugChip key={a} name={a} />) : <span className="hi-sub">None recorded</span>}</span>
+            <span className="stat-label">{tx("Augments")}</span>
+            <span className="hi-md-augs">{m.augments.length ? m.augments.map((a) => <AugChip key={a} name={a} />) : <span className="hi-sub">{tx("None recorded")}</span>}</span>
           </div>
           <div className="hi-md-sec">
-            <span className="stat-label">Enemy team</span>
+            <span className="stat-label">{tx("Enemy team")}</span>
             <span className="hi-md-enemies">
-              {m.enemies.length === 0 && <span className="hi-sub">Not recorded</span>}
+              {m.enemies.length === 0 && <span className="hi-sub">{tx("Not recorded")}</span>}
               {m.enemies.map((id, i) => {
                 const e = data.championsById.get(id);
                 return (
@@ -678,7 +679,7 @@ function MatchRow({ m, data, open, onToggle, onSummary }: { m: MatchRecord; data
           </div>
           {m.timeline && m.timeline.samples.length > 0 && (
             <div className="hi-md-sec hi-md-timeline">
-              <span className="stat-label">Game timeline</span>
+              <span className="stat-label">{tx("Game timeline")}</span>
               <GameTimelinePanel timeline={m.timeline} data={data} compact />
             </div>
           )}
@@ -765,7 +766,7 @@ export function HistoryView() {
                 <Icon name="tiers" size={13} /> After a few games you'll see your win rates, best augments and best items
               </li>
             </ul>
-            <p className="hi-sub no-margin">Everything stays on this PC. Moving from another PC? Import a history export.</p>
+            <p className="hi-sub no-margin">{tx("Everything stays on this PC. Moving from another PC? Import a history export.")}</p>
             <div className="hi-empty-actions">
               <ImportButton label="Import history" primary />
             </div>

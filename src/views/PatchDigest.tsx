@@ -1,5 +1,6 @@
 // Home: "Patch changes for you" — this patch vs the previous one (Data Dragon) for your favorite
 // champions (base stats, ability cooldowns / costs) and the items you build most.
+import { t as tx } from "../i18n";
 import { useEffect, useMemo, useState } from "react";
 import { useApp } from "../app/store";
 import { fetchJson } from "../bridge";
@@ -69,9 +70,9 @@ export function PatchDigest({ data }: { data: StaticData }) {
   return (
     <Card title="Patch changes for you" icon="refresh" className="home-digest" extra={st.status === "ok" ? <span className="home-sub">{displayPatch(data.version)} vs {displayPatch(st.prev)}</span> : undefined}>
       {st.status === "loading" ? (
-        <span className="dim small">Comparing with the last patch…</span>
+        <span className="dim small">{tx("Comparing with the last patch\u2026")}</span>
       ) : !st.entries.length ? (
-        <span className="dim small">No changes to your favorites or the items you build this patch.</span>
+        <span className="dim small">{tx("No changes to your favorites or the items you build this patch.")}</span>
       ) : (
         <ul className="digest-list">
           {st.entries.map((e) => {

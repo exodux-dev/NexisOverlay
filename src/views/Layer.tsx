@@ -6,6 +6,7 @@
 // Riot policy: the HUD only shows static reference info (what to build next, the usual
 // skill order). It never issues real-time combat prompts.
 
+import { t as tx } from "../i18n";
 import { setLanguage, t } from "../i18n";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { actions, devHooks, getState, registerDemo, useApp, useDerived } from "../app/store";
@@ -233,7 +234,7 @@ function CalibrationPreview() {
   return (
     <div className="nl-calib">
       <div className="nl-calib-region" style={{ left: `${region.x * 100}vw`, top: `${region.y * 100}vh`, width: `${region.w * 100}vw`, height: `${region.h * 100}vh` }}>
-        <span>Nexis scan region — augment names must be inside</span>
+        <span>{tx("Nexis scan region \u2014 augment names must be inside")}</span>
       </div>
       {!realCards &&
         SAMPLE_CARDS.map((x, i) => (

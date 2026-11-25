@@ -14,6 +14,7 @@
 // (hudSettings.ts). Click-through always comes back: Done, the hotkey, Esc, a timeout, or a focus
 // change all end edit mode (src-tauri/src/hud.rs), and this window has its own timeout too.
 
+import { t as tx } from "../i18n";
 import { t } from "../i18n";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from "react";
 import { actions, getState, useApp, useDerived } from "../app/store";
@@ -415,8 +416,8 @@ function HudEditor({ hud, model, hotkey, editKey, hidden, hudKey, sample }: { hu
       {dragging && local?.snapX && <div className={`nl-guide nl-guide-v nl-g-${local.snapX}`} />}
       {dragging && local?.snapY && <div className={`nl-guide nl-guide-h nl-g-${local.snapY}`} />}
       <div className="nl-edit-banner">
-        <strong>Edit HUD layout</strong>
-        <span>Drag the panel anywhere · drag the corner to resize · it snaps to edges and center</span>
+        <strong>{tx("Edit HUD layout")}</strong>
+        <span>{tx("Drag the panel anywhere \u00b7 drag the corner to resize \u00b7 it snaps to edges and center")}</span>
         <span className="nl-edit-keys">
           <span className="nl-kbd">Esc</span> or <span className="nl-kbd">{editKey || "Done"}</span> to finish
         </span>
@@ -425,7 +426,7 @@ function HudEditor({ hud, model, hotkey, editKey, hidden, hudKey, sample }: { hu
             The HUD is switched off — <span className="nl-kbd">{hudKey}</span> shows it in game
           </span>
         )}
-        {sample && <span className="nl-edit-note">Sample content — your build shows here in game</span>}
+        {sample && <span className="nl-edit-note">{tx("Sample content \u2014 your build shows here in game")}</span>}
       </div>
       <HudCard
         hud={view}
@@ -858,7 +859,7 @@ function PowerWidget({ p, c }: { p: HudPower; c: boolean }) {
       {!c && <span className="nl-label">{t("ITEM GOLD")}</span>}
       {p.team !== undefined && (
         <span className="nl-pw">
-          <small>Team</small>
+          <small>{tx("Team")}</small>
           <b className={tone(p.team)}>{fmt(p.team)}</b>
         </span>
       )}

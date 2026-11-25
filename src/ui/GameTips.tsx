@@ -2,6 +2,7 @@
 // augments. They share the item tooltip's frame (`.tt` inside `Tip`) and render Data Dragon
 // rich text through engine/tooltipText (tags → colors, unknown values → "?").
 
+import { t as tx } from "../i18n";
 import { Fragment, useMemo, type ReactNode } from "react";
 import { useChampionSpells, useDerived } from "../app/store";
 import { findAugment } from "../engine/augments";
@@ -128,7 +129,7 @@ export function AbilityTooltip({ spell, rank }: { spell: ChampionSpell; rank?: n
         <StatRows
           rows={[
             !!spell.cooldown && ["Cooldown", <RankValues key="cd" text={`${spell.cooldown}s`} rank={rank} />],
-            ["Cost", spell.cost ? <RankValues key="cost" text={spell.cost} rank={rank} /> : <span className="dim">No cost</span>],
+            ["Cost", spell.cost ? <RankValues key="cost" text={spell.cost} rank={rank} /> : <span className="dim">{tx("No cost")}</span>],
             !!spell.range && ["Range", spell.range],
           ]}
         />
@@ -138,7 +139,7 @@ export function AbilityTooltip({ spell, rank }: { spell: ChampionSpell; rank?: n
           <RichText segs={body} />
         </p>
       ) : (
-        <span className="dim">No description available.</span>
+        <span className="dim">{tx("No description available.")}</span>
       )}
     </div>
   );
@@ -229,7 +230,7 @@ export function SummonerTooltip({ spell, id }: { spell?: SummonerSpell; id?: num
     <div className="tt tt-game tt-summoner">
       <GameHead icon={spell.icon} name={spell.name} sub="Summoner spell" />
       <StatRows rows={[!!spell.cooldown && ["Cooldown", `${spell.cooldown}s`], !!spell.range && ["Range", spell.range]]} />
-      {spell.description ? <p className="tt-game-body">{spell.description}</p> : <span className="dim">No description available.</span>}
+      {spell.description ? <p className="tt-game-body">{spell.description}</p> : <span className="dim">{tx("No description available.")}</span>}
     </div>
   );
 }
@@ -246,7 +247,7 @@ export function AugmentTooltip({ augment, name, children }: { augment?: Augment;
         <strong>{title}</strong>
         {rarity && <span className={`tt-aug-rar rar-text-${rarity}`}>{RARITY_LABEL[rarity]}</span>}
       </div>
-      {aug?.desc ? <p className="tt-game-body">{aug.desc}</p> : <span className="dim">No description available.</span>}
+      {aug?.desc ? <p className="tt-game-body">{aug.desc}</p> : <span className="dim">{tx("No description available.")}</span>}
       {children}
     </div>
   );

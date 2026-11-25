@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { t as tx } from "../i18n";
 import { useId, type MouseEvent } from "react";
 import { MODE_LABEL, actions, getState, useApp, type Derived, type GameModeKind } from "../app/store";
 import { openUrl, startDrag } from "../bridge";
@@ -91,7 +92,7 @@ function UpdatePill() {
       </button>
       {open && (
         <div className="update-panel" role="dialog" aria-label="Update available">
-          <strong>New Nexis build</strong>
+          <strong>{tx("New Nexis build")}</strong>
           {update.changes.length > 0 ? (
             <ul>
               {update.changes.map((c, i) => (

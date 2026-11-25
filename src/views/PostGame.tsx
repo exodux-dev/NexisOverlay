@@ -2,6 +2,7 @@
 //
 //   <PostGameSummary record={rec} onClose={…} onOpenHistory={…} />
 
+import { t as tx } from "../i18n";
 import { recapPng } from "../ui/recapImage";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -226,7 +227,7 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
         <div className="pg-body">
           <section className="pg-sec">
             <div className="pg-sec-head">
-              <h3>Build check</h3>
+              <h3>{tx("Build check")}</h3>
               {core.length > 0 && (
                 <span className={`pg-score ${coreBuilt === core.length ? "pg-score-full" : coreBuilt === 0 ? "pg-score-none" : ""}`}>
                   {coreBuilt}/{core.length} core items
@@ -235,7 +236,7 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
             </div>
             <div className="pg-build">
               <div className="pg-build-row">
-                <span className="pg-row-label">Your build</span>
+                <span className="pg-row-label">{tx("Your build")}</span>
                 <span className="pg-items">
                   {Array.from({ length: 6 }, (_, i) => {
                     const id = record.items[i];
@@ -287,8 +288,8 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
           {record.timeline && record.timeline.samples.length > 0 && (
             <section className="pg-sec" aria-label="Game timeline">
               <div className="pg-sec-head">
-                <h3>Game timeline</h3>
-                <span className="pg-muted">From your scoreboard during the game</span>
+                <h3>{tx("Game timeline")}</h3>
+                <span className="pg-muted">{tx("From your scoreboard during the game")}</span>
               </div>
               <GameTimelinePanel timeline={record.timeline} data={data} />
             </section>
@@ -296,11 +297,11 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
 
           <section className="pg-sec">
             <div className="pg-sec-head">
-              <h3>Augments</h3>
+              <h3>{tx("Augments")}</h3>
               {graded.length > 0 && <span className="pg-muted">Graded for {name}</span>}
             </div>
             {graded.length === 0 ? (
-              <p className="pg-muted pg-tight">No augments were recorded for this game.</p>
+              <p className="pg-muted pg-tight">{tx("No augments were recorded for this game.")}</p>
             ) : (
               <ul className="pg-augs">
                 {graded.map(({ name: a, score }) => {
@@ -331,21 +332,21 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
             </div>
             <div className="pg-stats">
               <div className="pg-stat">
-                <span className="pg-stat-label">Games</span>
+                <span className="pg-stat-label">{tx("Games")}</span>
                 <span className="pg-stat-val tnum">{champStats.games}</span>
                 <span className="pg-muted tnum">
                   {champStats.wins}W {champStats.games - champStats.wins}L
                 </span>
               </div>
               <div className="pg-stat">
-                <span className="pg-stat-label">Win rate</span>
+                <span className="pg-stat-label">{tx("Win rate")}</span>
                 <span className={`pg-stat-val tnum ${champStats.wr >= 0.5 ? "pg-up" : "pg-down"}`}>{winRate(champStats.wr)}</span>
                 <span className="pg-muted tnum">
                   {wrDelta === undefined ? "First game recorded" : Math.abs(wrDelta) < 0.5 ? "Unchanged" : `${signed(wrDelta, 1)} pts this game`}
                 </span>
               </div>
               <div className="pg-stat">
-                <span className="pg-stat-label">Avg KDA</span>
+                <span className="pg-stat-label">{tx("Avg KDA")}</span>
                 <span className="pg-stat-val tnum">{champStats.kda}</span>
                 <span className="pg-muted">across all games</span>
               </div>
@@ -354,7 +355,7 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
         </div>
 
         <footer className="pg-foot">
-          <span className="pg-muted">Saved to your match history on this PC.</span>
+          <span className="pg-muted">{tx("Saved to your match history on this PC.")}</span>
           <span className="pg-foot-actions">
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => void shareRecap(record, data, "save")} title="Save a picture of this summary (PNG) to post on Discord">
               Save image

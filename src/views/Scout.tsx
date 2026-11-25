@@ -1,6 +1,7 @@
 // Loading-screen player scouting: rank, form, champion experience and quick tags for all 10
 // players, from OP.GG public profiles (see engine/sources/opggProfile.ts).
 
+import { t as tx } from "../i18n";
 import type { CSSProperties } from "react";
 import {
   positionLabel,
@@ -105,12 +106,12 @@ function RankBadge({ rank, all, size = "md" }: { rank?: RankEntry; all: RankEntr
 
 function Form({ profile, max = 10, size = "md" }: { profile: PlayerProfile; max?: number; size?: "sm" | "md" }) {
   const games = profile.recent.filter((g) => g.result !== "REMAKE").slice(0, max);
-  if (!games.length) return <span className="sc-dim sc-small">No recent games</span>;
+  if (!games.length) return <span className="sc-dim sc-small">{tx("No recent games")}</span>;
   return (
     <Tip
       content={
         <div className="tt sc-tt">
-          <div className="sc-tt-title">Recent games · newest first</div>
+          <div className="sc-tt-title">{tx("Recent games \u00b7 newest first")}</div>
           {games.map((g, i) => (
             <div key={i} className="sc-tt-row">
               <span className={`sc-tt-res ${g.result === "WIN" ? "sc-good" : "sc-bad"}`}>{g.result === "WIN" ? "W" : "L"}</span>
@@ -234,7 +235,7 @@ function PlayerCard({ player, state, queue, style }: { player: ScoutPlayer; stat
           <>
             <div className="sc-stats">
               <span className="sc-stat">
-                <span className="sc-k">Season</span>
+                <span className="sc-k">{tx("Season")}</span>
                 {s!.seasonWinRate !== undefined ? (
                   <>
                     <span className={`sc-v ${wrClass(s!.seasonWinRate)}`}>{s!.seasonWinRate}%</span>

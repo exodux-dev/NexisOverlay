@@ -3,6 +3,7 @@
 //
 //   <GameTimelinePanel timeline={record.timeline} />
 
+import { t as tx } from "../i18n";
 import { useId, useMemo, useState, type PointerEvent } from "react";
 import { summarizeTimeline, type GameTimeline, type TimelineSample } from "../engine/timeline";
 import type { StaticData } from "../engine/types";
@@ -188,7 +189,7 @@ export function GameTimelinePanel({ timeline, data, compact = false }: { timelin
                 First item at <strong>{clock(sum.firstItemAt)}</strong>
               </>
             ) : (
-              <span className="gtl-muted">No completed items recorded</span>
+              <span className="gtl-muted">{tx("No completed items recorded")}</span>
             )}
           </span>
         </div>
@@ -207,7 +208,7 @@ export function GameTimelinePanel({ timeline, data, compact = false }: { timelin
       {timeline.samples.length > 1 && (
         <div className="gtl-row">
           <div className="gtl-row-head">
-            <span className="gtl-label">Item gold</span>
+            <span className="gtl-label">{tx("Item gold")}</span>
             {last && (
               <span className="gtl-muted tnum">
                 {last.itemGold >= last.enemyItemGold ? "+" : "−"}

@@ -1,5 +1,6 @@
 // Small shared building blocks: cards, toggles, segmented controls, meters…
 
+import { t as tx } from "../i18n";
 import { t, tn } from "../i18n";
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "./icons";
@@ -103,7 +104,7 @@ export function Spinner({ size = 18 }: { size?: number }) {
 
 export function Kbd({ children }: { children: string }) {
   const parts = children.split("+").filter(Boolean);
-  if (!parts.length) return <span className="kbd-none">Not set</span>;
+  if (!parts.length) return <span className="kbd-none">{tx("Not set")}</span>;
   return (
     <span className="kbd-group">
       {parts.map((p, i) => (

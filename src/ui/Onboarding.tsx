@@ -1,6 +1,7 @@
 // First-run welcome tour. Shown once (persisted in onboarding.json via the bridge store),
 // and on demand from Settings → About ("Show welcome tour").
 
+import { t as tx } from "../i18n";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from "react";
 import { useApp } from "../app/store";
 import { loadStore, saveStore } from "../bridge";
@@ -84,7 +85,7 @@ function Setup({ hotkey }: { hotkey: string }) {
         <Icon name="settings" size={30} />
       </div>
       <h2 className="ob-title" id="ob-title">Quick setup</h2>
-      <p className="ob-lead">Two things to know before your first game.</p>
+      <p className="ob-lead">{tx("Two things to know before your first game.")}</p>
       <ul className="ob-rows">
         <Row icon="play" title="Set League's Window Mode to Borderless">
           In game: <b>Settings → Video → Window Mode → Borderless</b> (Windowed works too). Exclusive Fullscreen can't show overlays.
@@ -107,7 +108,7 @@ function DataStep() {
         <Icon name="spark" size={30} />
       </div>
       <h2 className="ob-title" id="ob-title">It figures things out for you</h2>
-      <p className="ob-lead">No setup per game. Nexis follows the client and loads fresh stats as you play.</p>
+      <p className="ob-lead">{tx("No setup per game. Nexis follows the client and loads fresh stats as you play.")}</p>
       <ul className="ob-rows">
         <Row icon="user" title="Auto-detects your champion and queue">
           <span className="ob-modes">
@@ -134,7 +135,7 @@ function FairPlay() {
         <Icon name="shield" size={30} />
       </div>
       <h2 className="ob-title" id="ob-title">Fair play, by design</h2>
-      <p className="ob-lead">Nexis only uses what Riot allows third-party apps to use.</p>
+      <p className="ob-lead">{tx("Nexis only uses what Riot allows third-party apps to use.")}</p>
       <ul className="ob-rows ob-checks">
         <Row icon="check" title="Read-only">
           Game data comes from Riot's official Live Client Data API.

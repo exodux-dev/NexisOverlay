@@ -1,6 +1,7 @@
 // Champion guide: skill order, matchup coach, mechanics, combos and how-to-play notes.
 // A pre-fight reference only — Nexis never prompts ability usage in real time (Riot third-party policy).
 
+import { t as tx } from "../i18n";
 import { Fragment, useState, type CSSProperties } from "react";
 import { actions, useApp, useChampionSpells, useDerived, type Derived } from "../app/store";
 import { ChampionPicker } from "../ui/ChampionPicker";
@@ -261,7 +262,7 @@ function SkillOrder({ d, spells }: { d: Derived; spells: ChampionSpell[] }) {
           })}
         </div>
         <div className="gd-max">
-          <span className="eyebrow">Max order</span>
+          <span className="eyebrow">{tx("Max order")}</span>
           <div className="gd-max-row">
             {plan.max.map((k, i) => (
               <Fragment key={k}>
@@ -373,9 +374,9 @@ function KaynForms({ d, a }: { d: Derived; a: CoachAdvice }) {
                     {f.sub} · {f.vs}
                   </div>
                 </div>
-                {rec && <span className="gd-kayn-badge">Recommended</span>}
+                {rec && <span className="gd-kayn-badge">{tx("Recommended")}</span>}
               </div>
-              {rec ? <p className="gd-kayn-text">{a.text}</p> : <p className="gd-kayn-text dim">Not favoured by this enemy team.</p>}
+              {rec ? <p className="gd-kayn-text">{a.text}</p> : <p className="gd-kayn-text dim">{tx("Not favoured by this enemy team.")}</p>}
               {rec && <SwitchBtn d={d} a={a} />}
             </div>
           </Fragment>
@@ -437,7 +438,7 @@ function Gun({ w }: { w: ApheliosWeapon }) {
 function ApheliosBurnOrder() {
   const steps = simulateBurns(STANDARD_BURNS);
   return (
-    <Card title="Weapon burn order" icon="spark" extra={<span className="dim small">Standard opening rotation · reference</span>}>
+    <Card title="Weapon burn order" icon="spark" extra={<span className="dim small">{tx("Standard opening rotation \u00b7 reference")}</span>}>
       <ol className="gd-burn">
         {steps.map((st, i) => (
           <li key={i} className="gd-burn-step">
@@ -478,7 +479,7 @@ function StackGoals({ champ, mode }: { champ: string; mode: GameModeKind }) {
   if (!plan) return null;
   const cols = MODE_COL.filter(([m]) => plan.goals.some((g) => g.by[m] !== undefined));
   return (
-    <Card title={`Stack goals · ${plan.name}`} icon="spark" extra={<span className="dim small">Rough pace to aim for</span>}>
+    <Card title={`Stack goals · ${plan.name}`} icon="spark" extra={<span className="dim small">{tx("Rough pace to aim for")}</span>}>
       <table className="gd-stacks">
         <thead>
           <tr>
@@ -603,7 +604,7 @@ function Combos({ g, spells, champ }: { g: ChampionGuide; spells: ChampionSpell[
   const byKey = new Map<string, ChampionSpell>(spells.map((s) => [s.key, s]));
   const weapons = champ === "Aphelios";
   return (
-    <Card title="Combos" icon="play" extra={<span className="dim small">Pre-game reference</span>}>
+    <Card title="Combos" icon="play" extra={<span className="dim small">{tx("Pre-game reference")}</span>}>
       <ul className="gd-combos">
         {g.combos.map((c) => (
           <li key={c.name} className="gd-combo">
@@ -703,7 +704,7 @@ function Hero({ d }: { d: Derived }) {
       <GuidePicker open={picking} onClose={() => setPicking(false)} />
       <GameIcon src={base.icon} name={base.name} size={48} className="gd-hero-icon" />
       <div className="gd-hero-text">
-        <span className="eyebrow">Champion guide</span>
+        <span className="eyebrow">{tx("Champion guide")}</span>
         <div className="gd-hero-name">
           {base.name}
           <span className="gd-hero-arch">{ARCHETYPE_LABEL[(d.champion ?? base).archetype]}</span>
@@ -712,7 +713,7 @@ function Hero({ d }: { d: Derived }) {
       </div>
       {v && d.variants.length > 1 && (
         <div className="gd-hero-style">
-          <span className="eyebrow">Build style</span>
+          <span className="eyebrow">{tx("Build style")}</span>
           <Segmented<string>
             size="sm"
             label="Build style"

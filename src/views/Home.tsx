@@ -2,6 +2,7 @@
 // a champion search that opens the build, favorites, recent champions, your recent form,
 // this patch's top picks and quick actions.
 
+import { t as tx } from "../i18n";
 import { PatchDigest } from "./PatchDigest";
 import { poolSuggestions } from "../engine/poolCoach";
 import { searchChampions } from "../engine/championSearch";
@@ -74,7 +75,7 @@ function ClientStatus() {
       title={connected ? "The League client is running — Nexis follows your queue and champ select." : "Start League and Nexis connects automatically."}
     >
       <span className="home-status-dot" />
-      <span className="home-status-k">League client</span>
+      <span className="home-status-k">{tx("League client")}</span>
       <span className="home-status-v">{label}</span>
     </span>
   );
@@ -199,7 +200,7 @@ function Hero({ d, data, patch, featured, recent }: { d: Derived; data: StaticDa
         <div className="home-hero-top">
           <div className="home-hero-meta">
             <span className="home-patch">
-              <span className="home-patch-k">Patch</span>
+              <span className="home-patch-k">{tx("Patch")}</span>
               <span className="home-patch-v">{patch ?? "—"}</span>
             </span>
             <ClientStatus />
@@ -215,7 +216,7 @@ function Hero({ d, data, patch, featured, recent }: { d: Derived; data: StaticDa
         <ChampionSearch data={data} />
         {recent.length > 0 && (
           <div className="home-recent" aria-label="Recent champions">
-            <span className="home-recent-k">Jump back in</span>
+            <span className="home-recent-k">{tx("Jump back in")}</span>
             <div className="home-recent-chips">
               {recent.map((c) => (
                 <button key={c.id} type="button" className="home-chip" onClick={() => openBuild(c.id)} title={`Open ${c.name}'s build`}>
@@ -243,7 +244,7 @@ function TierLine({ row, mode, loading }: { row?: ChampionTierRow; mode: GameMod
       </span>
     );
   if (loading) return <Skeleton w={64} h={14} />;
-  return <span className="home-tierline dim">No data</span>;
+  return <span className="home-tierline dim">{tx("No data")}</span>;
 }
 
 /** "▲ A→S" on a favorite whose tier changed since the previous patch. */
@@ -291,7 +292,7 @@ function Favorites({
             <Icon name="star" size={18} />
           </span>
           <div>
-            <div className="home-empty-title">Star the champions you play</div>
+            <div className="home-empty-title">{tx("Star the champions you play")}</div>
             <div className="home-empty-body">
               Tap <Icon name="star" size={12} className="home-inline-ico" /> on a build or in the tier list. They'll show up here with their tier and win rate for the current mode.
             </div>
@@ -393,7 +394,7 @@ function FormCard({ data, mode }: { data: StaticData; mode: GameModeKind }) {
     return (
       <Card title="Your recent form" icon="history" className="home-card home-form" extra={link}>
         <div className="home-onboard">
-          <p className="home-onboard-lead">Play a game with Nexis running and your results, KDA and most played champions appear here.</p>
+          <p className="home-onboard-lead">{tx("Play a game with Nexis running and your results, KDA and most played champions appear here.")}</p>
           <ul className="home-tips">
             <li>
               <span className="home-tip-ico">
@@ -441,7 +442,7 @@ function FormCard({ data, mode }: { data: StaticData; mode: GameModeKind }) {
         </div>
         <div className="home-form-stats">
           <div className="home-stat">
-            <span className="home-stat-k">Record</span>
+            <span className="home-stat-k">{tx("Record")}</span>
             <span className="home-stat-v">
               <span className="tone-win">{f.wins}W</span> <span className="tone-loss">{f.losses}L</span>
             </span>
@@ -455,7 +456,7 @@ function FormCard({ data, mode }: { data: StaticData; mode: GameModeKind }) {
           </div>
           {mp && f.mostPlayed && (
             <button type="button" className="home-stat home-stat-btn" onClick={() => openBuild(mp.id)} title={`Open ${mp.name}'s build`}>
-              <span className="home-stat-k">Most played</span>
+              <span className="home-stat-k">{tx("Most played")}</span>
               <span className="home-stat-champ">
                 <GameIcon src={mp.icon} name={mp.name} size={22} round />
                 <span className="home-stat-v">{mp.name}</span>
@@ -555,9 +556,9 @@ function TopPicks({ data, mode, rows, status, position }: { data: StaticData; mo
           <div className="home-top-head" aria-hidden="true">
             <span>#</span>
             <span />
-            <span>Champion</span>
+            <span>{tx("Champion")}</span>
             <span className="num">{rateLabel(mode, "Win")}</span>
-            <span className="num home-top-pr">Pick</span>
+            <span className="num home-top-pr">{tx("Pick")}</span>
           </div>
           {picks.map((r, i) => {
             const c = findChampion(data, r.championKey);

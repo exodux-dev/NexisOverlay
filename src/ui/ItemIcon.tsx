@@ -1,5 +1,6 @@
 // Item portrait + rich hover card (what the item does + why we recommend it).
 
+import { t as tx } from "../i18n";
 import type { ReactNode } from "react";
 import type { ItemRec, WinInfo } from "../engine/build";
 import type { Item } from "../engine/types";
@@ -72,7 +73,7 @@ export function ItemTooltip({ item, rec, note, fallbackName }: { item?: Item; re
           })}
         </div>
       )}
-      {!plaintext && !stats.length && !effects.length && !rec && !note && <span className="dim">No description available.</span>}
+      {!plaintext && !stats.length && !effects.length && !rec && !note && <span className="dim">{tx("No description available.")}</span>}
       {rec && (
         <div className="tt-rec">
           <div className={`tt-kind kind-${rec.kind}`}>
@@ -84,7 +85,7 @@ export function ItemTooltip({ item, rec, note, fallbackName }: { item?: Item; re
               <li key={i}>{r}</li>
             ))}
           </ul>
-          <div className="tt-wrline">{rec.winRate ? <WinRate wr={rec.winRate} /> : <span className="dim">No win-rate data yet</span>}</div>
+          <div className="tt-wrline">{rec.winRate ? <WinRate wr={rec.winRate} /> : <span className="dim">{tx("No win-rate data yet")}</span>}</div>
         </div>
       )}
       {note && <div className="tt-rec tt-note">{note}</div>}

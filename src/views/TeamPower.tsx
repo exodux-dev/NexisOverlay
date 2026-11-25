@@ -1,6 +1,7 @@
 // "Team power" card on the Players tab: team item gold / levels / kills, Summoner's Rift lanes and
 // what each enemy is building toward. Scoreboard information only (see engine/power.ts).
 
+import { t as tx } from "../i18n";
 import type { ReactNode } from "react";
 import { CATEGORY_LABEL, LANE_LABEL, shortGold, signedGold, teamDiffText, type EnemyBuild, type LaneMatchup, type PlayerPower, type TeamPower } from "../engine/power";
 import type { BuildCategory } from "../engine/power";
@@ -186,15 +187,15 @@ export function TeamPowerCard({ power }: { power: TeamPower }) {
         power.teamsComparable ? (
           <span className={`tp-verdict tp-${t}`}>{teamDiffText(diff.itemGold, EVEN_GOLD)}</span>
         ) : (
-          <span className="dim small">Arena · enemy duos aren't shown on the scoreboard</span>
+          <span className="dim small">{tx("Arena \u00b7 enemy duos aren't shown on the scoreboard")}</span>
         )
       }
     >
       {power.teamsComparable && (
         <div className="tp-teams">
           <div className="tp-legend">
-            <span className="tp-ally">Your team</span>
-            <span className="tp-enemy">Enemy team</span>
+            <span className="tp-ally">{tx("Your team")}</span>
+            <span className="tp-enemy">{tx("Enemy team")}</span>
           </div>
           <Versus
             label="Item gold"
@@ -220,8 +221,8 @@ export function TeamPowerCard({ power }: { power: TeamPower }) {
       {power.lanes.length > 0 && (
         <div className="tp-sec">
           <div className="tp-sec-head">
-            <span>Lanes</span>
-            <span className="dim">Item gold · level · CS difference</span>
+            <span>{tx("Lanes")}</span>
+            <span className="dim">{tx("Item gold \u00b7 level \u00b7 CS difference")}</span>
           </div>
           <ul className="tp-lanes">
             {power.lanes.map((l) => (
@@ -232,8 +233,8 @@ export function TeamPowerCard({ power }: { power: TeamPower }) {
       )}
       <div className="tp-sec">
         <div className="tp-sec-head">
-          <span>Enemy builds</span>
-          <span className="dim">Building toward — from components held</span>
+          <span>{tx("Enemy builds")}</span>
+          <span className="dim">{tx("Building toward \u2014 from components held")}</span>
         </div>
         <ul className="tp-builds">
           {power.builds.map((b) => (

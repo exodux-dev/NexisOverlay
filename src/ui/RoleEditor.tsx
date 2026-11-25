@@ -1,5 +1,6 @@
 // Summoner's Rift roles on the Players tab: one row per lane, both teams side by side.
 // Click a champion, then a teammate: they swap roles. Hidden outside SR (no lanes there).
+import { t as tx } from "../i18n";
 import { useState } from "react";
 import { actions, type Derived } from "../app/store";
 import { LANE_LABEL, LANES, type Lane } from "../engine/power";
@@ -76,8 +77,8 @@ export function RolesCard({ d }: { d: Derived }) {
       <p className="rb-hint">{picked ? `Now click a teammate to swap with ${picked.champion?.name ?? picked.championName}.` : "Wrong lanes? Click two champions on the same team to swap them."}</p>
       <div className="rb-grid">
         <span />
-        <span className="rb-team">Your team</span>
-        <span className="rb-team">Enemies</span>
+        <span className="rb-team">{tx("Your team")}</span>
+        <span className="rb-team">{tx("Enemies")}</span>
         {LANES.map((lane) => (
           <div key={lane} className="rb-row">
             <span className="rb-lane">{LANE_LABEL[lane]}</span>
@@ -87,7 +88,7 @@ export function RolesCard({ d }: { d: Derived }) {
         ))}
         {noLane && (
           <div className="rb-row">
-            <span className="rb-lane">No lane</span>
+            <span className="rb-lane">{tx("No lane")}</span>
             <span className="rb-stack">{allies.filter((p) => !laneOf(p)).map((p) => <Chip key={pkey(p)} p={p} state={stateOf(p)} onClick={() => click(p)} />)}</span>
             <span className="rb-stack">{g.enemies.filter((p) => !laneOf(p)).map((p) => <Chip key={pkey(p)} p={p} state={stateOf(p)} onClick={() => click(p)} />)}</span>
           </div>

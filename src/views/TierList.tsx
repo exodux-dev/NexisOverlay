@@ -1,6 +1,7 @@
 // Champion tier list per game mode (HexMayhem for ARAM: Mayhem, OP.GG for ARAM and Summoner's Rift).
 // Pure view: the caller loads `rows` (see engine/sources/tierlists.ts) and handles picks / refresh.
 
+import { t as tx } from "../i18n";
 import { searchChampions } from "../engine/championSearch";
 import { displayPatch } from "../ui/format";
 import { useMemo, useState, type ReactNode } from "react";
@@ -84,25 +85,25 @@ export function ChampTierTip({ e, mode }: { e: { row: ChampionTierRow; name: str
         <b className={wrTone(r.winRate)}>{fmtPct(r.winRate, 2)}</b>
         {r.pickRate !== undefined && (
           <>
-            <span>Pick rate</span>
+            <span>{tx("Pick rate")}</span>
             <b>{fmtPct(r.pickRate)}</b>
           </>
         )}
         {r.banRate !== undefined && (
           <>
-            <span>Ban rate</span>
+            <span>{tx("Ban rate")}</span>
             <b>{fmtPct(r.banRate)}</b>
           </>
         )}
         {r.games !== undefined && (
           <>
-            <span>Games</span>
+            <span>{tx("Games")}</span>
             <b>{r.games.toLocaleString("en-US")}</b>
           </>
         )}
         {r.rank !== undefined && (
           <>
-            <span>Rank</span>
+            <span>{tx("Rank")}</span>
             <b>
               #{r.rank}
               {r.position ? ` ${POSITION_LABEL[r.position]}` : ""}
@@ -399,7 +400,7 @@ export function TierListView({ mode, rows, status, position, onPosition, onPick,
             {src.name} · {src.note}
             {patch ? ` · Patch ${displayPatch(patch)}` : ""}
           </span>
-          {status === "error" && !!rows?.length && <span className="tl-stale">Showing cached data</span>}
+          {status === "error" && !!rows?.length && <span className="tl-stale">{tx("Showing cached data")}</span>}
         </div>
         {isSr && (
           <div className="tl-roles" role="tablist" aria-label="Role">

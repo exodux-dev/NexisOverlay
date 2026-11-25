@@ -3,6 +3,7 @@
 // redacted "Copy diagnostics" report, and augment-detection calibration (test scan with a
 // screenshot preview, scan region + badge offset with a live preview on the in-game layer).
 
+import { t as tx } from "../i18n";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { BUILD, DEFAULT_SETTINGS, actions, getState, useApp, type Settings } from "../app/store";
 import {
@@ -267,7 +268,7 @@ export function DiagnosticsSection() {
           </div>
         }
       >
-        {!isTauri && !diag && <p className="dim small no-margin">Running in a browser: backend checks are only available in the desktop app.</p>}
+        {!isTauri && !diag && <p className="dim small no-margin">{tx("Running in a browser: backend checks are only available in the desktop app.")}</p>}
         <ul className="diag-rows">
           {rows.map((r) => (
             <li key={r.id} className="diag-row" data-diag={r.id}>
@@ -461,7 +462,7 @@ function CalibrationCard() {
           {result?.payload.ok && (
             <div className="diag-ocr">
               <div className="diag-matched">
-                <span className="field-label">Matched augments</span>
+                <span className="field-label">{tx("Matched augments")}</span>
                 {result.matches.length ? (
                   result.matches.map((m) => (
                     <span key={m.augment.name} className="pill pill-teal">

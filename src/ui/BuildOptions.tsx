@@ -2,6 +2,7 @@
 // source, each with win rate / pick rate / games. Picking one is stored per champion + mode and
 // rebuilds the plan (build order, shop advice, "Import to League" item set) around it.
 
+import { t as tx } from "../i18n";
 import { Fragment, type ReactNode } from "react";
 import type { BuildPlan } from "../engine/build";
 import { winRateOf, type BuildChoice } from "../engine/options";
@@ -94,7 +95,7 @@ export function CoreOptions({ plan, onChoose, top4 }: { plan: BuildPlan; onChoos
           Core builds
           <OptionsHelp top4={top4} />
         </span>
-        <span className="bo-hint">Pick one to base the build order on</span>
+        <span className="bo-hint">{tx("Pick one to base the build order on")}</span>
       </div>
       <ul className="bo-core-list" role="radiogroup" aria-label="Core builds">
         {opts.map((o, i) => (
@@ -167,7 +168,7 @@ export function StarterOptions({ plan, onChoose, top4 }: { plan: BuildPlan; onCh
               <Icons items={o.items} size={26} />
               <span className="bo-name">
                 <span className="bo-cost tnum">{gold(o.items.reduce((s, it) => s + it.cost, 0))}g</span>
-                {picked ? <span className="bo-badge bo-badge-pick">Pick</span> : isAuto && <span className="bo-badge">Auto</span>}
+                {picked ? <span className="bo-badge bo-badge-pick">{tx("Pick")}</span> : isAuto && <span className="bo-badge">{tx("Auto")}</span>}
               </span>
               <OptRates stat={o.stat} top4={top4} />
             </OptionRow>

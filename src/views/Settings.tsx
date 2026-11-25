@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
+import { t as tx } from "../i18n";
 import { LANGUAGES, t as tr, type Lang } from "../i18n";
 import {
   DEFAULT_SETTINGS,
@@ -160,7 +161,7 @@ function KeybindRow({ field, label, hint, value, others }: { field: HotkeyField;
         <span className="field-label">{label}</span>
         <span className="field-hint">{hint}</span>
         {recording && error && <span className="field-hint warn-text">{error}</span>}
-        {!recording && dup && <span className="field-hint err">Same shortcut as another action</span>}
+        {!recording && dup && <span className="field-hint err">{tx("Same shortcut as another action")}</span>}
         {!recording && conflict && <span className="field-hint warn-text">May clash with {conflict}</span>}
       </div>
       <button
@@ -527,7 +528,7 @@ function ScanRegion({ region }: { region: Settings["scanRegion"] }) {
             </div>
             <div className="screen-rect" style={{ left: pct0(r.x), top: pct0(r.y), width: pct0(r.w), height: pct0(r.h) }} />
           </div>
-          <span className="dim small">Part of your screen captured when scanning. The three cards mark where augments appear.</span>
+          <span className="dim small">{tx("Part of your screen captured when scanning. The three cards mark where augments appear.")}</span>
           <button type="button" className="btn btn-ghost btn-sm" onClick={() => update({ scanRegion: DEFAULT_SETTINGS.scanRegion })}>
             Reset region
           </button>
@@ -717,7 +718,7 @@ function HudLayoutCard() {
             {anyWidget || hud.collapsed ? (
               <HudCard hud={view} model={model} hotkey={s.hotkeyToggle} inline />
             ) : (
-              <span className="hudset-empty">All widgets are off — turn one on below to show the HUD in game.</span>
+              <span className="hudset-empty">{tx("All widgets are off \u2014 turn one on below to show the HUD in game.")}</span>
             )}
           </div>
           <div className="hudset-mods" role="list" aria-label="HUD widgets (top to bottom)">
@@ -925,19 +926,19 @@ function GeneralSection() {
       <Card title="Quick reference" icon="info">
         <ul className="ref">
           <li>
-            <span>Show / hide overlay</span>
+            <span>{tx("Show / hide overlay")}</span>
             <Kbd>{s.hotkeyToggle}</Kbd>
           </li>
           <li>
-            <span>Scan augments</span>
+            <span>{tx("Scan augments")}</span>
             <Kbd>{s.hotkeyScan}</Kbd>
           </li>
           <li>
-            <span>Toggle in-game HUD</span>
+            <span>{tx("Toggle in-game HUD")}</span>
             <Kbd>{s.hotkeyHud}</Kbd>
           </li>
         </ul>
-        <p className="dim small no-margin">The overlay opens automatically when a game starts; it never sends inputs to the game.</p>
+        <p className="dim small no-margin">{tx("The overlay opens automatically when a game starts; it never sends inputs to the game.")}</p>
       </Card>
       <DiscordCard />
     </>
@@ -1291,7 +1292,7 @@ function AboutSection() {
           </span>
           <div className="about-id">
             <span className="about-name">Nexis Overlay</span>
-            <span className="about-tag">Free, open-source League of Legends companion</span>
+            <span className="about-tag">{tx("Free, open-source League of Legends companion")}</span>
             <span className="about-meta">
               <Pill tone="teal">{appVersion}</Pill>
               {patch && <Pill>Game data {displayPatch(patch)}</Pill>}
@@ -1331,23 +1332,23 @@ function AboutSection() {
       <Card title="Keyboard shortcuts" icon="keyboard">
         <ul className="ref">
           <li>
-            <span>Show / hide overlay</span>
+            <span>{tx("Show / hide overlay")}</span>
             <Kbd>{s.hotkeyToggle}</Kbd>
           </li>
           <li>
-            <span>Scan augments</span>
+            <span>{tx("Scan augments")}</span>
             <Kbd>{s.hotkeyScan}</Kbd>
           </li>
           <li>
-            <span>Toggle in-game HUD</span>
+            <span>{tx("Toggle in-game HUD")}</span>
             <Kbd>{s.hotkeyHud}</Kbd>
           </li>
           <li>
-            <span>Close dialogs, or hide the overlay</span>
+            <span>{tx("Close dialogs, or hide the overlay")}</span>
             <Kbd>Esc</Kbd>
           </li>
         </ul>
-        <p className="dim small no-margin">Change them in the Hotkeys section.</p>
+        <p className="dim small no-margin">{tx("Change them in the Hotkeys section.")}</p>
       </Card>
       <Card title="Data & credits" icon="heart">
         <ul className="credits">
@@ -1358,7 +1359,7 @@ function AboutSection() {
             </li>
           ))}
         </ul>
-        <p className="dim small no-margin">Stats sites aren't affiliated with Nexis. Thanks for keeping the data public.</p>
+        <p className="dim small no-margin">{tx("Stats sites aren't affiliated with Nexis. Thanks for keeping the data public.")}</p>
       </Card>
       <Card title="App" icon="power">
         <p className="dim small no-margin">

@@ -1,6 +1,7 @@
 // Champ select pick helper: how good is your champion in this mode, and is there something better
 // you can still get — the ARAM bench / a teammate trade, or (Summoner's Rift) a stronger pick in your role.
 
+import { t as tx } from "../i18n";
 import { useMemo, useState } from "react";
 import { useApp } from "../app/store";
 import { POSITION_LABEL, compareTierRows, findTierRow, rowsForPosition, type ChampionTierRow, type TierMode } from "../engine/sources/tierlists";
@@ -148,7 +149,7 @@ export function ChampSelectHelper({ mode, me, team, bench, rows, myPosition, onP
       <div className="csh-body">
         {/* ------------------------------------------------ your pick */}
         <div className="csh-mine">
-          <div className="eyebrow">Your pick</div>
+          <div className="eyebrow">{tx("Your pick")}</div>
           {me ? (
             <div className="csh-me">
               <button type="button" className="csh-me-icon" onClick={() => onPick?.(me.id)} aria-label={`Open ${me.name}`}>
@@ -158,7 +159,7 @@ export function ChampSelectHelper({ mode, me, team, bench, rows, myPosition, onP
               <div className="csh-me-text">
                 <span className="csh-me-name">{me.name}</span>
                 {loading ? (
-                  <span className="csh-me-stat dim">Loading tier data…</span>
+                  <span className="csh-me-stat dim">{tx("Loading tier data\u2026")}</span>
                 ) : mine ? (
                   <>
                     <span className="csh-me-stat">
@@ -231,7 +232,7 @@ export function ChampSelectHelper({ mode, me, team, bench, rows, myPosition, onP
                       <span className="csh-opt-title">{o.name}</span>
                       <span className="csh-opt-src">
                         {o.source === "you" ? "You" : o.source === "bench" ? "Bench" : o.source === "team" ? "Teammate" : o.row?.rank !== undefined ? `#${o.row.rank} ${posLabel ?? ""}` : "Available"}
-                        {isBest && <span className="csh-best-tag">Best available</span>}
+                        {isBest && <span className="csh-best-tag">{tx("Best available")}</span>}
                       </span>
                     </span>
                     {o.row ? (
@@ -242,13 +243,13 @@ export function ChampSelectHelper({ mode, me, team, bench, rows, myPosition, onP
                         </span>
                       </Tip>
                     ) : (
-                      <span className="csh-opt-tier dim small">No data</span>
+                      <span className="csh-opt-tier dim small">{tx("No data")}</span>
                     )}
                     <span className={`csh-delta csh-tone-${o.delta === undefined ? "none" : v.tone}`}>{o.delta !== undefined ? signed(o.delta) : ""}</span>
                     <span className={`csh-verdict csh-tone-${v.tone}`}>{v.text}</span>
                     {compNotes.get(o.id) && (
                       <span className={`csh-opt-comp ${compNotes.get(o.id)!.down ? "csh-opt-comp-down" : ""}`} title="What this pick changes in your team comp (win-rate ranking unchanged)">
-                        <span className="csh-opt-comp-k">Comp</span>
+                        <span className="csh-opt-comp-k">{tx("Comp")}</span>
                         {compNotes.get(o.id)!.text}
                       </span>
                     )}

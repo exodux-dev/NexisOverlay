@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { t as tx } from "../i18n";
 import { gamePlan } from "../engine/gamePlan";
 import { RolesCard } from "../ui/RoleEditor";
 import { actions, useApp, type Derived } from "../app/store";
@@ -38,11 +39,11 @@ function DamageSplit({ d }: { d: Derived }) {
       <div className="dmg-nums">
         <div>
           <span className="dmg-pct ap">{ap}%</span>
-          <span className="dmg-lbl">Magic (AP)</span>
+          <span className="dmg-lbl">{tx("Magic (AP)")}</span>
         </div>
         <div className="right">
           <span className="dmg-pct ad">{ad}%</span>
-          <span className="dmg-lbl">Physical (AD)</span>
+          <span className="dmg-lbl">{tx("Physical (AD)")}</span>
         </div>
       </div>
       <div className="dmg-bar" role="img" aria-label={`${ap}% magic, ${ad}% physical`}>
@@ -54,7 +55,7 @@ function DamageSplit({ d }: { d: Derived }) {
         <div className="warn">
           <Icon name="warning" size={16} />
           <div>
-            <strong>Suppression:</strong> {d.threat.suppress.join(", ")}. Only Quicksilver effects remove it — track their cooldowns.
+            <strong>{tx("Suppression:")}</strong> {d.threat.suppress.join(", ")}. Only Quicksilver effects remove it — track their cooldowns.
           </div>
         </div>
       )}
@@ -172,7 +173,7 @@ function TeamGoldCard({ d, data }: { d: Derived; data: StaticData }) {
       className="tg-card"
       extra={
         <Tip content={<div className="tt">Value of the items each player holds (completed items and components), from the scoreboard. Unspent gold isn't visible, so this is an estimate.</div>}>
-          <span className="tg-verdict">How it's counted</span>
+          <span className="tg-verdict">{tx("How it's counted")}</span>
         </Tip>
       }
     >
@@ -250,7 +251,7 @@ function IntelRow({ d, data }: { d: Derived; data: StaticData }) {
         <TeamGoldCard d={d} data={data} />
         <SpikesCard d={d} data={data} intel={intel} />
       </div>
-      <Card title="Game intel" icon="history" className="intel-card" extra={<span className="dim small">Scoreboard · newest first</span>}>
+      <Card title="Game intel" icon="history" className="intel-card" extra={<span className="dim small">{tx("Scoreboard \u00b7 newest first")}</span>}>
         <div className="intel-scroll">
           <IntelFeed events={intel} data={data} />
         </div>
@@ -302,7 +303,7 @@ function GamePlanCard({ d }: { d: Derived }) {
   }, [game.me, game.allies, game.enemies, d.threat, d.gameMode, d.plan, d.champion]);
   if (!points.length) return null;
   return (
-    <Card title="Game plan" icon="spark" className="gp-card" extra={<span className="dim small">For this game, before it starts</span>}>
+    <Card title="Game plan" icon="spark" className="gp-card" extra={<span className="dim small">{tx("For this game, before it starts")}</span>}>
       <ul className="gp-list">
         {points.map((pt) => (
           <li key={pt.kind} className={`gp-item gp-${pt.kind}`}>
@@ -374,7 +375,7 @@ export function EnemiesView({ d }: { d: Derived }) {
       {d.mode === "live" && d.game && <Players d={d} />}
       <div className="enemies-top">
         <DamageSplit d={d} />
-        <Card title="Threats" icon="enemies" extra={<span className="dim small">Hover avatars for details</span>} className="threat-card">
+        <Card title="Threats" icon="enemies" extra={<span className="dim small">{tx("Hover avatars for details")}</span>} className="threat-card">
           <div className="threat-grid">
             {meters.map((m) => (
               <MeterTile key={m.key} m={m} data={data} />

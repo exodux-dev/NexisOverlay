@@ -1,4 +1,5 @@
 import { Tip } from "./Tip";
+import { t as tx } from "../i18n";
 import "./build-options.css";
 
 /** Compact "?" explaining how the option lists are ranked (Recommended vs Most played). */
@@ -15,7 +16,7 @@ export function OptionsHelp({ top4, note }: { top4?: boolean; note?: string }) {
             <b>Most played</b> — the option picked in the most games.
           </p>
           {note && <p className="bo-help-note">{note}</p>}
-          <p className="bo-help-note">Your pick is saved per champion and mode.</p>
+          <p className="bo-help-note">{tx("Your pick is saved per champion and mode.")}</p>
         </div>
       }
     >

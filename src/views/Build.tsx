@@ -1,4 +1,5 @@
 import { Fragment, useMemo, useState } from "react";
+import { t as tx } from "../i18n";
 import { yourBestPicks } from "../engine/yourPicks";
 import { historyForMode } from "../engine/mode";
 import { DataSourceBar } from "../ui/DataSourceBar";
@@ -115,7 +116,7 @@ function BuildOrder({ plan }: { plan: BuildPlan }) {
 
 function Situational({ plan }: { plan: BuildPlan }) {
   return (
-    <Card title="Situational counters" icon="shield" extra={<span className="dim small">Based on the enemy team</span>}>
+    <Card title="Situational counters" icon="shield" extra={<span className="dim small">{tx("Based on the enemy team")}</span>}>
       {plan.situational.length === 0 ? (
         <Empty title="No urgent counters" icon="check">
           Their team doesn't force any specific answer — stick to the core build.
@@ -183,7 +184,7 @@ function Boots({ plan, d }: { plan: BuildPlan; d: Derived }) {
       <BootsOptions plan={plan} onChoose={chooser(d)} top4={d.gameMode === "arena"} />
       {alts.length > 0 && (
         <>
-          <div className="subhead">Alternatives</div>
+          <div className="subhead">{tx("Alternatives")}</div>
           <ul className="alt-list">
             {alts.map((a) => (
               <li key={a.item.id}>
@@ -243,7 +244,7 @@ function Starter({ plan, startGold, d }: { plan: BuildPlan; startGold: number; d
 function Prismatic({ plan }: { plan: BuildPlan }) {
   if (!plan.prismatic.length) return null;
   return (
-    <Card title="Prismatic items" icon="spark" className="prism-card" extra={<span className="dim small">From Prismatic anvils & augments</span>}>
+    <Card title="Prismatic items" icon="spark" className="prism-card" extra={<span className="dim small">{tx("From Prismatic anvils & augments")}</span>}>
       <ul className="prism-list">
         {plan.prismatic.map((rec) => (
           <li key={rec.item.id} className={`prism ${rec.owned ? "sit-owned" : ""}`}>
@@ -259,7 +260,7 @@ function Prismatic({ plan }: { plan: BuildPlan }) {
             </Tip>
             <div className="prism-body">
               <span className="sit-name">{rec.item.name}</span>
-              {rec.winRate ? <WinRate wr={rec.winRate} /> : <span className="dim small">No data yet</span>}
+              {rec.winRate ? <WinRate wr={rec.winRate} /> : <span className="dim small">{tx("No data yet")}</span>}
             </div>
           </li>
         ))}
@@ -318,7 +319,7 @@ function MatchupBar({ d }: { d: Derived }) {
       <span className="vs">VS</span>
       <TeamIcons players={game.enemies} />
       <div className="tb-spacer" />
-      {d.mode === "demo" && <span className="demo-flag-pill">Demo game · turn off at the bottom left</span>}
+      {d.mode === "demo" && <span className="demo-flag-pill">{tx("Demo game \u00b7 turn off at the bottom left")}</span>}
     </div>
   );
 }
@@ -410,7 +411,7 @@ function ChampSelectPanel() {
   return (
     <div className="cs-panel">
       <div className="cs-group">
-        <div className="eyebrow">Your team</div>
+        <div className="eyebrow">{tx("Your team")}</div>
         <div className="cs-row">
           {cs.team.map((c) => (
             <div key={c.id} className={`cs-champ ${c.id === mine ? "cs-me" : ""}`}>
@@ -422,7 +423,7 @@ function ChampSelectPanel() {
       </div>
       {cs.bench.length > 0 && (
         <div className="cs-group">
-          <div className="eyebrow">Bench</div>
+          <div className="eyebrow">{tx("Bench")}</div>
           <div className="cs-row">
             {cs.bench.map((c) => (
               <Tip key={c.id} content={<span className="tt-plain">{c.name}</span>}>
@@ -451,7 +452,7 @@ function StyleBar({ d }: { d: Derived }) {
   return (
     <div className="style-bar">
       <div className="style-label">
-        <span className="eyebrow">Build style</span>
+        <span className="eyebrow">{tx("Build style")}</span>
         <span className="style-sub">
           {base.name} · {ARCHETYPE_LABEL[(d.champion ?? base).archetype]}
         </span>
@@ -510,7 +511,7 @@ function SkillStrip({ d }: { d: Derived }) {
     // The whole strip opens the guide on click; the keys are focusable for their ability cards
     // and the "Guide" button is the keyboard route to the guide.
     <div className="skill-strip" onClick={() => actions.setTab("guide")} title={sp.note ?? "Open the full skill guide"}>
-      <span className="eyebrow">Skill order</span>
+      <span className="eyebrow">{tx("Skill order")}</span>
       <span className="skill-max">
         {sp.max.map((k: string, i: number) => (
           <span key={k} className="skill-max-item">
@@ -520,7 +521,7 @@ function SkillStrip({ d }: { d: Derived }) {
         ))}
       </span>
       <span className="skill-start">
-        <span className="dim small">Start</span>
+        <span className="dim small">{tx("Start")}</span>
         {sp.start.slice(0, 3).map((k: string, i: number) => key(k, "skill-key-sm", i))}
       </span>
       <button type="button" className="skill-link" onClick={() => actions.setTab("guide")}>

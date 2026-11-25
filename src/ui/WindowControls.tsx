@@ -2,6 +2,7 @@
 // Esc-to-hide and the "use Borderless" hint. Placement itself is saved by the backend
 // (src-tauri/src/window.rs) — nothing here touches settings.json except the lock toggle.
 
+import { t as tx } from "../i18n";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { actions, useApp } from "../app/store";
 import {
@@ -106,11 +107,11 @@ export function WindowMenu() {
       </button>
       {open && (
         <div className="win-pop" role="dialog" aria-label="Window size & position">
-          <span className="win-pop-title">Window size</span>
+          <span className="win-pop-title">{tx("Window size")}</span>
           <PresetButtons active={active} />
           <Toggle checked={locked} onChange={(windowLocked) => void actions.updateSettings({ windowLocked })} label="Lock position" sub="No dragging or edge-resizing" />
           <div className="win-pop-foot">
-            <span className="dim small">Drag the top bar to move · edges to resize · double-click the bar for Compact</span>
+            <span className="dim small">{tx("Drag the top bar to move \u00b7 edges to resize \u00b7 double-click the bar for Compact")}</span>
             <button type="button" className="btn btn-ghost btn-sm" disabled={!isTauri} onClick={() => void resetWindow()}>
               Re-center
             </button>
@@ -238,8 +239,8 @@ export function WindowSettings() {
       />
       <div className="field-row">
         <div className="field-text">
-          <span className="field-label">Position</span>
-          <span className="field-hint">Size and position are remembered. Re-center to put it back on the game's monitor.</span>
+          <span className="field-label">{tx("Position")}</span>
+          <span className="field-hint">{tx("Size and position are remembered. Re-center to put it back on the game's monitor.")}</span>
         </div>
         <button type="button" className="btn btn-ghost btn-sm" disabled={!isTauri} onClick={() => void resetWindow()}>
           Re-center

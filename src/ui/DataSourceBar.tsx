@@ -1,4 +1,5 @@
 import { actions, useApp, type Derived } from "../app/store";
+import { t as tx } from "../i18n";
 import { opggPosition } from "../engine/sources/opgg";
 import { POSITION_LABEL } from "../engine/sources/tierlists";
 import { DATA_SOURCE_LABEL, type DataSourceId } from "../engine/dataSource";
@@ -28,7 +29,7 @@ export function DataSourceBar({ d }: { d: Derived }) {
   return (
     <div className="data-source-bar">
       {d.gameMode === "sr" && <RolePicker d={d} />}
-      <span className="dim small">Data source</span>
+      <span className="dim small">{tx("Data source")}</span>
       <Segmented<DataSourceId>
         size="sm"
         label="Data source"
@@ -58,7 +59,7 @@ function RolePicker({ d }: { d: Derived }) {
   const value = (opggPosition(picked) ?? "") as "" | (typeof ROLES)[number];
   return (
     <>
-      <span className="dim small">Role</span>
+      <span className="dim small">{tx("Role")}</span>
       <Segmented<"" | (typeof ROLES)[number]>
         size="sm"
         label="Role"
