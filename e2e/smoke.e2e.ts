@@ -598,3 +598,16 @@ test("Home: Patch changes for you compares with the previous patch", async ({ st
   // The test copies of both patches are identical.
   await expect(card).toContainText("No changes to your favorites");
 });
+
+test("language: Spanish translates the menus and settings", async ({ start }) => {
+  const page = await start();
+  await tab(page, "settings").click();
+  await page.getByRole("combobox", { name: "Language" }).selectOption("es");
+  await expect(tab(page, "settings")).toContainText("Ajustes");
+  await expect(tab(page, "home")).toContainText("Inicio");
+  await expect(page.locator(".view-settings")).toContainText("Comportamiento del overlay");
+  await expect(page.locator(".view-settings")).toContainText("Modo streamer");
+  if (process.env.SHOT) await page.screenshot({ path: process.env.SHOT });
+  await page.getByRole("combobox", { name: "Language" }).selectOption("en");
+  await expect(tab(page, "settings")).toContainText("Settings");
+});

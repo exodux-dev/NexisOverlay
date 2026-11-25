@@ -1,4 +1,5 @@
 import { displayPatch } from "./format";
+import { t } from "../i18n";
 import { actions, useApp, type Tab } from "../app/store";
 import { Icon, type IconName } from "./icons";
 
@@ -25,7 +26,7 @@ function NavButton({ tab, label, icon, active, badge }: { tab: Tab; label: strin
         <Icon name={icon} size={20} />
         {badge ? <span className="nav-badge">{badge}</span> : null}
       </span>
-      <span className="nav-label">{label}</span>
+      <span className="nav-label">{t(label)}</span>
     </button>
   );
 }
@@ -42,10 +43,10 @@ function DemoToggle() {
       className={`nav-demo ${demo ? "is-on" : ""}`}
       aria-pressed={demo}
       onClick={() => actions.setDemo(!demo)}
-      title={demo ? "Turn off the demo game" : "Try the overlay with a sample in-game state"}
+      title={t(demo ? "Turn off the demo game" : "Try the overlay with a sample in-game state")}
     >
       <span className="nav-demo-dot" />
-      Demo
+      {t("Demo")}
     </button>
   );
 }

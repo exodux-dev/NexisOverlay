@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
+import { LANGUAGES, t as tr, type Lang } from "../i18n";
 import {
   DEFAULT_SETTINGS,
   DEFAULT_THEME,
@@ -309,7 +310,7 @@ function Slider({
   return (
     <label className="slider">
       <span className="slider-top">
-        <span className="field-label">{label}</span>
+        <span className="field-label">{tr(label)}</span>
         <span className="slider-val tnum">{format(value)}</span>
       </span>
       <input
@@ -321,7 +322,7 @@ function Slider({
         onChange={(e) => onChange(Number(e.target.value))}
         style={{ "--fill": `${((value - min) / (max - min)) * 100}%` } as CSSProperties}
       />
-      {hint && <span className="field-hint">{hint}</span>}
+      {hint && <span className="field-hint">{tr(hint)}</span>}
     </label>
   );
 }
@@ -393,7 +394,7 @@ function AppearanceSection() {
         </div>
         <div className="accent-row">
           <div className="field-text">
-            <span className="field-label">Accent color</span>
+            <span className="field-label">{tr("Accent color")}</span>
             <span className="field-hint">{t.accent ? "Custom accent" : `${preset.label} default`}</span>
           </div>
           <div className="accent-controls">
@@ -430,8 +431,8 @@ function AppearanceSection() {
         />
         <div className="field-row">
           <div className="field-text">
-            <span className="field-label">Density</span>
-            <span className="field-hint">Compact fits more on screen</span>
+            <span className="field-label">{tr("Density")}</span>
+            <span className="field-hint">{tr("Compact fits more on screen")}</span>
           </div>
           <Segmented<ThemeSettings["density"]>
             size="sm"
@@ -622,8 +623,8 @@ function HudLayoutCard() {
           </div>
           <div className="field-row">
             <div className="field-text">
-              <span className="field-label">Look</span>
-              <span className="field-hint">Minimal: just the next buy and skill order as small icons. Full: every default widget back.</span>
+              <span className="field-label">{tr("Look")}</span>
+              <span className="field-hint">{tr("Minimal: just the next buy and skill order as small icons. Full: every default widget back.")}</span>
             </div>
             <Segmented<HudPreset | "custom">
               size="sm"
@@ -784,8 +785,8 @@ function OverlaySection() {
       <Card title="Tier badges" icon="augments">
         <div className="field-row">
           <div className="field-text">
-            <span className="field-label">Badge position</span>
-            <span className="field-hint">Above keeps the reroll buttons under the cards clear</span>
+            <span className="field-label">{tr("Badge position")}</span>
+            <span className="field-hint">{tr("Above keeps the reroll buttons under the cards clear")}</span>
           </div>
           <Segmented<"above" | "below">
             size="sm"
@@ -855,11 +856,13 @@ function GeneralSection() {
             ]}
           />
           <span className="field-hint">
-            {!s.autoShowChampSelect
-              ? "Nothing opens in champ select; use the hotkey when you want it."
-              : s.champSelectFull
-                ? "Opens the full overlay with the pick helper and your build."
-                : "A small window at the side with your build and skill order — it doesn't cover champ select. Expand (or the hotkey) opens the full overlay."}
+            {tr(
+              !s.autoShowChampSelect
+                ? "Nothing opens in champ select; use the hotkey when you want it."
+                : s.champSelectFull
+                  ? "Opens the full overlay with the pick helper and your build."
+                  : "A small window at the side with your build and skill order — it doesn't cover champ select. Expand (or the hotkey) opens the full overlay.",
+            )}
           </span>
         </div>
         <Toggle
@@ -880,6 +883,19 @@ function GeneralSection() {
           }
         />
         <Toggle checked={s.showPostGame} onChange={(v) => update({ showPostGame: v })} label="Post-game summary" sub="Opens a short recap of your game when it ends" />
+        <div className="field-row">
+          <div className="field-text">
+            <span className="field-label">{tr("Language")}</span>
+            <span className="field-hint">{tr("Menus, cards and settings. Champion, item and augment names stay in English.")}</span>
+          </div>
+          <select className="mode-select" aria-label="Language" value={s.language} onChange={(e) => update({ language: e.target.value as Lang })}>
+            {LANGUAGES.map((l) => (
+              <option key={l.value} value={l.value}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+        </div>
         <Toggle
           checked={s.alwaysOnTop}
           onChange={(v) => update({ alwaysOnTop: v })}
@@ -890,9 +906,9 @@ function GeneralSection() {
       </Card>
       <Card title="Builds" icon="build">
         <div className="field-stack">
-          <span className="field-label">Default playstyle</span>
+          <span className="field-label">{tr("Default playstyle")}</span>
           <Segmented<Playstyle> size="sm" label="Default playstyle" options={PLAYSTYLES} value={s.playstyle} onChange={(playstyle) => update({ playstyle })} />
-          <span className="field-hint">{PLAYSTYLES.find((p) => p.value === s.playstyle)?.hint}. Also switchable from the top bar.</span>
+          <span className="field-hint">{tr(PLAYSTYLES.find((p) => p.value === s.playstyle)?.hint ?? "")}. {tr("Also switchable from the top bar.")}</span>
         </div>
         <Slider
           label="Starting gold"
@@ -1033,10 +1049,7 @@ function WebStatsCard() {
         </div>
       )}
       {s.webStats && web.status === "error" && <span className="field-hint err">{web.error} — falling back to your other data sources.</span>}
-      <span className="field-hint">
-        Reads public pages on hexmayhem.com and op.gg (not affiliated with Nexis). If a site changes or is down, Nexis falls back to the Riot dataset, your own
-        games and baseline builds.
-      </span>
+      <span className="field-hint">{tr("Reads public pages on hexmayhem.com and op.gg (not affiliated with Nexis). If a site changes or is down, Nexis falls back to the Riot dataset, your own games and baseline builds.")}</span>
     </Card>
   );
 }
@@ -1067,7 +1080,7 @@ function DataSection() {
       <WebStatsCard />
       <Card title="Win-rate stats (Riot API dataset)" icon="history" extra={statusPill}>
         <div className="field-stack">
-          <span className="field-label">Stats source URL</span>
+          <span className="field-label">{tr("Stats source URL")}</span>
           <TextSetting value={s.statsUrl} placeholder="https://…/stats.json" onCommit={(v) => update({ statsUrl: v })} mono />
           {statsStatus === "ok" && stats && (
             <span className="field-hint">
@@ -1090,9 +1103,9 @@ function DataSection() {
       </Card>
       <Card title="League of Legends" icon="settings">
         <div className="field-stack">
-          <span className="field-label">Install path</span>
+          <span className="field-label">{tr("Install path")}</span>
           <TextSetting value={s.leaguePath} placeholder="C:\Riot Games\League of Legends" onCommit={(v) => update({ leaguePath: v })} mono />
-          <span className="field-hint">Leave empty to detect automatically.</span>
+          <span className="field-hint">{tr("Leave empty to detect automatically.")}</span>
         </div>
       </Card>
     </>
@@ -1152,7 +1165,7 @@ function StorageInfo({ info }: { info: AppInfo | null | undefined }) {
         <span className="field-label">
           <Icon name="folder" size={14} /> Storage
         </span>
-        <span className="field-hint">Running in a browser: settings are kept in this browser's local storage.</span>
+        <span className="field-hint">{tr("Running in a browser: settings are kept in this browser's local storage.")}</span>
       </div>
     );
   }
@@ -1352,7 +1365,7 @@ export function SettingsView() {
             data-section={s.id}
           >
             <Icon name={s.icon} size={15} />
-            {s.label}
+            {tr(s.label)}
             {s.id === "hotkeys" && errors > 0 && <span className="tab-alert" />}
           </button>
         ))}

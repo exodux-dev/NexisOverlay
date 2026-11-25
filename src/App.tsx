@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect, useState, type ComponentType } from "react";
+import { setLanguage } from "./i18n";
 import { actions, getState, useApp, useDerived, useLeagueAutoImport, useMigrateBuildChoice, type Derived, type Tab } from "./app/store";
 import { opggPosition } from "./engine/sources/opgg";
 import * as bridge from "./bridge";
@@ -163,6 +164,9 @@ export default function App() {
 
   const ready = status === "ready";
   const postGame = useApp((s) => s.postGame);
+  // Language: set before rendering; the keys below remount the UI when it changes.
+  const lang = useApp((s) => s.settings.language);
+  setLanguage(lang);
   const mini = useMiniMode();
   if (mini)
     return (
@@ -172,11 +176,11 @@ export default function App() {
     );
   return (
     <div className="shell">
-      <TopBar derived={ready ? derived : null} />
+      <TopBar key={`top-${lang}`} derived={ready ? derived : null} />
       {status === "loading" && <Loading />}
       {status === "error" && <Failure />}
       {ready && (
-        <div className="body">
+        <div className="body" key={`body-${lang}`}>
           <Nav />
           <main className="content" key={tab}>
             <ErrorBoundary label={tab}>

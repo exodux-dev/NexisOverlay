@@ -1,5 +1,6 @@
 // Small shared building blocks: cards, toggles, segmented controls, meters…
 
+import { t, tn } from "../i18n";
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "./icons";
 
@@ -25,10 +26,10 @@ export function Card({
           {title && (
             <h3 className="card-title">
               {icon && <Icon name={icon} size={15} />}
-              {title}
+              {tn(title)}
             </h3>
           )}
-          {extra && <div className="card-extra">{extra}</div>}
+          {extra && <div className="card-extra">{tn(extra)}</div>}
         </header>
       )}
       {children}
@@ -46,8 +47,8 @@ export function Toggle({ checked, onChange, label, sub }: { checked: boolean; on
   return (
     <label className="toggle-row">
       <span className="toggle-text">
-        <span className="toggle-label">{label}</span>
-        {sub && <span className="toggle-sub">{sub}</span>}
+        <span className="toggle-label">{tn(label)}</span>
+        {sub && <span className="toggle-sub">{tn(sub)}</span>}
       </span>
       {sw}
     </label>
@@ -75,11 +76,11 @@ export function Segmented<T extends string>({
           type="button"
           role="radio"
           aria-checked={o.value === value}
-          title={o.hint}
+          title={o.hint && t(o.hint)}
           className={`seg-btn ${o.value === value ? "active" : ""}`}
           onClick={() => onChange(o.value)}
         >
-          {o.label}
+          {tn(o.label)}
         </button>
       ))}
     </div>
@@ -148,8 +149,8 @@ export function Empty({
         <Icon name={icon} size={compact ? 16 : 20} />
       </span>
       <div className="empty-text">
-        <div className="empty-title">{title}</div>
-        {children && <div className="empty-body">{children}</div>}
+        <div className="empty-title">{tn(title)}</div>
+        {children && <div className="empty-body">{tn(children)}</div>}
       </div>
       {action && <div className="empty-action">{action}</div>}
     </div>

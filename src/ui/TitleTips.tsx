@@ -2,6 +2,7 @@
 // like a plain Windows one. On hover the title moves to `data-nx-title` (so the native tip never
 // shows) and a themed tip appears after a short delay, placed below (or above) the element.
 // Icon-only controls keep their accessible name: the title becomes their aria-label if they had none.
+import { t } from "../i18n";
 import { useEffect, useState } from "react";
 
 interface Tip {
@@ -83,7 +84,7 @@ export function TitleTips() {
   if (!tip) return null;
   return (
     <div className={`nx-tip ${tip.above ? "nx-tip-above" : ""}`} role="tooltip" style={{ left: tip.x, top: tip.y }}>
-      {tip.text}
+      {t(tip.text)}
     </div>
   );
 }

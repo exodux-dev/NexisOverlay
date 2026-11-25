@@ -8,6 +8,11 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-25.3",
+    title: "Español and Português",
+    items: ["Settings → General → Language: English, Español or Português (BR) for menus, cards and settings. Champion, item and augment names stay in English."],
+  },
+  {
     id: "2026-11-25.2",
     title: "Smarter search and a cleaner Build tab",
     items: [

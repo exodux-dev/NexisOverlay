@@ -151,3 +151,11 @@ describe("keep on top (settings.alwaysOnTop)", () => {
     expect(normalizeSettings({ alwaysOnTop: true }).alwaysOnTop).toBe(true);
   });
 });
+
+describe("language (settings.language)", () => {
+  it("defaults to English and keeps a supported choice", () => {
+    expect(normalizeSettings({}).language).toBe("en");
+    expect(normalizeSettings({ language: "pt" } as never).language).toBe("pt");
+    expect(normalizeSettings({ language: "xx" } as never).language).toBe("en");
+  });
+});

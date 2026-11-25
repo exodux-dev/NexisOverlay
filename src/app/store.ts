@@ -1,6 +1,7 @@
 // Central app state. A tiny external store (no state library) + React hooks.
 // The UI reads state with `useApp(selector)` and derived recommendations with `useDerived()`.
 
+import { LANGUAGES, type Lang } from "../i18n";
 import { createContext, createElement, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
 import * as bridge from "../bridge";
 import { AUGMENTS, findAugment, rankAugments, registerArenaAugments, registerAugments, setAugmentPool, type AugmentScore, type GlobalAugmentStat } from "../engine/augments";
@@ -164,6 +165,8 @@ export interface Settings {
   hudPerMode: boolean;
   /** Stored HUD layouts of the modes not currently active. */
   hudByMode: Partial<Record<GameModeKind, HudSettings>>;
+  /** UI language (see i18n.ts). */
+  language: Lang;
   /** Keep the main window above every other window (the in-game HUD is always on top). */
   alwaysOnTop: boolean;
   /** Summoner's Rift role picked on the Build tab ("" = auto: champ select, else the main role). */
@@ -230,6 +233,7 @@ export const DEFAULT_SETTINGS: Settings = {
   streamerMode: false,
   srRole: "",
   alwaysOnTop: false,
+  language: "en",
   hudPerMode: false,
   hudByMode: {},
   theme: DEFAULT_THEME,
@@ -275,6 +279,7 @@ function finishNormalize(s: Settings): Settings {
   if (typeof s.streamerMode !== "boolean") s.streamerMode = false;
   if (typeof s.srRole !== "string") s.srRole = "";
   if (typeof s.alwaysOnTop !== "boolean") s.alwaysOnTop = false;
+  if (!LANGUAGES.some((l) => l.value === s.language)) s.language = "en";
   if (typeof s.hudPerMode !== "boolean") s.hudPerMode = false;
   if (!s.hudByMode || typeof s.hudByMode !== "object" || Array.isArray(s.hudByMode)) s.hudByMode = {};
   if (!Array.isArray(s.favorites)) s.favorites = [];
