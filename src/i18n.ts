@@ -440,6 +440,9 @@ const DICT: Record<string, [string, string]> = {
     "Quase transparente enquanto você joga; totalmente visível ao morrer, com ouro para o próximo item, com ponto de habilidade, com aumentos na tela, nos primeiros 90 s ou ao passar o mouse",
   ],
 
+  Standard: ["Estándar", "Padrão"],
+  "Show tips": ["Mostrar consejos", "Mostrar dicas"],
+
   // Hover tips & misc
   "Browse every champion": ["Ver todos los campeones", "Ver todos os campeões"],
   "Show another champion's guide": ["Ver la guía de otro campeón", "Ver o guia de outro campeão"],

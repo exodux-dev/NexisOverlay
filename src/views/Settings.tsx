@@ -626,7 +626,7 @@ function HudLayoutCard() {
           <div className="field-row">
             <div className="field-text">
               <span className="field-label">{tr("Look")}</span>
-              <span className="field-hint">{tr("Minimal: just the next buy and skill order as small icons. Full: every default widget back.")}</span>
+              <span className="field-hint">{tr("Standard: next buy, skills and augments. Minimal: the same as small icons, without augments. Full: every widget and tips.")}</span>
             </div>
             <Segmented<HudPreset | "custom">
               size="sm"
@@ -635,6 +635,7 @@ function HudLayoutCard() {
               onChange={(p) => p !== "custom" && updateHud(hudPreset(p))}
               options={[
                 { value: "minimal", label: "Minimal" },
+                { value: "standard", label: "Standard" },
                 { value: "full", label: "Full" },
                 ...(activeHudPreset(hud) ? [] : [{ value: "custom" as const, label: "Custom" }]),
               ]}
@@ -695,6 +696,7 @@ function HudLayoutCard() {
             sub="Mostly see-through while you play; fully visible when you're dead, have gold for your next item, have a skill point, see augments, in the first 90 s, or hover it"
           />
           {hud.idleDim && <Slider label="Opacity while faded" value={idleOpacity} min={HUD_IDLE_OPACITY.min} max={HUD_IDLE_OPACITY.max} step={0.05} format={pct0} onChange={setIdleOpacity} />}
+          <Toggle checked={hud.showTips} onChange={(v) => updateHud({ showTips: v })} label="Show tips" sub="Shop tips, why each item is suggested and the game phase on the HUD" />
           <Toggle checked={hud.collapsed} onChange={(v) => updateHud({ collapsed: v })} label="Collapse to a pill" sub="Just the next buy (and a skill point reminder) in a tiny pill" />
           <Toggle checked={hud.compact} onChange={(v) => updateHud({ compact: v })} label="Compact" sub="Icons only — a narrow strip with no labels" />
           <Toggle

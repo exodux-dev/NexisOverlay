@@ -34,6 +34,8 @@ export interface HudSettings {
   idleDim: boolean;
   /** Panel opacity while faded, 0.05..0.6. */
   idleOpacity: number;
+  /** Extra text: shop tips, why an item is suggested, the game phase label. Off by default. */
+  showTips: boolean;
   /** While you're dead: expand the HUD with the shop first ("shop now"). */
   deathShop: boolean;
   /** ~8 s reminder to mark your augment pick in Nexis when an offer is detected. */
@@ -63,14 +65,15 @@ export const HUD_DEFAULTS: HudSettings = {
   scale: 1,
   opacity: 0.92,
   showNextItem: true,
-  showThreats: true,
+  showThreats: false,
   showSkillOrder: true,
-  showBuildPath: true,
+  showBuildPath: false,
   showAugments: true,
   showPower: false,
-  showHint: true,
+  showHint: false,
   pickReminder: true,
   deathShop: true,
+  showTips: false,
   idleDim: true,
   idleOpacity: 0.2,
   order: [...HUD_WIDGETS],
@@ -105,20 +108,28 @@ export function deathView(h: HudSettings): HudSettings {
   return { ...h, collapsed: false, compact: false, showNextItem: true, order: ["shop", ...h.order.filter((w) => w !== "shop")] };
 }
 
-export type HudPreset = "minimal" | "full";
+export type HudPreset = "minimal" | "standard" | "full";
 
-/** Widget / look settings a preset sets (position, size, opacity and hover mode are kept). */
+/** The widget set the HUD used to show by default (before the leaner "standard"). */
+export const HUD_FULL_WIDGETS = { showNextItem: true, showSkillOrder: true, showBuildPath: true, showThreats: true, showAugments: true, showPower: false, showHint: true } as const;
+
+/**
+ * Widget / look settings a preset sets (position, size, opacity and hover mode are kept).
+ * Minimal: next buy + skills as icons. Standard (default): next buy, skills, augments — only what's
+ * worth a glance. Full: every widget, tips and the hint line.
+ */
 export function hudPreset(p: HudPreset): Partial<HudSettings> {
   if (p === "minimal")
-    return { showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: false, showPower: false, showHint: false, compact: true, collapsed: false };
-  const { showNextItem, showSkillOrder, showBuildPath, showThreats, showAugments, showPower, showHint, compact, collapsed } = HUD_DEFAULTS;
-  return { showNextItem, showSkillOrder, showBuildPath, showThreats, showAugments, showPower, showHint, compact, collapsed };
+    return { showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: false, showPower: false, showHint: false, showTips: false, compact: true, collapsed: false };
+  if (p === "standard")
+    return { showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: true, showPower: false, showHint: false, showTips: false, compact: false, collapsed: false };
+  return { ...HUD_FULL_WIDGETS, showTips: true, compact: false, collapsed: false };
 }
 
 /** The preset the current settings match exactly, if any. */
 export function activeHudPreset(h: HudSettings): HudPreset | undefined {
   const same = (p: HudPreset) => Object.entries(hudPreset(p)).every(([k, v]) => h[k as keyof HudSettings] === v);
-  return same("minimal") ? "minimal" : same("full") ? "full" : undefined;
+  return same("minimal") ? "minimal" : same("standard") ? "standard" : same("full") ? "full" : undefined;
 }
 
 /**
@@ -179,6 +190,7 @@ export function normalizeHud(raw: unknown): HudSettings {
     showHint: bool("showHint"),
     pickReminder: bool("pickReminder"),
     deathShop: bool("deathShop"),
+    showTips: bool("showTips"),
     idleDim: bool("idleDim"),
     idleOpacity: clampNum(r.idleOpacity, HUD_IDLE_OPACITY.min, HUD_IDLE_OPACITY.max, HUD_DEFAULTS.idleOpacity),
     order: normalizeOrder(r.order),

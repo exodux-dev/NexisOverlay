@@ -300,17 +300,18 @@ test("HUD shows a pick reminder for ~8 s when augment cards are detected", async
   await expect(reminder).toHaveCount(0);
 });
 
-test("HUD Minimal / Full preset", async ({ start }) => {
+test("HUD Minimal / Standard / Full preset", async ({ start }) => {
   const page = await start();
   await tab(page, "settings").click();
   await page.locator('[data-section="overlay"]').click();
   const preset = page.getByRole("radiogroup", { name: "HUD preset" });
-  await expect(preset.getByRole("radio", { name: "Full" })).toHaveAttribute("aria-checked", "true");
+  await expect(preset.getByRole("radio", { name: "Standard" })).toHaveAttribute("aria-checked", "true");
   await preset.getByRole("radio", { name: "Minimal" }).click();
   await expect(preset.getByRole("radio", { name: "Minimal" })).toHaveAttribute("aria-checked", "true");
   expect(await storeValue<Record<string, boolean>>(page, "(s) => s.settings.hud")).toMatchObject({ compact: true, showBuildPath: false, showThreats: false, showNextItem: true, showSkillOrder: true });
   await preset.getByRole("radio", { name: "Full" }).click();
   expect(await storeValue<boolean>(page, "(s) => s.settings.hud.showBuildPath")).toBe(true);
+  expect(await storeValue<boolean>(page, "(s) => s.settings.hud.showTips")).toBe(true);
 });
 
 test("detects the augment pick from the screen and shows it on the HUD", async ({ start, context }) => {
@@ -646,7 +647,7 @@ test("in-game HUD follows the language", async ({ start, context }) => {
   await hud.goto("/?view=hud");
   await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
   await emit(hud, "live-game", liveGame());
-  await expect(hud.locator(".nl-hud")).toContainText("BUILD PRINCIPAL");
+  await expect(hud.locator(".nl-hud")).toContainText(/COMPRAR YA|SIGUIENTE OBJETO/);
 });
 
 test("Build tab: '/' focuses the champion search", async ({ start }) => {

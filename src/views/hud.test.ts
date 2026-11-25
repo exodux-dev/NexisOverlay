@@ -15,7 +15,7 @@ describe("hud settings migration", () => {
     expect(h.scale).toBe(1.2);
     expect(h.showNextItem).toBe(false);
     expect(h.showAugments).toBe(true);
-    expect(h.showHint).toBe(true);
+    expect(h.showHint).toBe(false); // lean default
     expect(h.showPower).toBe(false); // opt-in widget
     expect(h.order).toEqual(HUD_WIDGETS);
     expect(h.collapsed).toBe(false);
@@ -171,10 +171,11 @@ describe("HUD presets", () => {
     expect(activeHudPreset(min)).toBe("minimal");
     const full = normalizeHud({ ...min, ...hudPreset("full") });
     expect(activeHudPreset(full)).toBe("full");
-    expect(full.showBuildPath).toBe(HUD_DEFAULTS.showBuildPath);
+    expect(full.showBuildPath).toBe(true); // Full: every widget
+    expect(full.showTips).toBe(true);
     expect(full.scale).toBe(1.2);
     expect(activeHudPreset(custom)).toBeUndefined();
-    expect(activeHudPreset(HUD_DEFAULTS)).toBe("full");
+    expect(activeHudPreset(HUD_DEFAULTS)).toBe("standard");
   });
 });
 

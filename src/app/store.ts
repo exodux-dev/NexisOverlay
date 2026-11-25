@@ -14,7 +14,7 @@ import { COMBOS_URL, parseCombos, type AugmentCombo } from "../engine/sources/co
 import { appendIntel, buildChanges, diffSnapshots, type IntelEvent } from "../engine/intel";
 import { scoreboardPower, type TeamPower } from "../engine/power";
 import { toast } from "../ui/Toasts";
-import { HUD_DEFAULTS, normalizeHud, type HudSettings } from "../views/hudSettings";
+import { HUD_DEFAULTS, HUD_FULL_WIDGETS, hudPreset, normalizeHud, type HudSettings } from "../views/hudSettings";
 import { parseTierList, tierListPatch, tierListUrl, type ChampionTierRow, type TierPosition } from "../engine/sources/tierlists";
 import { recordTierSnapshot } from "./tierHistory";
 import { recommendBuild, type BuildPlan } from "../engine/build";
@@ -251,6 +251,14 @@ export function normalizeSettings(raw: Partial<Settings> | Record<string, unknow
   const s: Settings = { ...DEFAULT_SETTINGS, ...r, theme: { ...DEFAULT_THEME, ...(r.theme ?? {}) }, buildStyles: { ...(r.buildStyles ?? {}) }, hud: normalizeHud(r.hud) };
   // v0.1 defaults collided with the NVIDIA overlay (Alt+Z) — move stored *old defaults* off it,
   // once, at startup (a user who deliberately picks Alt+Z later keeps it).
+  // The HUD's default got leaner (next buy, skills, augments): a HUD whose widgets were never
+  // changed from the old defaults switches once; a customized one is left alone.
+  if (migrate && !(r as { hudV2?: boolean }).hudV2) {
+    (s as Settings & { hudV2?: boolean }).hudV2 = true;
+    const h = (r.hud ?? {}) as Partial<HudSettings>;
+    const untouched = Object.entries(HUD_FULL_WIDGETS).every(([k, v]) => (h[k as keyof HudSettings] ?? v) === v);
+    if (untouched) s.hud = normalizeHud({ ...s.hud, ...hudPreset("standard") });
+  }
   // The navy + gold "League" look stopped being the default: move it to the new default once
   // (it stays available as "Classic" in Appearance, and a later pick of it is kept).
   if (migrate && !(r as { themeV2?: boolean }).themeV2) {

@@ -175,3 +175,15 @@ describe("Rift role keys (mid / middle)", () => {
     expect(s.buildChoices["sr:Jinx:adc"]).toEqual({ core: "b" });
   });
 });
+
+describe("HUD v2: leaner default", () => {
+  it("switches an untouched HUD to Standard once, keeps a customized one", () => {
+    const untouched = normalizeSettings({ hud: { x: 0.9, y: 0.1 } } as never, true);
+    expect(untouched.hud).toMatchObject({ showBuildPath: false, showThreats: false, showHint: false, showNextItem: true, x: 0.9 });
+    const custom = normalizeSettings({ hud: { showThreats: false, showBuildPath: true } } as never, true);
+    expect(custom.hud.showBuildPath).toBe(true);
+    // Only once.
+    const later = normalizeSettings({ hudV2: true, hud: { showBuildPath: true, showThreats: true, showHint: true } } as never, true);
+    expect(later.hud.showBuildPath).toBe(true);
+  });
+});

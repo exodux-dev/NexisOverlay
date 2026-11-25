@@ -16,7 +16,18 @@
 
 import { t as tx } from "../i18n";
 import { t } from "../i18n";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode, type Ref } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+  type Ref,
+} from "react";
 import { actions, getState, useApp, useDerived } from "../app/store";
 import * as bridge from "../bridge";
 import { findAugment } from "../engine/augments";
@@ -28,8 +39,27 @@ import type { ApheliosWeapon } from "../engine/live";
 import { AugmentTip, KeyAbilityTip } from "../ui/GameTips";
 import { threatLevel, type ThreatKey } from "../engine/threat";
 import type { AugmentRarity, Item, StaticData } from "../engine/types";
-import { damageSplit, hudWakeReason, nextSkill, pendingPoints, powerOf, shopOf, type DamageSplit, type HudPower } from "./hudLogic";
-import { HUD_DEFAULTS, HUD_SCALE, WIDGET_FLAG, deathView, dragToFrac, hudFrac, hudOf, type HudSettings, type HudWidget } from "./hudSettings";
+import {
+  damageSplit,
+  hudWakeReason,
+  nextSkill,
+  pendingPoints,
+  powerOf,
+  shopOf,
+  type DamageSplit,
+  type HudPower,
+} from "./hudLogic";
+import {
+  HUD_DEFAULTS,
+  HUD_SCALE,
+  WIDGET_FLAG,
+  deathView,
+  dragToFrac,
+  hudFrac,
+  hudOf,
+  type HudSettings,
+  type HudWidget,
+} from "./hudSettings";
 import "./layer.css";
 import "./minihud.css";
 
@@ -61,9 +91,19 @@ export interface HudModel {
   /** Current gold (live game only). */
   gold?: number;
   /** Shop advice from the phase engine (derived.shop). */
-  shop?: { buyNow: HudShopRow[]; saveFor?: { name: string; icon: string; need: number }; tip?: string };
+  shop?: {
+    buyNow: HudShopRow[];
+    saveFor?: { name: string; icon: string; need: number };
+    tip?: string;
+  };
   /** `goldUnknown`: Arena outside a live game — gold comes per round, so no affordability. */
-  next?: { item: Item; affordable: boolean; missingGold: number; component?: Item; goldUnknown?: boolean };
+  next?: {
+    item: Item;
+    affordable: boolean;
+    missingGold: number;
+    component?: Item;
+    goldUnknown?: boolean;
+  };
   path: Array<{ item: Item; owned: boolean; next: boolean }>;
   skill?: {
     max: Basic[];
@@ -82,7 +122,13 @@ export interface HudModel {
   /** Team item-gold diff and your lane diff (derived.power, scoreboard only). */
   power?: HudPower;
   /** Stacking champions: the next stack milestone to aim for by this game time (reference pace). */
-  stack?: { name: string; stacks: number; unlock: string; by: number; late: boolean };
+  stack?: {
+    name: string;
+    stacks: number;
+    unlock: string;
+    by: number;
+    late: boolean;
+  };
   /** Aphelios: current main-hand weapon (Live Client API) with reference pairings. */
   aphelios?: ApheliosWeapon;
 }
@@ -101,17 +147,27 @@ export function useHudModel(): HudModel {
   const ranks = game?.skills;
   const gold = game?.source === "live" ? Math.floor(game.gold) : undefined;
   const gameMode = derived.gameMode;
-  const minute = game?.source === "live" ? Math.floor((game.gameTime ?? 0) / 60) : 0;
+  const minute =
+    game?.source === "live" ? Math.floor((game.gameTime ?? 0) / 60) : 0;
   const baseId = derived.baseChampion?.id;
   const stack = useMemo(() => {
     if (!baseId) return undefined;
     const g = nextStackGoal(baseId, gameMode, minute);
-    return g ? { name: g.name, stacks: g.stacks, unlock: g.unlock, by: g.by[gameMode] as number, late: g.late } : undefined;
+    return g
+      ? {
+          name: g.name,
+          stacks: g.stacks,
+          unlock: g.unlock,
+          by: g.by[gameMode] as number,
+          late: g.late,
+        }
+      : undefined;
   }, [baseId, gameMode, minute]);
 
   return useMemo(() => {
     const nextId = plan?.next?.rec.item.id;
-    const itemIcon = (id: string, icon?: string) => icon || data?.items.get(Number(id))?.icon || "";
+    const itemIcon = (id: string, icon?: string) =>
+      icon || data?.items.get(Number(id))?.icon || "";
     const shop =
       shopRaw && (shopRaw.buyNow.length || shopRaw.saveFor)
         ? {
@@ -120,15 +176,24 @@ export function useHudModel(): HudModel {
               icon: itemIcon(b.itemId, b.icon),
               cost: b.cost,
               reason: b.reason,
-              affordable: shopRaw.gold === undefined ? undefined : b.cost <= shopRaw.gold,
+              affordable:
+                shopRaw.gold === undefined ? undefined : b.cost <= shopRaw.gold,
             })),
-            saveFor: shopRaw.saveFor ? { name: shopRaw.saveFor.name, icon: itemIcon(shopRaw.saveFor.itemId, shopRaw.saveFor.icon), need: shopRaw.saveFor.need } : undefined,
+            saveFor: shopRaw.saveFor
+              ? {
+                  name: shopRaw.saveFor.name,
+                  icon: itemIcon(shopRaw.saveFor.itemId, shopRaw.saveFor.icon),
+                  need: shopRaw.saveFor.need,
+                }
+              : undefined,
             tip: shopRaw.tips?.[0],
           }
         : undefined;
     const pending = pendingPoints(ranks, level);
     return {
-      champion: champion ? { name: champion.name, icon: champion.icon } : undefined,
+      champion: champion
+        ? { name: champion.name, icon: champion.icon }
+        : undefined,
       phaseLabel: shopRaw?.phaseLabel,
       gold: shopRaw?.gold ?? gold,
       shop,
@@ -141,14 +206,26 @@ export function useHudModel(): HudModel {
             ...(plan.next.goldUnknown ? { goldUnknown: true } : {}),
           }
         : undefined,
-      path: (plan?.order ?? []).slice(0, 6).map((r) => ({ item: r.item, owned: r.owned, next: r.item.id === nextId && !r.owned })),
+      path: (plan?.order ?? [])
+        .slice(0, 6)
+        .map((r) => ({
+          item: r.item,
+          owned: r.owned,
+          next: r.item.id === nextId && !r.owned,
+        })),
       skill: skillPlan
         ? {
             max: skillPlan.max as Basic[],
             start: skillPlan.start as Basic[],
             pending,
-            levelUp: ranks && pending > 0 ? nextSkill(levelOrder, ranks, level) : undefined,
-            upcoming: level > 0 && level < 18 && levelOrder[level] ? { level: level + 1, key: levelOrder[level]! } : undefined,
+            levelUp:
+              ranks && pending > 0
+                ? nextSkill(levelOrder, ranks, level)
+                : undefined,
+            upcoming:
+              level > 0 && level < 18 && levelOrder[level]
+                ? { level: level + 1, key: levelOrder[level]! }
+                : undefined,
             ...(ranks ? { ranks } : {}),
           }
         : undefined,
@@ -158,20 +235,66 @@ export function useHudModel(): HudModel {
         .sort((a, b) => b.value - a.value)
         .slice(0, 3)
         .map((m) => ({ key: m.key, label: m.label, value: m.value })),
-      augments: myAugments.map((name) => ({ name, rarity: findAugment(name)?.rarity })),
+      augments: myAugments.map((name) => ({
+        name,
+        rarity: findAugment(name)?.rarity,
+      })),
       power,
       stack,
       aphelios: game?.apheliosMain,
     };
-  }, [plan, threat, skillPlan, levelOrder, shopRaw, data, myAugments, damage, level, ranks, gold, champion, power, stack, game?.apheliosMain]);
+  }, [
+    plan,
+    threat,
+    skillPlan,
+    levelOrder,
+    shopRaw,
+    data,
+    myAugments,
+    damage,
+    level,
+    ranks,
+    gold,
+    champion,
+    power,
+    stack,
+    game?.apheliosMain,
+  ]);
 }
 
 /** Representative content for the Settings preview / layout editor when no game is running. */
 export function sampleHudModel(data: StaticData | null | undefined): HudModel {
-  const fake = (name: string, cost: number): Item => ({ id: -cost, name, cost, icon: "", from: [], into: [], tags: [], stats: {}, aram: true, sr: true, completed: true, plaintext: "", statLines: [], effects: [] });
-  const get = (name: string, cost = 3000) => (data && findItem(data, name)) || fake(name, cost);
-  const names = ["Luden's Echo", "Sorcerer's Shoes", "Shadowflame", "Rabadon's Deathcap", "Void Staff", "Zhonya's Hourglass"];
-  const path = names.map((n, i) => ({ item: get(n, 3000 + i), owned: i < 2, next: i === 2 }));
+  const fake = (name: string, cost: number): Item => ({
+    id: -cost,
+    name,
+    cost,
+    icon: "",
+    from: [],
+    into: [],
+    tags: [],
+    stats: {},
+    aram: true,
+    sr: true,
+    completed: true,
+    plaintext: "",
+    statLines: [],
+    effects: [],
+  });
+  const get = (name: string, cost = 3000) =>
+    (data && findItem(data, name)) || fake(name, cost);
+  const names = [
+    "Luden's Echo",
+    "Sorcerer's Shoes",
+    "Shadowflame",
+    "Rabadon's Deathcap",
+    "Void Staff",
+    "Zhonya's Hourglass",
+  ];
+  const path = names.map((n, i) => ({
+    item: get(n, 3000 + i),
+    owned: i < 2,
+    next: i === 2,
+  }));
   const rod = get("Needlessly Large Rod", 1250);
   const lux = data?.championsById.get("Lux");
   return {
@@ -179,13 +302,36 @@ export function sampleHudModel(data: StaticData | null | undefined): HudModel {
     phaseLabel: "Mid game",
     gold: 1650,
     shop: {
-      buyNow: [{ name: rod.name, icon: rod.icon, cost: rod.cost, reason: "Biggest step towards Shadowflame", affordable: true }],
-      saveFor: { name: path[2]!.item.name, icon: path[2]!.item.icon, need: 650 },
+      buyNow: [
+        {
+          name: rod.name,
+          icon: rod.icon,
+          cost: rod.cost,
+          reason: "Biggest step towards Shadowflame",
+          affordable: true,
+        },
+      ],
+      saveFor: {
+        name: path[2]!.item.name,
+        icon: path[2]!.item.icon,
+        need: 650,
+      },
       tip: "Enemy team heals a lot — pick up anti-heal next back",
     },
-    next: { item: path[2]!.item, affordable: false, missingGold: 650, component: rod },
+    next: {
+      item: path[2]!.item,
+      affordable: false,
+      missingGold: 650,
+      component: rod,
+    },
     path,
-    skill: { max: ["Q", "E", "W"], start: ["Q", "E", "W"], pending: 1, levelUp: "Q", upcoming: { level: 10, key: "Q" } },
+    skill: {
+      max: ["Q", "E", "W"],
+      start: ["Q", "E", "W"],
+      pending: 1,
+      levelUp: "Q",
+      upcoming: { level: 10, key: "Q" },
+    },
     damage: { ad: 0.58, ap: 0.34, tru: 0.08 },
     threats: [
       { key: "heal", label: "Healing", value: 0.82 },
@@ -202,7 +348,9 @@ export function sampleHudModel(data: StaticData | null | undefined): HudModel {
 
 /** True when `hud` + `model` would draw at least one widget. */
 export function hudHasContent(hud: HudSettings, model: HudModel): boolean {
-  return hud.order.some((w) => hud[WIDGET_FLAG[w]] && widgetHasContent(w, model));
+  return hud.order.some(
+    (w) => hud[WIDGET_FLAG[w]] && widgetHasContent(w, model),
+  );
 }
 
 function widgetHasContent(w: HudWidget, m: HudModel): boolean {
@@ -250,7 +398,14 @@ export function MiniHud() {
           {live.respawnIn ? ` · ${live.respawnIn}s` : ""} · {t("shop now")}
         </div>
       );
-      return <HoverFade hud={deathView(hud)} model={model} hotkey={hotkey} banner={banner} />;
+      return (
+        <HoverFade
+          hud={deathView(hud)}
+          model={model}
+          hotkey={hotkey}
+          banner={banner}
+        />
+      );
     }
     // Fade during normal play; fully visible when the game reports a reason to look.
     const wake = hudWakeReason({
@@ -258,14 +413,35 @@ export function MiniHud() {
       augmentCards: cardsUp,
       pendingSkill: model.skill?.pending,
       // Your next core item, or any real purchase (800 g+) the shop suggests — not a lone component.
-      canBuy: !!model.next?.affordable || !!model.shop?.buyNow.some((b) => b.affordable && b.cost >= MEANINGFUL_BUY),
+      canBuy:
+        !!model.next?.affordable ||
+        !!model.shop?.buyNow.some(
+          (b) => b.affordable && b.cost >= MEANINGFUL_BUY,
+        ),
       gameTime: live ? live.gameTime : 0,
     });
-    return <HoverFade hud={hud} model={model} hotkey={hotkey} dim={hud.idleDim && !wake} />;
+    return (
+      <HoverFade
+        hud={hud}
+        model={model}
+        hotkey={hotkey}
+        dim={hud.idleDim && !wake}
+      />
+    );
   }
   // Editing: always show something to position, even outside a game or with the HUD toggled off.
   const view = hudHasContent(hud, model) ? model : sampleHudModel(data);
-  return <HudEditor hud={hud} model={view} hotkey={hotkey} editKey={editKey} hidden={!enabled} hudKey={hudKey} sample={view !== model} />;
+  return (
+    <HudEditor
+      hud={hud}
+      model={view}
+      hotkey={hotkey}
+      editKey={editKey}
+      hidden={!enabled}
+      hudKey={hudKey}
+      sample={view !== model}
+    />
+  );
 }
 
 /**
@@ -273,7 +449,19 @@ export function MiniHud() {
  * is click-through, so it never gets hover events: poll the cursor (read-only) and compare it with
  * the panel's rect. Only polls while the option is on.
  */
-function HoverFade({ hud, model, hotkey, banner, dim = false }: { hud: HudSettings; model: HudModel; hotkey: string; banner?: ReactNode; dim?: boolean }) {
+function HoverFade({
+  hud,
+  model,
+  hotkey,
+  banner,
+  dim = false,
+}: {
+  hud: HudSettings;
+  model: HudModel;
+  hotkey: string;
+  banner?: ReactNode;
+  dim?: boolean;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [over, setOver] = useState(false);
   // Cursor position only (never clicks): hovering a faded HUD shows it in full.
@@ -289,7 +477,15 @@ function HoverFade({ hud, model, hotkey, banner, dim = false }: { hud: HudSettin
       const r = ref.current?.getBoundingClientRect();
       if (!alive) return;
       const pad = 6;
-      setOver(!!c && !!r && r.width > 0 && c[0] >= r.left - pad && c[0] <= r.right + pad && c[1] >= r.top - pad && c[1] <= r.bottom + pad);
+      setOver(
+        !!c &&
+          !!r &&
+          r.width > 0 &&
+          c[0] >= r.left - pad &&
+          c[0] <= r.right + pad &&
+          c[1] >= r.top - pad &&
+          c[1] <= r.bottom + pad,
+      );
     };
     const id = window.setInterval(() => void tick(), 120);
     return () => {
@@ -297,10 +493,27 @@ function HoverFade({ hud, model, hotkey, banner, dim = false }: { hud: HudSettin
       window.clearInterval(id);
     };
   }, [watch]);
-  const opacity = dim ? (over ? 1 : hud.idleOpacity) : !over || hud.hoverMode === "off" ? 1 : hud.hoverMode === "hide" ? 0 : hud.hoverOpacity;
+  const opacity = dim
+    ? over
+      ? 1
+      : hud.idleOpacity
+    : !over || hud.hoverMode === "off"
+      ? 1
+      : hud.hoverMode === "hide"
+        ? 0
+        : hud.hoverOpacity;
   return (
-    <div className={`nl-hover ${dim && !over ? "nl-idle" : ""}`} style={{ opacity, transition: "opacity 300ms ease" }}>
-      <HudCard hud={hud} model={model} hotkey={hotkey} panelRef={ref} banner={banner} />
+    <div
+      className={`nl-hover ${dim && !over ? "nl-idle" : ""}`}
+      style={{ opacity, transition: "opacity 300ms ease" }}
+    >
+      <HudCard
+        hud={hud}
+        model={model}
+        hotkey={hotkey}
+        panelRef={ref}
+        banner={banner}
+      />
     </div>
   );
 }
@@ -336,8 +549,12 @@ function useHudEditing(): boolean {
     document.documentElement.classList.toggle("nl-edit-on", editing);
     if (!editing) return;
     // This window's own safety net (the backend has one too).
-    const t = window.setTimeout(() => void bridge.setHudEdit(false), EDIT_TIMEOUT_MS);
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && void bridge.setHudEdit(false);
+    const t = window.setTimeout(
+      () => void bridge.setHudEdit(false),
+      EDIT_TIMEOUT_MS,
+    );
+    const onKey = (e: KeyboardEvent) =>
+      e.key === "Escape" && void bridge.setHudEdit(false);
     window.addEventListener("keydown", onKey);
     return () => {
       window.clearTimeout(t);
@@ -347,7 +564,10 @@ function useHudEditing(): boolean {
   return editing;
 }
 
-const saveHud = (patch: Partial<HudSettings>) => void actions.updateSettings({ hud: { ...hudOf(getState().settings), ...patch } });
+const saveHud = (patch: Partial<HudSettings>) =>
+  void actions.updateSettings({
+    hud: { ...hudOf(getState().settings), ...patch },
+  });
 
 interface Local {
   x: number;
@@ -367,7 +587,23 @@ interface DragState {
   width: number;
 }
 
-function HudEditor({ hud, model, hotkey, editKey, hidden, hudKey, sample }: { hud: HudSettings; model: HudModel; hotkey: string; editKey: string; hidden: boolean; hudKey: string; sample: boolean }) {
+function HudEditor({
+  hud,
+  model,
+  hotkey,
+  editKey,
+  hidden,
+  hudKey,
+  sample,
+}: {
+  hud: HudSettings;
+  model: HudModel;
+  hotkey: string;
+  editKey: string;
+  hidden: boolean;
+  hudKey: string;
+  sample: boolean;
+}) {
   // Tooltips (portaled to <body>) would pop up under the cursor while dragging the panel.
   useEffect(() => {
     document.body.classList.add("nl-editing");
@@ -392,7 +628,15 @@ function HudEditor({ hud, model, hotkey, editKey, hidden, hudKey, sample }: { hu
     e.preventDefault();
     e.stopPropagation();
     const r = panel.current.getBoundingClientRect();
-    drag.current = { kind, id: e.pointerId, dx: e.clientX - r.left, dy: e.clientY - r.top, startX: e.clientX, startScale: cur.scale, width: r.width };
+    drag.current = {
+      kind,
+      id: e.pointerId,
+      dx: e.clientX - r.left,
+      dy: e.clientY - r.top,
+      startX: e.clientX,
+      startScale: cur.scale,
+      width: r.width,
+    };
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     setLocal({ x: cur.x, y: cur.y, scale: cur.scale });
   };
@@ -402,49 +646,94 @@ function HudEditor({ hud, model, hotkey, editKey, hidden, hudKey, sample }: { hu
     const r = panel.current.getBoundingClientRect();
     const screen = { width: window.innerWidth, height: window.innerHeight };
     if (d.kind === "move") {
-      const res = dragToFrac({ left: e.clientX - d.dx, top: e.clientY - d.dy, width: r.width, height: r.height }, screen, MARGIN, SNAP);
-      setLocal({ x: res.x, y: res.y, scale: localRef.current?.scale ?? d.startScale, snapX: res.snapX, snapY: res.snapY });
+      const res = dragToFrac(
+        {
+          left: e.clientX - d.dx,
+          top: e.clientY - d.dy,
+          width: r.width,
+          height: r.height,
+        },
+        screen,
+        MARGIN,
+        SNAP,
+      );
+      setLocal({
+        x: res.x,
+        y: res.y,
+        scale: localRef.current?.scale ?? d.startScale,
+        snapX: res.snapX,
+        snapY: res.snapY,
+      });
     } else {
-      const scale = Math.round(Math.min(HUD_SCALE.max, Math.max(HUD_SCALE.min, d.startScale * ((d.width + (e.clientX - d.startX)) / d.width))) * 100) / 100;
+      const scale =
+        Math.round(
+          Math.min(
+            HUD_SCALE.max,
+            Math.max(
+              HUD_SCALE.min,
+              d.startScale * ((d.width + (e.clientX - d.startX)) / d.width),
+            ),
+          ) * 100,
+        ) / 100;
       const l = localRef.current;
       if (l) setLocal({ ...l, scale });
     }
   };
   const onUp = (e: ReactPointerEvent) => {
-      const d = drag.current;
-      if (!d || d.id !== e.pointerId) return;
-      drag.current = null;
-      const l = localRef.current;
-      if (l) {
-        setLocal({ x: l.x, y: l.y, scale: l.scale }); // keep it (sans guides) until the save lands
-        saveHud(d.kind === "move" ? { x: l.x, y: l.y } : { scale: l.scale });
-      }
+    const d = drag.current;
+    if (!d || d.id !== e.pointerId) return;
+    drag.current = null;
+    const l = localRef.current;
+    if (l) {
+      setLocal({ x: l.x, y: l.y, scale: l.scale }); // keep it (sans guides) until the save lands
+      saveHud(d.kind === "move" ? { x: l.x, y: l.y } : { scale: l.scale });
+    }
   };
   // Settings round-trip done: drop the local copy only once the saved values arrive (no jump).
   useEffect(() => {
     if (!drag.current) setLocal(null);
   }, [hud.x, hud.y, hud.scale]);
 
-  const step = (d: number) => saveHud({ scale: Math.round(Math.min(HUD_SCALE.max, Math.max(HUD_SCALE.min, hud.scale + d)) * 100) / 100 });
+  const step = (d: number) =>
+    saveHud({
+      scale:
+        Math.round(
+          Math.min(HUD_SCALE.max, Math.max(HUD_SCALE.min, hud.scale + d)) * 100,
+        ) / 100,
+    });
   const dragging = !!drag.current && drag.current.kind === "move";
 
   return (
     <div className="nl-edit">
       <div className="nl-edit-scrim" />
-      {dragging && local?.snapX && <div className={`nl-guide nl-guide-v nl-g-${local.snapX}`} />}
-      {dragging && local?.snapY && <div className={`nl-guide nl-guide-h nl-g-${local.snapY}`} />}
+      {dragging && local?.snapX && (
+        <div className={`nl-guide nl-guide-v nl-g-${local.snapX}`} />
+      )}
+      {dragging && local?.snapY && (
+        <div className={`nl-guide nl-guide-h nl-g-${local.snapY}`} />
+      )}
       <div className="nl-edit-banner">
         <strong>{tx("Edit HUD layout")}</strong>
-        <span>{tx("Drag the panel anywhere \u00b7 drag the corner to resize \u00b7 it snaps to edges and center")}</span>
+        <span>
+          {tx(
+            "Drag the panel anywhere \u00b7 drag the corner to resize \u00b7 it snaps to edges and center",
+          )}
+        </span>
         <span className="nl-edit-keys">
-          <span className="nl-kbd">Esc</span> or <span className="nl-kbd">{editKey || "Done"}</span> to finish
+          <span className="nl-kbd">Esc</span> or{" "}
+          <span className="nl-kbd">{editKey || "Done"}</span> to finish
         </span>
         {hidden && (
           <span className="nl-edit-warn">
-            The HUD is switched off — <span className="nl-kbd">{hudKey}</span> shows it in game
+            The HUD is switched off — <span className="nl-kbd">{hudKey}</span>{" "}
+            shows it in game
           </span>
         )}
-        {sample && <span className="nl-edit-note">{tx("Sample content \u2014 your build shows here in game")}</span>}
+        {sample && (
+          <span className="nl-edit-note">
+            {tx("Sample content \u2014 your build shows here in game")}
+          </span>
+        )}
       </div>
       <HudCard
         hud={view}
@@ -457,32 +746,70 @@ function HudEditor({ hud, model, hotkey, editKey, hidden, hudKey, sample }: { hu
         onPointerUp={onUp}
         onPointerCancel={onUp}
         toolbar={
-          <div className="nl-toolbar" onPointerDown={(e) => e.stopPropagation()}>
-            <span className="nl-grip" title="Drag to move" onPointerDown={onDown("move")}>
+          <div
+            className="nl-toolbar"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <span
+              className="nl-grip"
+              title="Drag to move"
+              onPointerDown={onDown("move")}
+            >
               <GripIcon />
               Move
             </span>
             <span className="nl-tb-group">
-              <button type="button" onClick={() => step(-0.05)} aria-label="Smaller">
+              <button
+                type="button"
+                onClick={() => step(-0.05)}
+                aria-label="Smaller"
+              >
                 −
               </button>
               <span className="nl-tb-val">{Math.round(cur.scale * 100)}%</span>
-              <button type="button" onClick={() => step(0.05)} aria-label="Bigger">
+              <button
+                type="button"
+                onClick={() => step(0.05)}
+                aria-label="Bigger"
+              >
                 +
               </button>
             </span>
-            <button type="button" onClick={() => saveHud({ collapsed: !hud.collapsed })}>
+            <button
+              type="button"
+              onClick={() => saveHud({ collapsed: !hud.collapsed })}
+            >
               {hud.collapsed ? "Expand" : "Collapse"}
             </button>
-            <button type="button" onClick={() => saveHud({ x: null, y: null, position: HUD_DEFAULTS.position, scale: HUD_DEFAULTS.scale })}>
+            <button
+              type="button"
+              onClick={() =>
+                saveHud({
+                  x: null,
+                  y: null,
+                  position: HUD_DEFAULTS.position,
+                  scale: HUD_DEFAULTS.scale,
+                })
+              }
+            >
               Reset
             </button>
-            <button type="button" className="nl-tb-done" onClick={() => void bridge.setHudEdit(false)}>
+            <button
+              type="button"
+              className="nl-tb-done"
+              onClick={() => void bridge.setHudEdit(false)}
+            >
               Done
             </button>
           </div>
         }
-        resizeHandle={<span className="nl-resize" onPointerDown={onDown("resize")} title="Drag to resize" />}
+        resizeHandle={
+          <span
+            className="nl-resize"
+            onPointerDown={onDown("resize")}
+            title="Drag to resize"
+          />
+        }
       />
     </div>
   );
@@ -513,7 +840,14 @@ const THREAT_ANSWER: Record<ThreatKey, string> = {
   poke: "sustain",
 };
 
-const WIDGET_LABEL: Record<HudWidget, string> = { shop: "Shop", path: "Build", skill: "Skills", threats: "Enemy", augments: "Augments", power: "Team power" };
+const WIDGET_LABEL: Record<HudWidget, string> = {
+  shop: "Shop",
+  path: "Build",
+  skill: "Skills",
+  threats: "Enemy",
+  augments: "Augments",
+  power: "Team power",
+};
 
 interface CardProps {
   hud: HudSettings;
@@ -534,7 +868,18 @@ interface CardProps {
 }
 
 /** The mini HUD panel, positioned over the game by its free-space fractions (or inline). */
-export function HudCard({ hud, model, hotkey, inline = false, editing = false, panelRef, toolbar, banner, resizeHandle, ...handlers }: CardProps) {
+export function HudCard({
+  hud,
+  model,
+  hotkey,
+  inline = false,
+  editing = false,
+  panelRef,
+  toolbar,
+  banner,
+  resizeHandle,
+  ...handlers
+}: CardProps) {
   if (!editing && !hudHasContent(hud, model)) return null;
   const c = hud.compact;
   const { x, y } = hudFrac(hud);
@@ -544,7 +889,17 @@ export function HudCard({ hud, model, hotkey, inline = false, editing = false, p
     "--fx": String(x),
     "--fy": String(y),
   } as CSSProperties;
-  const cls = ["nl-hud", c && "nl-compact", hud.collapsed && "nl-collapsed", inline && "nl-hud-inline", editing && "nl-hud-editing", y < 0.3 && "nl-tb-under", x > 0.5 && "nl-tb-right"].filter(Boolean).join(" ");
+  const cls = [
+    "nl-hud",
+    c && "nl-compact",
+    hud.collapsed && "nl-collapsed",
+    inline && "nl-hud-inline",
+    editing && "nl-hud-editing",
+    y < 0.3 && "nl-tb-under",
+    x > 0.5 && "nl-tb-right",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   if (hud.collapsed)
     return (
@@ -561,23 +916,29 @@ export function HudCard({ hud, model, hotkey, inline = false, editing = false, p
     .filter(([, el]) => el);
 
   return (
-    <div ref={panelRef} className={cls} style={style} {...handlers}>
-      {toolbar}
-      {banner}
-      {!c && <Head model={model} />}
-      {sections.map(([key, el]) => (
-        <section key={key} className={`nl-sec nl-sec-${key}`} aria-label={WIDGET_LABEL[key]}>
-          {el}
-        </section>
-      ))}
-      {hud.showHint && hotkey && !c && (
-        <div className="nl-hint">
-          <span className="nl-kbd">{hotkey}</span>
-          <span>{t("full view")}</span>
-        </div>
-      )}
-      {resizeHandle}
-    </div>
+    <TipsContext.Provider value={hud.showTips}>
+      <div ref={panelRef} className={cls} style={style} {...handlers}>
+        {toolbar}
+        {banner}
+        {!c && <Head model={model} />}
+        {sections.map(([key, el]) => (
+          <section
+            key={key}
+            className={`nl-sec nl-sec-${key}`}
+            aria-label={WIDGET_LABEL[key]}
+          >
+            {el}
+          </section>
+        ))}
+        {hud.showHint && hotkey && !c && (
+          <div className="nl-hint">
+            <span className="nl-kbd">{hotkey}</span>
+            <span>{t("full view")}</span>
+          </div>
+        )}
+        {resizeHandle}
+      </div>
+    </TipsContext.Provider>
   );
 }
 
@@ -604,12 +965,26 @@ function renderWidget(w: HudWidget, m: HudModel, c: boolean): ReactNode {
   }
 }
 
+/** "Show tips" (Settings): shop tips, why an item is suggested, the phase label. */
+const TipsContext = createContext(false);
+
 function Head({ model }: { model: HudModel }) {
+  const showTips = useContext(TipsContext);
   return (
     <div className="nl-hud-head">
-      {model.champion ? <Icon src={model.champion.icon} name={model.champion.name} className="nl-champ" /> : <Diamond />}
+      {model.champion ? (
+        <Icon
+          src={model.champion.icon}
+          name={model.champion.name}
+          className="nl-champ"
+        />
+      ) : (
+        <Diamond />
+      )}
       <span className="nl-brand">NEXIS</span>
-      {model.phaseLabel && <span className="nl-phase">{model.phaseLabel}</span>}
+      {model.phaseLabel && showTips && (
+        <span className="nl-phase">{model.phaseLabel}</span>
+      )}
       {model.gold !== undefined && (
         <span className="nl-head-gold">
           <Coin />
@@ -624,14 +999,32 @@ function Pill({ model }: { model: HudModel }) {
   const buy = model.shop?.buyNow[0];
   const save = model.shop?.saveFor;
   const next = model.next;
-  const icon = buy ? { src: buy.icon, name: buy.name } : save ? { src: save.icon, name: save.name } : next ? { src: next.item.icon, name: next.item.name } : undefined;
-  const text = buy ? "Buy" : save ? `−${fmtGold(save.need)}` : next ? (next.affordable ? "Buy" : next.goldUnknown ? "Next" : `−${fmtGold(next.missingGold)}`) : "Nexis";
+  const icon = buy
+    ? { src: buy.icon, name: buy.name }
+    : save
+      ? { src: save.icon, name: save.name }
+      : next
+        ? { src: next.item.icon, name: next.item.name }
+        : undefined;
+  const text = buy
+    ? "Buy"
+    : save
+      ? `−${fmtGold(save.need)}`
+      : next
+        ? next.affordable
+          ? "Buy"
+          : next.goldUnknown
+            ? "Next"
+            : `−${fmtGold(next.missingGold)}`
+        : "Nexis";
   const ok = buy ? buy.affordable !== false : !!next?.affordable && !save;
   const lvl = model.skill?.levelUp;
   return (
     <div className="nl-pill">
       <Diamond />
-      {icon && <Icon src={icon.src} name={icon.name} className="nl-pill-icon" />}
+      {icon && (
+        <Icon src={icon.src} name={icon.name} className="nl-pill-icon" />
+      )}
       <span className={`nl-pill-text ${ok ? "nl-ok" : ""}`}>{text}</span>
       {lvl && <span className={`nl-key nl-key-sm nl-key-up`}>{lvl}</span>}
     </div>
@@ -639,11 +1032,15 @@ function Pill({ model }: { model: HudModel }) {
 }
 
 function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
+  const showTips = useContext(TipsContext);
   const shop = m.shop;
   if (shop) {
     const save = shop.saveFor;
     const haveGold = m.gold;
-    const progress = save && haveGold !== undefined ? Math.min(1, Math.max(0, haveGold / (haveGold + save.need))) : undefined;
+    const progress =
+      save && haveGold !== undefined
+        ? Math.min(1, Math.max(0, haveGold / (haveGold + save.need)))
+        : undefined;
     if (c)
       return (
         <div className="nl-shop-c">
@@ -674,9 +1071,15 @@ function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
                 <div className="nl-buy-body">
                   <div className="nl-buy-top">
                     <span className="nl-buy-name">{b.name}</span>
-                    <span className={`nl-cost ${b.affordable === false ? "" : "nl-ok"}`}>{b.cost.toLocaleString("en-US")}</span>
+                    <span
+                      className={`nl-cost ${b.affordable === false ? "" : "nl-ok"}`}
+                    >
+                      {b.cost.toLocaleString("en-US")}
+                    </span>
                   </div>
-                  {b.reason && <div className="nl-reason-line">{b.reason}</div>}
+                  {b.reason && showTips && (
+                    <div className="nl-reason-line">{b.reason}</div>
+                  )}
                 </div>
               </div>
             ))}
@@ -688,9 +1091,12 @@ function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
             <div className="nl-buy-body">
               <div className="nl-buy-top">
                 <span className="nl-save-label">
-                  <span className="nl-label">{t("SAVE FOR")}</span> <span className="nl-buy-name">{save.name}</span>
+                  <span className="nl-label">{t("SAVE FOR")}</span>{" "}
+                  <span className="nl-buy-name">{save.name}</span>
                 </span>
-                <span className="nl-cost">{save.need.toLocaleString("en-US")} more</span>
+                <span className="nl-cost">
+                  {save.need.toLocaleString("en-US")} more
+                </span>
               </div>
               {progress !== undefined && (
                 <div className="nl-bar">
@@ -700,7 +1106,7 @@ function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
             </div>
           </div>
         )}
-        {shop.tip && <div className="nl-tip">{shop.tip}</div>}
+        {shop.tip && showTips && <div className="nl-tip">{shop.tip}</div>}
       </div>
     );
   }
@@ -712,14 +1118,22 @@ function ShopWidget({ m, c }: { m: HudModel; c: boolean }) {
         <div className="nl-icon-wrap">
           <Icon src={next.item.icon} name={next.item.name} />
         </div>
-        <span className={`nl-gold-pill ${next.affordable ? "nl-ok" : ""}`}>{next.affordable ? t("BUY") : next.goldUnknown ? t("NEXT") : `−${fmtGold(next.missingGold)}`}</span>
+        <span className={`nl-gold-pill ${next.affordable ? "nl-ok" : ""}`}>
+          {next.affordable
+            ? t("BUY")
+            : next.goldUnknown
+              ? t("NEXT")
+              : `−${fmtGold(next.missingGold)}`}
+        </span>
       </div>
     );
   return (
     <div className="nl-next">
       <Icon src={next.item.icon} name={next.item.name} />
       <div className="nl-next-body">
-        <div className={`nl-label ${next.affordable ? "nl-label-ok" : ""}`}>{next.affordable ? t("BUY NOW") : t("NEXT ITEM")}</div>
+        <div className={`nl-label ${next.affordable ? "nl-label-ok" : ""}`}>
+          {next.affordable ? t("BUY NOW") : t("NEXT ITEM")}
+        </div>
         <div className="nl-next-name">{next.item.name}</div>
         <div className={`nl-gold ${next.affordable ? "nl-ok" : ""}`}>
           {next.affordable
@@ -747,7 +1161,11 @@ function PathWidget({ m, c }: { m: HudModel; c: boolean }) {
       )}
       <div className="nl-path">
         {m.path.map((p, i) => (
-          <div key={`${p.item.id}-${i}`} className={`nl-slot ${p.owned ? "nl-owned" : ""} ${p.next ? "nl-is-next" : ""}`} title={p.item.name}>
+          <div
+            key={`${p.item.id}-${i}`}
+            className={`nl-slot ${p.owned ? "nl-owned" : ""} ${p.next ? "nl-is-next" : ""}`}
+            title={p.item.name}
+          >
             <Icon src={p.item.icon} name={p.item.name} />
             {p.owned && <Check />}
           </div>
@@ -760,14 +1178,18 @@ function PathWidget({ m, c }: { m: HudModel; c: boolean }) {
 function ApheliosRow({ w, c }: { w: ApheliosWeapon; c: boolean }) {
   const info = APHELIOS_INFO[w];
   return (
-    <div className="nl-aph" title={`${w}: ${info.role}. Pairs well with ${info.pairs.join(" or ")} (reference). League only shares your main-hand weapon with apps.`}>
+    <div
+      className="nl-aph"
+      title={`${w}: ${info.role}. Pairs well with ${info.pairs.join(" or ")} (reference). League only shares your main-hand weapon with apps.`}
+    >
       {!c && <span className="nl-label">{t("MAIN")}</span>}
       <span className="nl-aph-gun" style={{ color: info.color }}>
         ● {w}
       </span>
       {!c && (
         <span className="nl-aph-pairs">
-          pairs: {info.pairs.map((p) => (
+          pairs:{" "}
+          {info.pairs.map((p) => (
             <span key={p} style={{ color: APHELIOS_INFO[p].color }}>
               {p}{" "}
             </span>
@@ -778,13 +1200,26 @@ function ApheliosRow({ w, c }: { w: ApheliosWeapon; c: boolean }) {
   );
 }
 
-function StackGoalRow({ s, c }: { s: NonNullable<HudModel["stack"]>; c: boolean }) {
+function StackGoalRow({
+  s,
+  c,
+}: {
+  s: NonNullable<HudModel["stack"]>;
+  c: boolean;
+}) {
   return (
-    <div className="nl-stack" title={`${s.name}: ${s.stacks} stacks — ${s.unlock}. A rough pace; Nexis can't see your actual stacks.`}>
+    <div
+      className="nl-stack"
+      title={`${s.name}: ${s.stacks} stacks — ${s.unlock}. A rough pace; Nexis can't see your actual stacks.`}
+    >
       {!c && <span className="nl-label">{t("STACKS")}</span>}
       <span className="nl-stack-goal">
         <b>{s.stacks}</b>
-        {!c && <span className="nl-stack-by">{s.late ? `(was due ~${s.by}:00)` : `by ~${s.by}:00`}</span>}
+        {!c && (
+          <span className="nl-stack-by">
+            {s.late ? `(was due ~${s.by}:00)` : `by ~${s.by}:00`}
+          </span>
+        )}
       </span>
       {!c && <span className="nl-stack-unlock">{s.unlock}</span>}
     </div>
@@ -798,12 +1233,22 @@ const MAX_RANK: Record<SkillKey, number> = { Q: 5, W: 5, E: 5, R: 3 };
  * Q W E R with your points, the ability to level next highlighted: strongly with "Level up" when a
  * point is waiting, softly as "next" otherwise (before the game: your first skill).
  */
-function SkillWidget({ s, c }: { s: NonNullable<HudModel["skill"]>; c: boolean }) {
+function SkillWidget({
+  s,
+  c,
+}: {
+  s: NonNullable<HudModel["skill"]>;
+  c: boolean;
+}) {
   const hot = s.levelUp;
   const soft = hot ? undefined : (s.upcoming?.key ?? s.start[0]);
   return (
     <div className={`nl-skill nl-skill-row ${hot ? "nl-skill-hot" : ""}`}>
-      {!c && <span className={`nl-label ${hot ? "nl-label-ok" : ""}`}>{hot ? t("LEVEL UP") : t("NEXT")}</span>}
+      {!c && (
+        <span className={`nl-label ${hot ? "nl-label-ok" : ""}`}>
+          {hot ? t("LEVEL UP") : t("NEXT")}
+        </span>
+      )}
       <span className="nl-abilities">
         {SKILL_KEYS.map((k) => {
           const rank = s.ranks?.[k];
@@ -824,8 +1269,12 @@ function SkillWidget({ s, c }: { s: NonNullable<HudModel["skill"]>; c: boolean }
           );
         })}
       </span>
-      {hot && s.pending > 1 && <span className="nl-pending">+{s.pending - 1}</span>}
-      {!hot && !c && s.upcoming && <span className="nl-label nl-label-dim">LV {s.upcoming.level}</span>}
+      {hot && s.pending > 1 && (
+        <span className="nl-pending">+{s.pending - 1}</span>
+      )}
+      {!hot && !c && s.upcoming && (
+        <span className="nl-label nl-label-dim">LV {s.upcoming.level}</span>
+      )}
     </div>
   );
 }
@@ -842,11 +1291,16 @@ function ThreatWidget({ m, c }: { m: HudModel; c: boolean }) {
               <span className="nl-split-legend">
                 <span className="nl-ad">AD {pct(d.ad)}</span>
                 <span className="nl-ap">AP {pct(d.ap)}</span>
-                {d.tru >= 0.04 && <span className="nl-tru">TRUE {pct(d.tru)}</span>}
+                {d.tru >= 0.04 && (
+                  <span className="nl-tru">TRUE {pct(d.tru)}</span>
+                )}
               </span>
             </div>
           )}
-          <div className="nl-split-bar" title={`Physical ${pct(d.ad)} · Magic ${pct(d.ap)} · True ${pct(d.tru)}`}>
+          <div
+            className="nl-split-bar"
+            title={`Physical ${pct(d.ad)} · Magic ${pct(d.ap)} · True ${pct(d.tru)}`}
+          >
             <i className="nl-ad" style={{ flexGrow: d.ad }} />
             <i className="nl-ap" style={{ flexGrow: d.ap }} />
             {d.tru > 0 && <i className="nl-tru" style={{ flexGrow: d.tru }} />}
@@ -856,7 +1310,11 @@ function ThreatWidget({ m, c }: { m: HudModel; c: boolean }) {
       {m.threats.length > 0 && (
         <div className="nl-flags">
           {m.threats.map((t) => (
-            <span key={t.key} className={`nl-flag nl-t-${threatLevel(t.value)}`} title={`${t.label} — consider ${THREAT_ANSWER[t.key]}`}>
+            <span
+              key={t.key}
+              className={`nl-flag nl-t-${threatLevel(t.value)}`}
+              title={`${t.label} — consider ${THREAT_ANSWER[t.key]}`}
+            >
               <i />
               {SHORT_THREAT[t.key]}
               {!c && <small>{THREAT_ANSWER[t.key]}</small>}
@@ -870,10 +1328,17 @@ function ThreatWidget({ m, c }: { m: HudModel; c: boolean }) {
 
 /** One line of scoreboard information: team item-gold diff and your lane's (no prompts). */
 function PowerWidget({ p, c }: { p: HudPower; c: boolean }) {
-  const tone = (d: number) => (Math.abs(d) < 300 ? "nl-pw-even" : d > 0 ? "nl-pw-up" : "nl-pw-down");
-  const fmt = (d: number) => (Math.abs(d) < 300 ? "even" : `${d > 0 ? "+" : "−"}${fmtGold(Math.abs(Math.round(d)))}`);
+  const tone = (d: number) =>
+    Math.abs(d) < 300 ? "nl-pw-even" : d > 0 ? "nl-pw-up" : "nl-pw-down";
+  const fmt = (d: number) =>
+    Math.abs(d) < 300
+      ? "even"
+      : `${d > 0 ? "+" : "−"}${fmtGold(Math.abs(Math.round(d)))}`;
   return (
-    <div className="nl-power" title="Item gold difference from the scoreboard (your side − enemy side)">
+    <div
+      className="nl-power"
+      title="Item gold difference from the scoreboard (your side − enemy side)"
+    >
       {!c && <span className="nl-label">{t("ITEM GOLD")}</span>}
       {p.team !== undefined && (
         <span className="nl-pw">
@@ -888,15 +1353,28 @@ function PowerWidget({ p, c }: { p: HudPower; c: boolean }) {
         </span>
       )}
       {p.spike && (
-        <span className="nl-spike" title="Your next item and enemies close to finishing one (scoreboard items only)">
+        <span
+          className="nl-spike"
+          title="Your next item and enemies close to finishing one (scoreboard items only)"
+        >
           {p.spike.next && (
             <span>
-              <small>{t("Next spike")}</small> <b>{c ? fmtGold(p.spike.next.need) : `${p.spike.next.name} · ${fmtGold(p.spike.next.need)}`}</b>
+              <small>{t("Next spike")}</small>{" "}
+              <b>
+                {c
+                  ? fmtGold(p.spike.next.need)
+                  : `${p.spike.next.name} · ${fmtGold(p.spike.next.need)}`}
+              </b>
             </span>
           )}
           {p.spike.enemyClose.length > 0 && (
             <span className="nl-spike-enemy">
-              <small>{t("Enemy")}</small> <b>{c ? p.spike.enemyClose.length : `${p.spike.enemyClose.length} ${t(p.spike.enemyClose.length > 1 ? "items almost done" : "item almost done")}`}</b>
+              <small>{t("Enemy")}</small>{" "}
+              <b>
+                {c
+                  ? p.spike.enemyClose.length
+                  : `${p.spike.enemyClose.length} ${t(p.spike.enemyClose.length > 1 ? "items almost done" : "item almost done")}`}
+              </b>
             </span>
           )}
         </span>
@@ -912,7 +1390,9 @@ function AugmentWidget({ m, c }: { m: HudModel; c: boolean }) {
       <div className="nl-aug-list">
         {m.augments.map((a) => (
           <AugmentTip key={a.name} name={a.name}>
-            <span className={`nl-aug nl-r-${a.rarity ?? "silver"}`}>{c ? initialsOf(a.name) : a.name}</span>
+            <span className={`nl-aug nl-r-${a.rarity ?? "silver"}`}>
+              {c ? initialsOf(a.name) : a.name}
+            </span>
           </AugmentTip>
         ))}
       </div>
@@ -925,7 +1405,9 @@ function AugmentWidget({ m, c }: { m: HudModel; c: boolean }) {
 const pct = (v: number) => `${Math.round(v * 100)}%`;
 
 function fmtGold(n: number): string {
-  return n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k` : String(n);
+  return n >= 1000
+    ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k`
+    : String(n);
 }
 
 function initialsOf(name: string): string {
@@ -979,8 +1461,29 @@ function GripIcon() {
   );
 }
 
-function Icon({ src, name, className = "" }: { src: string; name: string; className?: string }) {
+function Icon({
+  src,
+  name,
+  className = "",
+}: {
+  src: string;
+  name: string;
+  className?: string;
+}) {
   const [failed, setFailed] = useState<string | null>(null);
-  if (!src || failed === src) return <div className={`nl-icon nl-icon-fallback ${className}`}>{initialsOf(name)}</div>;
-  return <img className={`nl-icon ${className}`} src={src} alt="" draggable={false} onError={() => setFailed(src)} />;
+  if (!src || failed === src)
+    return (
+      <div className={`nl-icon nl-icon-fallback ${className}`}>
+        {initialsOf(name)}
+      </div>
+    );
+  return (
+    <img
+      className={`nl-icon ${className}`}
+      src={src}
+      alt=""
+      draggable={false}
+      onError={() => setFailed(src)}
+    />
+  );
 }
