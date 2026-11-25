@@ -61,3 +61,13 @@ describe("resolveSource", () => {
     expect(resolveSource("sr", "opgg", { web: { opgg: st(0) }, webEnabled: true }).fallback?.reason).toBe("nodata");
   });
 });
+
+describe("missing builds warning (site format change)", () => {
+  it("warns when a web source has games but no builds", async () => {
+    const { missingBuildsWarning } = await import("./dataSource");
+    expect(missingBuildsWarning({ active: "opgg", stats: st(5000, "opgg") })).toMatch(/OP\.GG sent no builds/);
+    expect(missingBuildsWarning({ active: "opgg", stats: { ...st(5000, "opgg"), builds: [{ items: [1, 2, 3], games: 10, wins: 5 }] } })).toBeUndefined();
+    expect(missingBuildsWarning({ active: "hexmayhem", stats: { ...st(5000, "hexmayhem"), bestBuild: [1, 2, 3] } })).toBeUndefined();
+    expect(missingBuildsWarning({ active: "personal", stats: st(5) })).toBeUndefined();
+  });
+});

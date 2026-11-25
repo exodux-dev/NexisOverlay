@@ -110,3 +110,15 @@ export function fallbackNotice(r: SourceResolution, championName: string): strin
       return `${name} has no data for ${championName} — using Auto`;
   }
 }
+
+/**
+ * A web source that answered with stats but no builds is a sign its page format changed (as when
+ * OP.GG wrote "games" instead of "Games"): say so instead of silently showing template items.
+ */
+export function missingBuildsWarning(r: Pick<SourceResolution, "active" | "stats">): string | undefined {
+  if ((r.active !== "opgg" && r.active !== "hexmayhem") || !r.stats || r.stats.games <= 0) return undefined;
+  const hasBuilds = !!r.stats.builds?.length || !!r.stats.bestBuild?.length;
+  if (hasBuilds) return undefined;
+  const name = r.active === "opgg" ? "OP.GG" : "HexMayhem";
+  return `${name} sent no builds for this champion (the site may have changed) — items are the baseline`;
+}

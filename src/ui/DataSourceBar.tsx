@@ -2,7 +2,7 @@ import { actions, useApp, type Derived } from "../app/store";
 import { t as tx } from "../i18n";
 import { opggPosition } from "../engine/sources/opgg";
 import { POSITION_LABEL } from "../engine/sources/tierlists";
-import { DATA_SOURCE_LABEL, type DataSourceId } from "../engine/dataSource";
+import { DATA_SOURCE_LABEL, missingBuildsWarning, type DataSourceId } from "../engine/dataSource";
 import { Pill, Segmented } from "./controls";
 
 const HINT: Record<DataSourceId, string> = {
@@ -44,6 +44,11 @@ export function DataSourceBar({ d }: { d: Derived }) {
       {s.notice && (
         <Pill tone="gold" dot>
           {s.notice}
+        </Pill>
+      )}
+      {!s.notice && missingBuildsWarning(s) && (
+        <Pill tone="red" dot title="Settings → Data → Refresh stats now; if it stays, send Diagnostics">
+          {missingBuildsWarning(s)}
         </Pill>
       )}
     </div>
