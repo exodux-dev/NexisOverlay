@@ -8,6 +8,19 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-26.1",
+    title: "Overnight polish and fixes",
+    items: [
+      "Most screens and the in-game HUD now follow the language setting (Español / Português).",
+      "Build tab: type to add enemies; press / to jump to the champion search.",
+      "A red notice appears if a stats site sends no builds (a sign it changed its pages), instead of quietly showing template items.",
+      "Settings → Diagnostics → Report a problem: copies the report and opens a GitHub issue.",
+      "Fixed: a role picked by hand could carry into the next champ select; old Rift picks keep working with the new role names.",
+      "Fixed: pick detection is stricter (no false picks from a hover tooltip); the compact champ-select window stays visible.",
+      "Discord status can never freeze the app if Discord stops responding.",
+    ],
+  },
+  {
     id: "2026-11-25.3",
     title: "Español and Português",
     items: [
