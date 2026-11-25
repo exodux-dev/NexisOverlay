@@ -28,7 +28,7 @@ import type { ApheliosWeapon } from "../engine/live";
 import { AugmentTip, KeyAbilityTip } from "../ui/GameTips";
 import { threatLevel, type ThreatKey } from "../engine/threat";
 import type { AugmentRarity, Item, StaticData } from "../engine/types";
-import { damageSplit, nextSkill, pendingPoints, powerOf, shopOf, type DamageSplit, type HudPower } from "./hudLogic";
+import { damageSplit, hudWakeReason, nextSkill, pendingPoints, powerOf, shopOf, type DamageSplit, type HudPower } from "./hudLogic";
 import { HUD_DEFAULTS, HUD_SCALE, WIDGET_FLAG, deathView, dragToFrac, hudFrac, hudOf, type HudSettings, type HudWidget } from "./hudSettings";
 import "./layer.css";
 import "./minihud.css";
@@ -41,6 +41,9 @@ const SNAP = 18;
 const EDIT_TIMEOUT_MS = 185_000;
 
 // ------------------------------------------------------------------ model
+
+/** Gold for a purchase worth looking at the HUD for (wakes a faded HUD). */
+const MEANINGFUL_BUY = 800;
 
 export interface HudShopRow {
   name: string;
@@ -70,6 +73,8 @@ export interface HudModel {
     levelUp?: SkillKey;
     /** Planned skill for the next champion level (static reference when ranks are unknown). */
     upcoming?: { level: number; key: SkillKey };
+    /** Current ability ranks (live game), for the rank pips. */
+    ranks?: Record<SkillKey, number>;
   };
   damage?: DamageSplit;
   threats: Array<{ key: ThreatKey; label: string; value: number }>;
@@ -144,6 +149,7 @@ export function useHudModel(): HudModel {
             pending,
             levelUp: ranks && pending > 0 ? nextSkill(levelOrder, ranks, level) : undefined,
             upcoming: level > 0 && level < 18 && levelOrder[level] ? { level: level + 1, key: levelOrder[level]! } : undefined,
+            ...(ranks ? { ranks } : {}),
           }
         : undefined,
       damage,
@@ -231,6 +237,7 @@ export function MiniHud() {
   const demo = useApp((s) => s.demo);
   const model = useHudModel();
   const editing = useHudEditing();
+  const cardsUp = useApp((s) => s.cards.length > 0);
 
   if (!editing) {
     if (!enabled || !(live || demo)) return null;
@@ -245,7 +252,16 @@ export function MiniHud() {
       );
       return <HoverFade hud={deathView(hud)} model={model} hotkey={hotkey} banner={banner} />;
     }
-    return <HoverFade hud={hud} model={model} hotkey={hotkey} />;
+    // Fade during normal play; fully visible when the game reports a reason to look.
+    const wake = hudWakeReason({
+      dead: live?.me.dead,
+      augmentCards: cardsUp,
+      pendingSkill: model.skill?.pending,
+      // Your next core item, or any real purchase (800 g+) the shop suggests — not a lone component.
+      canBuy: !!model.next?.affordable || !!model.shop?.buyNow.some((b) => b.affordable && b.cost >= MEANINGFUL_BUY),
+      gameTime: live ? live.gameTime : 0,
+    });
+    return <HoverFade hud={hud} model={model} hotkey={hotkey} dim={hud.idleDim && !wake} />;
   }
   // Editing: always show something to position, even outside a game or with the HUD toggled off.
   const view = hudHasContent(hud, model) ? model : sampleHudModel(data);
@@ -257,11 +273,13 @@ export function MiniHud() {
  * is click-through, so it never gets hover events: poll the cursor (read-only) and compare it with
  * the panel's rect. Only polls while the option is on.
  */
-function HoverFade({ hud, model, hotkey, banner }: { hud: HudSettings; model: HudModel; hotkey: string; banner?: ReactNode }) {
+function HoverFade({ hud, model, hotkey, banner, dim = false }: { hud: HudSettings; model: HudModel; hotkey: string; banner?: ReactNode; dim?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const [over, setOver] = useState(false);
+  // Cursor position only (never clicks): hovering a faded HUD shows it in full.
+  const watch = hud.hoverMode !== "off" || dim;
   useEffect(() => {
-    if (hud.hoverMode === "off") {
+    if (!watch) {
       setOver(false);
       return;
     }
@@ -278,10 +296,10 @@ function HoverFade({ hud, model, hotkey, banner }: { hud: HudSettings; model: Hu
       alive = false;
       window.clearInterval(id);
     };
-  }, [hud.hoverMode]);
-  const opacity = !over ? 1 : hud.hoverMode === "hide" ? 0 : hud.hoverOpacity;
+  }, [watch]);
+  const opacity = dim ? (over ? 1 : hud.idleOpacity) : !over || hud.hoverMode === "off" ? 1 : hud.hoverMode === "hide" ? 0 : hud.hoverOpacity;
   return (
-    <div className="nl-hover" style={{ opacity, transition: "opacity 160ms ease" }}>
+    <div className={`nl-hover ${dim && !over ? "nl-idle" : ""}`} style={{ opacity, transition: "opacity 300ms ease" }}>
       <HudCard hud={hud} model={model} hotkey={hotkey} panelRef={ref} banner={banner} />
     </div>
   );
@@ -773,41 +791,41 @@ function StackGoalRow({ s, c }: { s: NonNullable<HudModel["stack"]>; c: boolean 
   );
 }
 
+const SKILL_KEYS: SkillKey[] = ["Q", "W", "E", "R"];
+const MAX_RANK: Record<SkillKey, number> = { Q: 5, W: 5, E: 5, R: 3 };
+
+/**
+ * Q W E R with your points, the ability to level next highlighted: strongly with "Level up" when a
+ * point is waiting, softly as "next" otherwise (before the game: your first skill).
+ */
 function SkillWidget({ s, c }: { s: NonNullable<HudModel["skill"]>; c: boolean }) {
+  const hot = s.levelUp;
+  const soft = hot ? undefined : (s.upcoming?.key ?? s.start[0]);
   return (
-    <div className="nl-skill">
-      {!c && <span className="nl-label">{t("MAX")}</span>}
-      <span className="nl-keys">
-        {s.max.map((k, i) => (
-          <span key={k} className="nl-key-group">
-            {i > 0 && <Chevron />}
-            <KeyAbilityTip k={k}>
-              <span className={`nl-key ${i === 0 ? "nl-key-first" : ""}`}>{k}</span>
+    <div className={`nl-skill nl-skill-row ${hot ? "nl-skill-hot" : ""}`}>
+      {!c && <span className={`nl-label ${hot ? "nl-label-ok" : ""}`}>{hot ? t("LEVEL UP") : t("NEXT")}</span>}
+      <span className="nl-abilities">
+        {SKILL_KEYS.map((k) => {
+          const rank = s.ranks?.[k];
+          const cls = k === hot ? "nl-ab-hot" : k === soft ? "nl-ab-soft" : "";
+          return (
+            <KeyAbilityTip key={k} k={k}>
+              <span className={`nl-ab ${cls}`}>
+                <span className="nl-ab-key">{k}</span>
+                {rank !== undefined && (
+                  <span className="nl-ab-pips" aria-label={`${k} rank ${rank}`}>
+                    {Array.from({ length: MAX_RANK[k] }, (_, i) => (
+                      <i key={i} className={i < rank ? "on" : ""} />
+                    ))}
+                  </span>
+                )}
+              </span>
             </KeyAbilityTip>
-          </span>
-        ))}
+          );
+        })}
       </span>
-      {s.levelUp ? (
-        <span className="nl-levelup" title="A skill point is available — this is the ability the build levels next">
-          {!c && <span className="nl-label nl-label-ok">{t("LEVEL UP")}</span>}
-          <KeyAbilityTip k={s.levelUp}>
-            <span className="nl-key nl-key-up">{s.levelUp}</span>
-          </KeyAbilityTip>
-          {s.pending > 1 && <span className="nl-pending">+{s.pending - 1}</span>}
-        </span>
-      ) : s.upcoming && !c ? (
-        <span className="nl-upcoming">
-          <span className="nl-label nl-label-dim">LV {s.upcoming.level}</span>
-          <KeyAbilityTip k={s.upcoming.key}>
-            <span className="nl-key nl-key-sm">{s.upcoming.key}</span>
-          </KeyAbilityTip>
-        </span>
-      ) : !c && s.start.length > 0 ? (
-        <span className="nl-upcoming">
-          <span className="nl-label nl-label-dim">{t("START")}</span>
-          <span className="nl-start-keys">{s.start.join(" ")}</span>
-        </span>
-      ) : null}
+      {hot && s.pending > 1 && <span className="nl-pending">+{s.pending - 1}</span>}
+      {!hot && !c && s.upcoming && <span className="nl-label nl-label-dim">LV {s.upcoming.level}</span>}
     </div>
   );
 }
@@ -926,14 +944,6 @@ function Check() {
     <svg className="nl-check" viewBox="0 0 16 16" aria-hidden="true">
       <circle cx="8" cy="8" r="7.5" />
       <path d="M4.6 8.3l2.2 2.2 4.6-4.8" />
-    </svg>
-  );
-}
-
-function Chevron() {
-  return (
-    <svg className="nl-chev" viewBox="0 0 8 12" aria-hidden="true">
-      <path d="M2 1.5L6.5 6 2 10.5" />
     </svg>
   );
 }

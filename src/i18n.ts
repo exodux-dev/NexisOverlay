@@ -433,6 +433,13 @@ const DICT: Record<string, [string, string]> = {
   "Search settings": ["Buscar ajustes", "Buscar configurações"],
   "No settings match": ["Ningún ajuste coincide con", "Nenhuma configuração corresponde a"],
 
+  "Fade during play": ["Atenuar durante la partida", "Esmaecer durante a partida"],
+  "Opacity while faded": ["Opacidad atenuada", "Opacidade esmaecida"],
+  "Mostly see-through while you play; fully visible when you're dead, have gold for your next item, have a skill point, see augments, in the first 90 s, or hover it": [
+    "Casi transparente mientras juegas; visible del todo al morir, con oro para tu próximo objeto, con un punto de habilidad, con aumentos en pantalla, los primeros 90 s o al pasar el ratón",
+    "Quase transparente enquanto você joga; totalmente visível ao morrer, com ouro para o próximo item, com ponto de habilidade, com aumentos na tela, nos primeiros 90 s ou ao passar o mouse",
+  ],
+
   // Hover tips & misc
   "Browse every champion": ["Ver todos los campeones", "Ver todos os campeões"],
   "Show another champion's guide": ["Ver la guía de otro campeón", "Ver o guia de outro campeão"],

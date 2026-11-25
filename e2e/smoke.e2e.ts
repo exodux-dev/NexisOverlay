@@ -692,3 +692,36 @@ test("Settings search finds settings across tabs", async ({ start }) => {
   await search.fill("");
   await expect(page.locator('[data-section="general"]')).toHaveAttribute("aria-selected", "true");
 });
+
+test("HUD fades during play and wakes when there's a reason to look", async ({ start, context }) => {
+  await start();
+  const hud = await context.newPage();
+  await hud.goto("/?view=hud");
+  await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
+  const game = liveGame() as ReturnType<typeof liveGame> & { activePlayer: Record<string, unknown> };
+  game.gameData.gameTime = 600;
+  game.activePlayer.currentGold = 0;
+  delete game.activePlayer.abilities; // no live ability ranks: no "skill point waiting"
+  await emit(hud, "live-game", game);
+  const wrap = hud.locator(".nl-hover");
+  await expect(wrap).toHaveClass(/nl-idle/);
+  // Enough gold for the next item: fully visible.
+  game.activePlayer.currentGold = 5000;
+  await emit(hud, "live-game", game);
+  await expect(wrap).not.toHaveClass(/nl-idle/);
+});
+
+test("HUD highlights the ability to level up next", async ({ start, context }) => {
+  await start();
+  const hud = await context.newPage();
+  await hud.goto("/?view=hud");
+  await hud.waitForFunction(() => (window as unknown as { __nexis?: { getState(): { status: string } } }).__nexis?.getState().status === "ready");
+  const game = liveGame() as ReturnType<typeof liveGame> & { activePlayer: Record<string, unknown> };
+  // Level 11 with 10 points spent: one point waiting.
+  game.activePlayer.abilities = { Q: { abilityLevel: 5 }, W: { abilityLevel: 1 }, E: { abilityLevel: 2 }, R: { abilityLevel: 2 } };
+  await emit(hud, "live-game", game);
+  const skill = hud.locator(".nl-skill");
+  await expect(skill).toContainText("LEVEL UP");
+  await expect(skill.locator(".nl-ab-hot")).toHaveCount(1);
+  await expect(skill.locator(".nl-ab")).toHaveCount(4);
+});

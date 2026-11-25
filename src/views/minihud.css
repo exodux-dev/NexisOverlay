@@ -1103,3 +1103,68 @@ body.nl-editing .tip {
 .nl-power:has(.nl-spike) {
   flex-wrap: wrap;
 }
+
+/* Skills: Q W E R with rank pips, the next one highlighted */
+.nl-skill-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.nl-abilities {
+  display: flex;
+  gap: 0.3em;
+}
+.nl-ab {
+  display: grid;
+  justify-items: center;
+  gap: 0.15em;
+  min-width: 1.9em;
+  padding: 0.2em 0.25em 0.25em;
+  border-radius: var(--nl-radius);
+  border: 1px solid rgba(var(--nl-tx), 0.14);
+  background: rgba(var(--nl-deep), 0.55);
+  opacity: 0.75;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.nl-ab-key {
+  font-weight: 800;
+  font-size: 0.95em;
+  color: var(--nl-cream);
+}
+.nl-ab-pips {
+  display: flex;
+  gap: 0.12em;
+}
+.nl-ab-pips i {
+  width: 0.28em;
+  height: 0.28em;
+  border-radius: 50%;
+  background: rgba(var(--nl-tx), 0.18);
+}
+.nl-ab-pips i.on {
+  background: var(--nl-gold-hi);
+}
+.nl-ab-soft {
+  opacity: 1;
+  border-color: rgba(var(--nl-hl), 0.6);
+}
+.nl-ab-hot {
+  opacity: 1;
+  border-color: var(--nl-ok);
+  background: rgba(var(--nl-ok-rgb), 0.18);
+  box-shadow: 0 0 0.7em rgba(var(--nl-ok-rgb), 0.55);
+  animation: nl-ab-pulse 1.4s ease-in-out infinite;
+}
+.nl-ab-hot .nl-ab-key {
+  color: var(--nl-ok-hi);
+}
+@keyframes nl-ab-pulse {
+  50% {
+    box-shadow: 0 0 1.1em rgba(var(--nl-ok-rgb), 0.85);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nl-ab-hot {
+    animation: none;
+  }
+}

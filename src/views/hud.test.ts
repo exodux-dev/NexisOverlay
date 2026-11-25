@@ -189,3 +189,21 @@ describe("death shop view", () => {
     expect(normalizeHud({}).deathShop).toBe(true);
   });
 });
+
+describe("HUD fade during play", () => {
+  it("wakes for death, augments, a skill point, gold for the next item and the opening", async () => {
+    const { hudWakeReason } = await import("./hudLogic");
+    const mid = { gameTime: 600 };
+    expect(hudWakeReason(mid)).toBeUndefined();
+    expect(hudWakeReason({ ...mid, dead: true })).toBe("dead");
+    expect(hudWakeReason({ ...mid, augmentCards: true })).toBe("augments");
+    expect(hudWakeReason({ ...mid, pendingSkill: 1 })).toBe("skill");
+    expect(hudWakeReason({ ...mid, canBuy: true })).toBe("buy");
+    expect(hudWakeReason({ gameTime: 30 })).toBe("start");
+  });
+  it("is on by default", async () => {
+    const { normalizeHud } = await import("./hudSettings");
+    expect(normalizeHud({})).toMatchObject({ idleDim: true, idleOpacity: 0.2 });
+    expect(normalizeHud({ idleDim: false, idleOpacity: 9 })).toMatchObject({ idleDim: false, idleOpacity: 0.6 });
+  });
+});

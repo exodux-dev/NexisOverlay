@@ -27,7 +27,7 @@ import { Icon, type IconName } from "../ui/icons";
 import { HudCard, hudHasContent, sampleHudModel, useHudModel } from "./MiniHud";
 import { useLeagueClientConnected } from "../ui/ImportToLeague";
 import { DiagnosticsSection } from "./Diagnostics";
-import { HUD_DEFAULTS, HUD_HOVER_OPACITY, HUD_OPACITY, HUD_POSITIONS, HUD_SCALE, WIDGET_FLAG, activeHudPreset, hudFrac, hudOf, hudPreset, moveWidget, presetFrac, type HudPosition, type HudPreset, type HudSettings, type HudWidget } from "./hudSettings";
+import { HUD_DEFAULTS, HUD_HOVER_OPACITY, HUD_IDLE_OPACITY, HUD_OPACITY, HUD_POSITIONS, HUD_SCALE, WIDGET_FLAG, activeHudPreset, hudFrac, hudOf, hudPreset, moveWidget, presetFrac, type HudPosition, type HudPreset, type HudSettings, type HudWidget } from "./hudSettings";
 
 const update = (patch: Partial<Settings>) => void actions.updateSettings(patch);
 const updateTheme = (patch: Partial<ThemeSettings>) => void actions.updateTheme(patch);
@@ -561,6 +561,7 @@ function HudLayoutCard() {
   const [scale, setScale] = useDebounced(hud.scale, (v) => updateHud({ scale: v }), 150);
   const [opacity, setOpacity] = useDebounced(hud.opacity, (v) => updateHud({ opacity: v }), 150);
   const [hoverOpacity, setHoverOpacity] = useDebounced(hud.hoverOpacity, (v) => updateHud({ hoverOpacity: v }), 150);
+  const [idleOpacity, setIdleOpacity] = useDebounced(hud.idleOpacity, (v) => updateHud({ idleOpacity: v }), 150);
   const view: HudSettings = { ...hud, scale, opacity };
   const usingLive = hudHasContent({ ...hud, collapsed: false }, live) && (live.path.length > 0 || !!live.next || !!live.shop);
   const model = usingLive ? live : sampleHudModel(data);
@@ -687,6 +688,13 @@ function HudLayoutCard() {
             label="Separate layout per mode"
             sub={s.hudPerMode ? `Mayhem, ARAM, Arena and Rift each keep their own HUD. You're editing the ${MODE_LABEL[effectiveMode(getState())]} layout.` : "Give Mayhem, ARAM, Arena and Rift their own HUD position and widgets"}
           />
+          <Toggle
+            checked={hud.idleDim}
+            onChange={(v) => updateHud({ idleDim: v })}
+            label="Fade during play"
+            sub="Mostly see-through while you play; fully visible when you're dead, have gold for your next item, have a skill point, see augments, in the first 90 s, or hover it"
+          />
+          {hud.idleDim && <Slider label="Opacity while faded" value={idleOpacity} min={HUD_IDLE_OPACITY.min} max={HUD_IDLE_OPACITY.max} step={0.05} format={pct0} onChange={setIdleOpacity} />}
           <Toggle checked={hud.collapsed} onChange={(v) => updateHud({ collapsed: v })} label="Collapse to a pill" sub="Just the next buy (and a skill point reminder) in a tiny pill" />
           <Toggle checked={hud.compact} onChange={(v) => updateHud({ compact: v })} label="Compact" sub="Icons only — a narrow strip with no labels" />
           <Toggle

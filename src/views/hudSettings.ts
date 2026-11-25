@@ -30,6 +30,10 @@ export interface HudSettings {
   showPower: boolean;
   /** "Ctrl+Shift+Space for full view" footer. */
   showHint: boolean;
+  /** Mostly see-through during normal play; fully visible when it matters (see hudWakeReason). */
+  idleDim: boolean;
+  /** Panel opacity while faded, 0.05..0.6. */
+  idleOpacity: number;
   /** While you're dead: expand the HUD with the shop first ("shop now"). */
   deathShop: boolean;
   /** ~8 s reminder to mark your augment pick in Nexis when an offer is detected. */
@@ -48,6 +52,7 @@ export interface HudSettings {
 
 export type HudHoverMode = "off" | "fade" | "hide";
 export const HUD_HOVER_OPACITY = { min: 0.05, max: 0.9 } as const;
+export const HUD_IDLE_OPACITY = { min: 0.05, max: 0.6 } as const;
 
 export const HUD_WIDGETS: HudWidget[] = ["shop", "path", "skill", "threats", "augments", "power"];
 
@@ -66,6 +71,8 @@ export const HUD_DEFAULTS: HudSettings = {
   showHint: true,
   pickReminder: true,
   deathShop: true,
+  idleDim: true,
+  idleOpacity: 0.2,
   order: [...HUD_WIDGETS],
   compact: false,
   collapsed: false,
@@ -172,6 +179,8 @@ export function normalizeHud(raw: unknown): HudSettings {
     showHint: bool("showHint"),
     pickReminder: bool("pickReminder"),
     deathShop: bool("deathShop"),
+    idleDim: bool("idleDim"),
+    idleOpacity: clampNum(r.idleOpacity, HUD_IDLE_OPACITY.min, HUD_IDLE_OPACITY.max, HUD_DEFAULTS.idleOpacity),
     order: normalizeOrder(r.order),
     compact: bool("compact"),
     collapsed: bool("collapsed"),

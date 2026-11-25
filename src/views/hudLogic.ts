@@ -135,3 +135,21 @@ export function powerOf(derived: unknown): HudPower | undefined {
   if (save || enemyClose.length) out.spike = { ...(save ? { next: { name: save.name, need: save.need } } : {}), enemyClose };
   return out.team === undefined && !out.lane && !out.spike ? undefined : out;
 }
+
+// ------------------------------------------------------------------ fade during play
+
+export type HudWakeReason = "dead" | "skill" | "buy" | "start" | "augments";
+
+/**
+ * Why the HUD should be fully visible right now (undefined = fade it). Only signals the game
+ * reports: dead (shop time), a skill point waiting, enough gold for your next item, the opening
+ * 90 seconds (starting items), or augment cards on screen. The shop panel itself isn't reported.
+ */
+export function hudWakeReason(o: { dead?: boolean; pendingSkill?: number; canBuy?: boolean; gameTime?: number; augmentCards?: boolean }): HudWakeReason | undefined {
+  if (o.dead) return "dead";
+  if (o.augmentCards) return "augments";
+  if ((o.pendingSkill ?? 0) > 0) return "skill";
+  if (o.canBuy) return "buy";
+  if ((o.gameTime ?? 0) < 90) return "start";
+  return undefined;
+}
