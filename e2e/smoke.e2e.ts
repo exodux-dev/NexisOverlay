@@ -641,3 +641,11 @@ test("in-game HUD follows the language", async ({ start, context }) => {
   await emit(hud, "live-game", liveGame());
   await expect(hud.locator(".nl-hud")).toContainText("BUILD PRINCIPAL");
 });
+
+test("Build tab: '/' focuses the champion search", async ({ start }) => {
+  const page = await start();
+  await act(page, "setTab", "build");
+  await page.locator("body").click({ position: { x: 5, y: 700 } });
+  await page.keyboard.press("/");
+  await expect(page.getByRole("combobox", { name: "Search champions for a build" })).toBeFocused();
+});

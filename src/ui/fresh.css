@@ -1010,3 +1010,11 @@
   justify-content: flex-end;
   gap: 8px;
 }
+.csearch-slash {
+  font: inherit;
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--fr-line-2);
+  border-radius: 5px;
+  padding: 0 6px;
+}

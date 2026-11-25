@@ -17,9 +17,11 @@ interface Props {
   exclude?: string[];
   label?: string;
   className?: string;
+  /** "/" anywhere (outside a text field) focuses this box. */
+  slashFocus?: boolean;
 }
 
-export function ChampionSearch({ champions, onPick, current, placeholder = "Search a champion…", exclude = [], label = "Search champion", className = "" }: Props) {
+export function ChampionSearch({ champions, onPick, current, placeholder = "Search a champion…", exclude = [], label = "Search champion", className = "", slashFocus = false }: Props) {
   const [q, setQ] = useState("");
   const [sel, setSel] = useState(0);
   const [open, setOpen] = useState(false);
@@ -27,6 +29,19 @@ export function ChampionSearch({ champions, onPick, current, placeholder = "Sear
   const listId = useId();
   const results = useMemo(() => (q.trim() ? searchChampions(q, champions.filter((c) => !exclude.includes(c.id)), 7) : []), [q, champions, exclude]);
   useEffect(() => setSel(0), [q]);
+  const input = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!slashFocus) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return;
+      e.preventDefault();
+      input.current?.focus();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [slashFocus]);
   useEffect(() => {
     const onDown = (e: MouseEvent) => !box.current?.contains(e.target as Node) && setOpen(false);
     document.addEventListener("mousedown", onDown);
@@ -46,6 +61,7 @@ export function ChampionSearch({ champions, onPick, current, placeholder = "Sear
       <label className="search csearch-field">
         {current && !q ? <GameIcon src={current.icon} name={current.name} size={26} round className="csearch-current" /> : <Icon name="search" size={16} />}
         <input
+          ref={input}
           value={q}
           onChange={(e) => {
             setQ(e.target.value);
@@ -76,6 +92,7 @@ export function ChampionSearch({ champions, onPick, current, placeholder = "Sear
           spellCheck={false}
           autoComplete="off"
         />
+        {!q && slashFocus && <kbd className="csearch-slash">/</kbd>}
         {q && (
           <button type="button" className="csearch-clear" onClick={() => setQ("")} aria-label="Clear">
             <Icon name="close" size={12} />

@@ -347,7 +347,7 @@ function ExplorePanel({ d }: { d: Derived }) {
   return (
     <div className="explore explore-v2">
       <div className="explore-pick">
-        <ChampionSearch champions={data.champions} current={me} onPick={(c) => actions.setExploreChampion(c.id)} label="Search champions for a build" />
+        <ChampionSearch champions={data.champions} current={me} onPick={(c) => actions.setExploreChampion(c.id)} label="Search champions for a build" slashFocus />
         <button type="button" className="btn explore-all" onClick={() => setPick({ kind: "me" })} title="Browse every champion">
           <Icon name="grid" size={15} />
           All champions
