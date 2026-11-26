@@ -93,9 +93,9 @@ export const HUD_DEFAULTS: HudSettings = {
   deathShop: true,
   showTips: false,
   levelArrows: true,
-  barX: 0.497,
-  barY: 0.935,
-  barGap: 0.05,
+  barX: 0.463,
+  barY: 0.932,
+  barGap: 0.0435,
   idleDim: true,
   idleOpacity: 0.2,
   order: [...HUD_WIDGETS],
@@ -216,9 +216,15 @@ export function normalizeHud(raw: unknown): HudSettings {
     deathShop: bool("deathShop"),
     showTips: bool("showTips"),
     levelArrows: bool("levelArrows"),
-    barX: clampNum(r.barX, BAR.x.min, BAR.x.max, HUD_DEFAULTS.barX),
-    barY: clampNum(r.barY, BAR.y.min, BAR.y.max, HUD_DEFAULTS.barY),
-    barGap: clampNum(r.barGap, BAR.gap.min, BAR.gap.max, HUD_DEFAULTS.barGap),
+    // The first default (0.497 / 0.935 / 0.05) was a guess; League's standard HUD measures as the
+    // new default. Settings still on the old guess move over; a calibrated bar is kept.
+    ...(r.barX === 0.497 && r.barY === 0.935 && r.barGap === 0.05
+      ? { barX: HUD_DEFAULTS.barX, barY: HUD_DEFAULTS.barY, barGap: HUD_DEFAULTS.barGap }
+      : {
+          barX: clampNum(r.barX, BAR.x.min, BAR.x.max, HUD_DEFAULTS.barX),
+          barY: clampNum(r.barY, BAR.y.min, BAR.y.max, HUD_DEFAULTS.barY),
+          barGap: clampNum(r.barGap, BAR.gap.min, BAR.gap.max, HUD_DEFAULTS.barGap),
+        }),
     idleDim: bool("idleDim"),
     idleOpacity: clampNum(r.idleOpacity, HUD_IDLE_OPACITY.min, HUD_IDLE_OPACITY.max, HUD_DEFAULTS.idleOpacity),
     order: normalizeOrder(r.order),

@@ -50,3 +50,16 @@ describe("live snapshot structural sharing", () => {
     expect(sameValue(new Map(), new Map())).toBe(false);
   });
 });
+
+describe("your level", () => {
+  it("follows activePlayer.level when the scoreboard list lags behind (level-up arrow)", () => {
+    const raw = demoAllGameData();
+    const meRaw = raw.allPlayers!.find((p) => p.riotIdGameName === raw.activePlayer!.riotIdGameName) ?? raw.allPlayers![0];
+    meRaw.level = 14;
+    raw.activePlayer!.level = 15;
+    expect(parse(raw).me.level).toBe(15);
+    // never goes down or past 18
+    raw.activePlayer!.level = 13;
+    expect(parse(raw).me.level).toBe(14);
+  });
+});

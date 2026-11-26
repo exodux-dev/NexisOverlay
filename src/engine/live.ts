@@ -100,6 +100,9 @@ export function parseLiveGame(raw: AllGameDataRaw, data: StaticData | null, meHi
     (hint ? mapped.find((p) => p.championName.toLowerCase() === hint.toLowerCase()) : undefined) ??
     mapped[0];
   mapped.forEach((p) => (p.isMe = p === me));
+  // Your level: the scoreboard list (allPlayers) can lag a level behind; activePlayer.level is
+  // what the game shows on your portrait. Without this the HUD misses a freshly earned skill point.
+  if (typeof active.level === "number" && active.level > me.level && active.level <= 18) me.level = active.level;
   const end = raw.events?.Events?.find((e) => e.EventName === "GameEnd");
   const tower = raw.events?.Events?.find((e) => e.EventName === "TurretKilled" && typeof e.EventTime === "number");
   const ab = active.abilities;

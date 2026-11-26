@@ -11,6 +11,8 @@ export const CHANGELOG: ChangelogEntry[] = [
     id: "2026-11-26.6",
     title: "Recording works again",
     items: [
+      "Fixed: the level-up arrow didn't appear when you leveled up. Nexis read your level from the scoreboard list, which can lag a level behind; it now uses your own level, like your portrait.",
+      "The level-up arrow now lines up with League's standard HUD out of the box (it was a guess before). Already calibrated? Your setting is kept.",
       "Fixed: GeForce Instant Replay / desktop capture turned off while Nexis was running. Nexis no longer hides its windows from screen capture (recorders saw that as protected content); the augment reader now blacks out Nexis's own badges in its screenshot instead.",
       "Your recordings and clips (GeForce, OBS, Discord) now include the Nexis overlay.",
     ],

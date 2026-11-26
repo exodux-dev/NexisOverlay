@@ -229,3 +229,10 @@ describe("farming widget", () => {
     expect(normalizeHud({ showFarm: true }).showFarm).toBe(true);
   });
 });
+
+describe("ability bar default", () => {
+  it("moves the old guessed default to League's measured bar, keeps a calibrated one", () => {
+    expect(normalizeHud({ barX: 0.497, barY: 0.935, barGap: 0.05 })).toMatchObject({ barX: HUD_DEFAULTS.barX, barY: HUD_DEFAULTS.barY, barGap: HUD_DEFAULTS.barGap });
+    expect(normalizeHud({ barX: 0.48, barY: 0.94, barGap: 0.05 })).toMatchObject({ barX: 0.48, barY: 0.94, barGap: 0.05 });
+  });
+});
