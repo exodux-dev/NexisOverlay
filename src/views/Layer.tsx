@@ -59,6 +59,9 @@ export default function Layer() {
 
 /** Tells the backend where we draw (a few times a second, only when it changed). */
 function CaptureMask() {
+  // The slow interval (style-only animations) runs only in a game; outside one, changes still
+  // come through the MutationObserver (e.g. the calibration preview), so it costs nothing idle.
+  const inGame = useApp((s) => !!s.live);
   useEffect(() => {
     if (!bridge.isTauri) return;
     let last = "";
@@ -82,13 +85,13 @@ function CaptureMask() {
     const obs = new MutationObserver(soon);
     const root = document.querySelector(".nl-root");
     if (root) obs.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["style", "class"] });
-    const id = window.setInterval(tick, 400);
+    const id = inGame ? window.setInterval(tick, 400) : 0;
     return () => {
-      window.clearInterval(id);
+      if (id) window.clearInterval(id);
       obs.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [inGame]);
   return null;
 }
 

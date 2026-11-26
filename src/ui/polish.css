@@ -1224,3 +1224,41 @@
     flex-wrap: wrap;
   }
 }
+
+/* Foldable cards (Card collapseId): the title is the toggle */
+.card-title.card-fold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 2px 6px 2px 2px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.card-title.card-fold:hover {
+  background: var(--panel-2);
+}
+.card-title.card-fold:focus-visible {
+  outline: 2px solid var(--focus, var(--accent));
+  outline-offset: 2px;
+}
+.card-fold-chev {
+  opacity: 0.45;
+  transition: transform 0.18s, opacity 0.15s;
+}
+.card-title.card-fold:hover .card-fold-chev {
+  opacity: 0.9;
+}
+.card-collapsed .card-fold-chev {
+  transform: rotate(-90deg);
+}
+.card-collapsed > .card-head {
+  margin-bottom: 0;
+}
+.card-collapsed {
+  opacity: 0.85;
+}

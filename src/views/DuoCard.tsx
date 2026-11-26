@@ -57,7 +57,7 @@ export function DuoCard({ d }: { d: Derived }) {
     `${(r.winRate * 100).toFixed(1)}% ${metric}${r.avgPlace !== undefined ? ` · avg place ${r.avgPlace.toFixed(2)}` : ""} · ${r.games.toLocaleString("en-US")} games`;
 
   return (
-    <Card title="Duo partners" icon="user" className="duo-card" extra={<span className="dim small">OP.GG {arena ? "Arena" : "bot lane"}</span>}>
+    <Card collapseId="build.duo" title="Duo partners" icon="user" className="duo-card" extra={<span className="dim small">OP.GG {arena ? "Arena" : "bot lane"}</span>}>
       {rows === "loading" ? (
         <span className="dim small">{tx("Loading partners\u2026")}</span>
       ) : (

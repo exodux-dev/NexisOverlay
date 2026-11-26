@@ -71,7 +71,7 @@ export function MatchupsCard({ d }: { d: Derived }) {
   const oppRow = opp ? rows.find((r) => r.champion.id === opp.id) : undefined;
 
   return (
-    <Card title="Matchups" icon="enemies" extra={<span className="dim small">OP.GG · {me.name}'s win rate</span>} className="mu-card">
+    <Card collapseId="build.matchups" title="Matchups" icon="enemies" extra={<span className="dim small">OP.GG · {me.name}'s win rate</span>} className="mu-card">
       {opp && (
         <div className={`mu-lane ${oppRow ? (oppRow.winRate >= 0.5 ? "mu-good" : "mu-bad") : ""}`}>
           <GameIcon src={opp.icon} name={opp.name} size={42} round />

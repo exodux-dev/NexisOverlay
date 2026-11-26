@@ -171,6 +171,8 @@ export interface Settings {
   srRole: string;
   /** Hide player names / Riot IDs everywhere (safe to show on stream). */
   streamerMode: boolean;
+  /** Cards the user collapsed (Card collapseId), e.g. "build.boots". */
+  collapsedCards: string[];
   /** Mark your augment pick automatically when only the chosen card is left on screen. */
   detectPicks: boolean;
   theme: ThemeSettings;
@@ -229,6 +231,7 @@ export const DEFAULT_SETTINGS: Settings = {
   badgePlacement: "above",
   detectPicks: true,
   streamerMode: false,
+  collapsedCards: [],
   srRole: "",
   alwaysOnTop: false,
   language: "en",
@@ -249,6 +252,7 @@ export const DEFAULT_SETTINGS: Settings = {
 export function normalizeSettings(raw: Partial<Settings> | Record<string, unknown>, migrate = false): Settings {
   const r = raw as Partial<Settings>;
   const s: Settings = { ...DEFAULT_SETTINGS, ...r, theme: { ...DEFAULT_THEME, ...(r.theme ?? {}) }, buildStyles: { ...(r.buildStyles ?? {}) }, hud: normalizeHud(r.hud) };
+  s.collapsedCards = Array.isArray(r.collapsedCards) ? r.collapsedCards.filter((x): x is string => typeof x === "string").slice(0, 50) : [];
   // v0.1 defaults collided with the NVIDIA overlay (Alt+Z) — move stored *old defaults* off it,
   // once, at startup (a user who deliberately picks Alt+Z later keeps it).
   // The HUD's default got leaner (next buy, skills, augments): a HUD whose widgets were never

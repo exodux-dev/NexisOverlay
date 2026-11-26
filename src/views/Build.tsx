@@ -116,7 +116,7 @@ function BuildOrder({ plan }: { plan: BuildPlan }) {
 
 function Situational({ plan }: { plan: BuildPlan }) {
   return (
-    <Card title="Situational counters" icon="shield" extra={<span className="dim small">{tx("Based on the enemy team")}</span>}>
+    <Card collapseId="build.counters" title="Situational counters" icon="shield" extra={<span className="dim small">{tx("Based on the enemy team")}</span>}>
       {plan.situational.length === 0 ? (
         <Empty title="No urgent counters" icon="check">
           Their team doesn't force any specific answer — stick to the core build.
@@ -168,7 +168,7 @@ function Boots({ plan, d }: { plan: BuildPlan; d: Derived }) {
   // Boots already listed under "Most played" (with their numbers) aren't repeated as alternatives.
   const alts = plan.bootsAlternatives.filter((a) => !plan.bootsOptions.some((o) => o.item.id === a.item.id) || a.reason.startsWith("Auto"));
   return (
-    <Card title="Boots" icon="boot">
+    <Card collapseId="build.boots" title="Boots" icon="boot">
       <div className="boots-main">
         <Tip content={<ItemTooltip item={b.item} rec={b} />}>
           <GameIcon src={b.item.icon} name={b.item.name} size={44} />
@@ -208,6 +208,7 @@ function Starter({ plan, startGold, d }: { plan: BuildPlan; startGold: number; d
   const fromStats = plan.starterSource === "stats";
   return (
     <Card
+      collapseId="build.starter"
       title={fromStats && d.gameMode === "arena" ? "First shop" : "Starting items"}
       icon="play"
       extra={
@@ -244,7 +245,7 @@ function Starter({ plan, startGold, d }: { plan: BuildPlan; startGold: number; d
 function Prismatic({ plan }: { plan: BuildPlan }) {
   if (!plan.prismatic.length) return null;
   return (
-    <Card title="Prismatic items" icon="spark" className="prism-card" extra={<span className="dim small">{tx("From Prismatic anvils & augments")}</span>}>
+    <Card collapseId="build.prismatic" title="Prismatic items" icon="spark" className="prism-card" extra={<span className="dim small">{tx("From Prismatic anvils & augments")}</span>}>
       <ul className="prism-list">
         {plan.prismatic.map((rec) => (
           <li key={rec.item.id} className={`prism ${rec.owned ? "sit-owned" : ""}`}>
@@ -272,7 +273,7 @@ function Prismatic({ plan }: { plan: BuildPlan }) {
 function Swaps({ plan }: { plan: BuildPlan }) {
   if (!plan.swaps.length) return null;
   return (
-    <Card title="Late-game swaps" icon="swap">
+    <Card collapseId="build.swaps" title="Late-game swaps" icon="swap">
       <ul className="swap-list">
         {plan.swaps.map((s) => (
           <li key={s.sell.id}>
@@ -587,7 +588,7 @@ function YourBestPicks({ d }: { d: Derived }) {
   }, [cs, data, history, rows, d.gameMode, d.position]);
   if (!picks.length) return null;
   return (
-    <Card title="Your best picks" icon="star" className="ybp-card" extra={<span className="dim small">From your games{d.gameMode === "sr" ? " · this role" : ""}</span>}>
+    <Card collapseId="build.bestPicks" title="Your best picks" icon="star" className="ybp-card" extra={<span className="dim small">From your games{d.gameMode === "sr" ? " · this role" : ""}</span>}>
       <ul className="ybp-list">
         {picks.map((p) => (
           <li key={p.champion.id}>

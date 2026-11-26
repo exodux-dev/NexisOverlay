@@ -4,6 +4,7 @@ import { t as tx } from "../i18n";
 import { t, tn } from "../i18n";
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "./icons";
+import { actions, getState, useApp } from "../app/store";
 
 export function Card({
   title,
@@ -12,6 +13,7 @@ export function Card({
   children,
   className = "",
   pad = true,
+  collapseId,
 }: {
   title?: ReactNode;
   icon?: IconName;
@@ -19,21 +21,36 @@ export function Card({
   children: ReactNode;
   className?: string;
   pad?: boolean;
+  /** Lets the user fold the card to its header (remembered in settings.collapsedCards). */
+  collapseId?: string;
 }) {
+  const collapsed = useApp((s) => (collapseId ? s.settings.collapsedCards.includes(collapseId) : false));
+  const toggle = () => {
+    if (!collapseId) return;
+    const cur = getState().settings.collapsedCards;
+    void actions.updateSettings({ collapsedCards: collapsed ? cur.filter((x) => x !== collapseId) : [...cur, collapseId] });
+  };
   return (
-    <section className={`card ${pad ? "" : "card-flush"} ${className}`}>
+    <section className={`card ${pad ? "" : "card-flush"} ${collapsed ? "card-collapsed" : ""} ${className}`}>
       {(title || extra) && (
         <header className="card-head">
-          {title && (
-            <h3 className="card-title">
-              {icon && <Icon name={icon} size={15} />}
-              {tn(title)}
-            </h3>
-          )}
-          {extra && <div className="card-extra">{tn(extra)}</div>}
+          {title &&
+            (collapseId ? (
+              <button type="button" className="card-title card-fold" onClick={toggle} aria-expanded={!collapsed} title={collapsed ? "Show this card" : "Hide this card"}>
+                {icon && <Icon name={icon} size={15} />}
+                {tn(title)}
+                <Icon name="chevronDown" size={14} className="card-fold-chev" />
+              </button>
+            ) : (
+              <h3 className="card-title">
+                {icon && <Icon name={icon} size={15} />}
+                {tn(title)}
+              </h3>
+            ))}
+          {extra && !collapsed && <div className="card-extra">{tn(extra)}</div>}
         </header>
       )}
-      {children}
+      {!collapsed && children}
     </section>
   );
 }
