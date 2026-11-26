@@ -52,7 +52,7 @@ pub struct ScanResult {
 pub const PREVIEW_WIDTH: u32 = 960;
 
 #[cfg(windows)]
-pub fn scan(region: Region, debug: bool) -> Result<ScanResult, String> {
+pub fn scan(region: Region, mask: &[Region], debug: bool) -> Result<ScanResult, String> {
     use image::imageops;
     use windows::Graphics::Imaging::{BitmapPixelFormat, SoftwareBitmap};
     use windows::Media::Ocr::OcrEngine;
@@ -94,6 +94,16 @@ pub fn scan(region: Region, debug: bool) -> Result<ScanResult, String> {
             Err(_) => full_crop(&mut preview, &mut screen)?,
         }
     };
+
+    // Black out our own overlay (badges, HUD panel, the open main window) so OCR only sees the game.
+    for (px, py, pw, ph) in mask_rects(region, mask, mw, mh) {
+        let (iw, ih) = (crop.width(), crop.height());
+        for yy in py.min(ih)..(py + ph).min(ih) {
+            for xx in px.min(iw)..(px + pw).min(iw) {
+                crop.put_pixel(xx, yy, image::Rgba([0, 0, 0, 255]));
+            }
+        }
+    }
 
     let max_dim = OcrEngine::MaxImageDimension().map_err(|e| e.to_string())?;
     if crop.width() > max_dim || crop.height() > max_dim {
@@ -208,8 +218,26 @@ pub fn crop_rect(region: Region, sw: u32, sh: u32) -> (u32, u32, u32, u32) {
     (x, y, w, h)
 }
 
+/// Mask rectangles (fractions of the screen) as pixel rects inside the `region` crop of a
+/// `sw` x `sh` screen; rects outside the crop are dropped, partial ones are clipped.
+#[cfg_attr(not(windows), allow(dead_code))]
+pub fn mask_rects(region: Region, mask: &[Region], sw: u32, sh: u32) -> Vec<(u32, u32, u32, u32)> {
+    let (cx, cy, cw, ch) = crop_rect(region, sw, sh);
+    let (fw, fh) = (sw as f32, sh as f32);
+    mask.iter()
+        .filter(|m| m.w.is_finite() && m.h.is_finite() && m.x.is_finite() && m.y.is_finite() && m.w > 0.0 && m.h > 0.0)
+        .filter_map(|m| {
+            let x0 = (m.x * fw).floor().max(cx as f32);
+            let y0 = (m.y * fh).floor().max(cy as f32);
+            let x1 = ((m.x + m.w) * fw).ceil().min((cx + cw) as f32);
+            let y1 = ((m.y + m.h) * fh).ceil().min((cy + ch) as f32);
+            (x1 > x0 && y1 > y0).then(|| ((x0 as u32) - cx, (y0 as u32) - cy, (x1 - x0) as u32, (y1 - y0) as u32))
+        })
+        .collect()
+}
+
 #[cfg(not(windows))]
-pub fn scan(_region: Region, _debug: bool) -> Result<ScanResult, String> {
+pub fn scan(_region: Region, _mask: &[Region], _debug: bool) -> Result<ScanResult, String> {
     Err("Screen scanning uses the built-in Windows OCR engine and is only available on Windows. Pick your augments manually instead.".into())
 }
 
@@ -222,5 +250,16 @@ mod tests {
         let edge = Region { x: 1.0, y: 1.0, w: 1.0, h: 1.0 };
         let (x, y, w, h) = crop_rect(edge, 1920, 1080);
         assert!(x + w <= 1920 && y + h <= 1080 && w >= 1 && h >= 1);
+    }
+
+    #[test]
+    fn mask_rects_clip_to_the_scan_crop() {
+        let region = Region { x: 0.25, y: 0.25, w: 0.5, h: 0.5 }; // crop (480, 270, 960, 540) on 1080p
+        let inside = Region { x: 0.5, y: 0.5, w: 0.1, h: 0.1 };
+        let partial = Region { x: 0.0, y: 0.0, w: 0.3, h: 0.3 };
+        let outside = Region { x: 0.9, y: 0.9, w: 0.05, h: 0.05 };
+        let bad = Region { x: f32::NAN, y: 0.0, w: 1.0, h: 1.0 };
+        let r = mask_rects(region, &[inside, partial, outside, bad], 1920, 1080);
+        assert_eq!(r, vec![(480, 270, 192, 108), (0, 0, 96, 54)]);
     }
 }

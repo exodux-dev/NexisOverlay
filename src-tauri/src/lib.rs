@@ -58,6 +58,11 @@ pub struct AppState {
     augment_mode: AtomicBool,
     /// League client credentials found by the champ-select watcher (used by the import commands).
     lcu_creds: Mutex<Option<lcu::Credentials>>,
+    /// Where the HUD layer is drawing right now (badges, panel, notices), as fractions of the
+    /// screen. Blacked out of augment scans so OCR never reads our own text. This replaces
+    /// excluding our windows from capture, which made recorders (GeForce Instant Replay /
+    /// desktop capture) treat the screen as protected content and switch themselves off.
+    capture_mask: Mutex<Vec<capture::Region>>,
 }
 
 impl AppState {
@@ -192,25 +197,40 @@ fn place_layer(hud: &WebviewWindow) {
     }
 }
 
-/// Keep our own windows out of screenshots so OCR never reads the overlay itself.
-#[cfg(windows)]
-fn exclude_from_capture(w: &WebviewWindow) {
-    use windows::Win32::Foundation::HWND;
-    use windows::Win32::UI::WindowsAndMessaging::{SetWindowDisplayAffinity, WDA_EXCLUDEFROMCAPTURE};
-    if let Ok(h) = w.hwnd() {
-        unsafe {
-            let _ = SetWindowDisplayAffinity(HWND(h.0 as _), WDA_EXCLUDEFROMCAPTURE);
-        }
+/// HUD layer → where it draws (fractions of the screen), so scans can black those spots out.
+#[tauri::command]
+fn set_capture_mask(state: tauri::State<AppState>, rects: Vec<capture::Region>) {
+    if let Ok(mut m) = state.capture_mask.lock() {
+        *m = rects.into_iter().take(64).collect();
     }
 }
-#[cfg(not(windows))]
-fn exclude_from_capture(_w: &WebviewWindow) {}
+
+/// Everything of ours on screen during a scan: the HUD layer's drawn areas, plus the main
+/// window when it is open (as fractions of the primary monitor).
+fn capture_mask(app: &AppHandle) -> Vec<capture::Region> {
+    let mut out = app.state::<AppState>().capture_mask.lock().map(|m| m.clone()).unwrap_or_default();
+    if let Some(w) = main_window(app) {
+        if w.is_visible().unwrap_or(false) && !w.is_minimized().unwrap_or(false) {
+            if let (Ok(Some(mon)), Ok(pos), Ok(size)) = (w.primary_monitor(), w.outer_position(), w.outer_size()) {
+                let (mp, ms) = (mon.position(), mon.size());
+                let (mw, mh) = (ms.width.max(1) as f32, ms.height.max(1) as f32);
+                out.push(capture::Region {
+                    x: (pos.x - mp.x) as f32 / mw,
+                    y: (pos.y - mp.y) as f32 / mh,
+                    w: size.width as f32 / mw,
+                    h: size.height as f32 / mh,
+                });
+            }
+        }
+    }
+    out
+}
 
 fn run_scan(app: AppHandle) {
     let region = app.state::<AppState>().scan_region();
     tauri::async_runtime::spawn(async move {
         let _ = app.emit("augment-scan-started", ());
-        let payload = scan_payload(region, false, false).await;
+        let payload = scan_payload(&app, region, false, false).await;
         let _ = app.emit("augment-scan", payload);
         show_main(&app);
         let _ = app.emit("navigate", "augments");
@@ -218,8 +238,9 @@ fn run_scan(app: AppHandle) {
 }
 
 /// Run one scan off the async runtime and wrap it as the `augment-scan` payload (also logged).
-async fn scan_payload(region: capture::Region, auto: bool, debug: bool) -> Value {
-    let result = tauri::async_runtime::spawn_blocking(move || capture::scan(region, debug)).await;
+async fn scan_payload(app: &AppHandle, region: capture::Region, auto: bool, debug: bool) -> Value {
+    let mask = capture_mask(app);
+    let result = tauri::async_runtime::spawn_blocking(move || capture::scan(region, &mask, debug)).await;
     match result {
         Ok(Ok(scan)) => {
             diag::scan_ok(auto, scan.lines.len(), scan.millis);
@@ -364,7 +385,7 @@ async fn auto_detect_loop(app: AppHandle) {
             continue;
         }
         let region = state.scan_region();
-        let payload = scan_payload(region, true, false).await;
+        let payload = scan_payload(&app, region, true, false).await;
         if payload["ok"].as_bool() == Some(true) {
             last_error_sent = false;
             let _ = app.emit("augment-scan", payload);
@@ -577,7 +598,7 @@ fn get_hud_edit(state: tauri::State<AppState>) -> bool {
 async fn scan_augments(app: AppHandle, debug: Option<bool>) -> Option<Value> {
     if debug.unwrap_or(false) {
         let region = app.state::<AppState>().scan_region();
-        return Some(scan_payload(region, false, true).await);
+        return Some(scan_payload(&app, region, false, true).await);
     }
     run_scan(app);
     None
@@ -758,6 +779,7 @@ pub fn run() {
                 hotkeys_suspended: AtomicBool::new(false),
                 augment_mode: AtomicBool::new(true),
                 lcu_creds: Mutex::new(None),
+                capture_mask: Mutex::new(Vec::new()),
             });
 
             // The main window is created here (not from tauri.conf) so "See-through window" can pick
@@ -819,11 +841,6 @@ pub fn run() {
                 })
                 .build(app)?;
 
-            for label in ["main", "hud"] {
-                if let Some(w) = app.get_webview_window(label) {
-                    exclude_from_capture(&w);
-                }
-            }
             if let Some(w) = app.get_webview_window("main") {
                 // Starts hidden (tauri.conf.json) so it appears directly at its saved spot.
                 window::restore(&handle, &w);
@@ -853,6 +870,7 @@ pub fn run() {
             set_augment_mode,
             open_url,
             scan_augments,
+            set_capture_mask,
             set_hud_edit,
             get_hud_edit,
             hud::hud_cursor,

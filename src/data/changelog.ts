@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-26.6",
+    title: "Recording works again",
+    items: [
+      "Fixed: GeForce Instant Replay / desktop capture turned off while Nexis was running. Nexis no longer hides its windows from screen capture (recorders saw that as protected content); the augment reader now blacks out Nexis's own badges in its screenshot instead.",
+      "Your recordings and clips (GeForce, OBS, Discord) now include the Nexis overlay.",
+    ],
+  },
+  {
     id: "2026-11-26.5",
     title: "Runes redone, Guide search",
     items: [

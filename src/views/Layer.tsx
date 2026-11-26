@@ -15,6 +15,7 @@ import type { OcrMatch } from "../engine/ocrMatch";
 import { MiniHud, useHudModel } from "./MiniHud";
 import { abilitySlot, hudOf } from "./hudSettings";
 import * as bridge from "../bridge";
+import { collectMask } from "./captureMask";
 import "./layer.css";
 
 export { HudCard, hudHasContent, sampleHudModel, useHudModel, type HudModel } from "./MiniHud";
@@ -45,6 +46,7 @@ export default function Layer() {
   setLanguage(lang);
   return (
     <div className="nl-root" aria-hidden="true" key={lang}>
+      <CaptureMask />
       <AugmentBadges />
       <PickReminder />
       <PickedNotice />
@@ -53,6 +55,41 @@ export default function Layer() {
       <MiniHud />
     </div>
   );
+}
+
+/** Tells the backend where we draw (a few times a second, only when it changed). */
+function CaptureMask() {
+  useEffect(() => {
+    if (!bridge.isTauri) return;
+    let last = "";
+    const tick = () => {
+      const root = document.querySelector(".nl-root");
+      if (!root) return;
+      const rects = collectMask(root, window.innerWidth, window.innerHeight);
+      const key = JSON.stringify(rects);
+      if (key !== last) {
+        last = key;
+        void bridge.setCaptureMask(rects).catch(() => {});
+      }
+    };
+    tick();
+    // Right away when something appears or moves (a new badge must be masked before the next
+    // scan), plus a slow interval for animations that only change styles.
+    let raf = 0;
+    const soon = () => {
+      if (!raf) raf = requestAnimationFrame(() => ((raf = 0), tick()));
+    };
+    const obs = new MutationObserver(soon);
+    const root = document.querySelector(".nl-root");
+    if (root) obs.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["style", "class"] });
+    const id = window.setInterval(tick, 400);
+    return () => {
+      window.clearInterval(id);
+      obs.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+  return null;
 }
 
 // ------------------------------------------------------------------ augment badges

@@ -9,7 +9,9 @@ Nexis runs locally on your PC. This page says what it touches and how it is lock
   champ select / game flow / region. Writes happen only with *Import to League* turned on, and only
   to rune pages and item sets (named `Nexis: …`). There is no generic LCU passthrough.
 - **Screen capture + Windows OCR** of the augment region, only in augment modes while the game is in
-  front (or on the scan hotkey). Nexis's own windows are excluded from capture. Full-screen previews
+  front (or on the scan hotkey). Nexis's own overlay is blacked out of
+  that screenshot before OCR (its windows are *not* hidden from capture, so recorders like GeForce
+  Instant Replay, OBS and Discord keep working). Full-screen previews
   are taken only for Settings → Diagnostics → *Test augment detection*.
 - **Public web data** over HTTPS from an allow-list: Data Dragon, CommunityDragon, HexMayhem, OP.GG,
   GitHub (update check, default stats dataset) and the stats URL you set in Settings.

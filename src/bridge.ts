@@ -364,6 +364,22 @@ export async function discordDisconnect(): Promise<void> {
 }
 
 /** Show the scan region + sample tier badges on the in-game layer (click-through, auto-off after 3 min). */
+/** Rectangle as fractions (0..1) of the screen. */
+export interface ScreenRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/**
+ * HUD layer → backend: where the overlay is drawing, so augment scans black those spots out
+ * instead of hiding our windows from capture (which makes GeForce Instant Replay switch off).
+ */
+export async function setCaptureMask(rects: ScreenRect[]): Promise<void> {
+  if (isTauri) return tauriInvoke("set_capture_mask", { rects });
+}
+
 export async function setHudPreview(on: boolean): Promise<void> {
   if (isTauri) return tauriInvoke("set_hud_preview", { on });
   emitLocal("hud-preview", on);
