@@ -13,7 +13,9 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 
 [![Support on Ko-fi](https://img.shields.io/badge/support-Ko--fi-ff5e5b?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/exoduxdev)
 
-![Nexis Overlay — Build tab](docs/screenshots/build.png)
+<a href="docs/trailer/nexis-trailer.mp4"><img src="docs/trailer/poster.png" alt="Watch the Nexis Overlay trailer (33 s, with sound)" width="820" /></a>
+
+<sub>▶ <a href="docs/trailer/nexis-trailer.mp4">Watch the trailer</a> (33 s, with sound)</sub>
 
 </div>
 
