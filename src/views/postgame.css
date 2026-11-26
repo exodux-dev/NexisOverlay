@@ -525,3 +525,60 @@
   min-width: 0;
   max-width: 100%;
 }
+
+/* Compared with your usual */
+.pg-usual {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pg-usual li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto auto 112px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--panel-2) 70%, transparent);
+  font-size: 13.5px;
+}
+.pg-usual-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+.pg-usual-up .pg-usual-icon {
+  color: var(--green, #34d399);
+  background: color-mix(in srgb, var(--green, #34d399) 16%, transparent);
+}
+.pg-usual-down .pg-usual-icon {
+  color: #fbbf24;
+  background: color-mix(in srgb, #fbbf24 16%, transparent);
+}
+.pg-usual-label {
+  color: var(--text);
+  font-weight: 600;
+}
+.pg-usual-val {
+  font-weight: 700;
+}
+.pg-usual-avg {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+.pg-usual-diff {
+  text-align: right;
+  font-weight: 700;
+  font-size: 12.5px;
+}
+.pg-usual-up .pg-usual-diff {
+  color: var(--green, #34d399);
+}
+.pg-usual-down .pg-usual-diff {
+  color: #fbbf24;
+}

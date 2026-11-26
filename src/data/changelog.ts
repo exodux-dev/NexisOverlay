@@ -8,6 +8,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-27.1",
+    title: "How did that game go?",
+    items: [
+      "Post-game summary: “Compared with your usual” — CS per minute, CS at 10, first item time, deaths and KDA against your own earlier games on that champion, what went better and what to work on.",
+      "History: a CS/min trend line over your last games.",
+      "Fixed: the History summary squeezed its numbers on top of each other in a narrow window; the boots reason no longer claims “highest” when a rarely built pair rates better; the champion name stays readable in the top bar.",
+    ],
+  },
+  {
     id: "2026-11-26.6",
     title: "Recording works again",
     items: [

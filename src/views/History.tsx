@@ -226,6 +226,20 @@ function Donut({ rate }: { rate: number }) {
   );
 }
 
+/** Tiny trend line (oldest → newest), e.g. CS/min over your last games. */
+function Sparkline({ values }: { values: number[] }) {
+  if (values.length < 3) return null;
+  const w = 96, h = 26, lo = Math.min(...values), hi = Math.max(...values), span = hi - lo || 1;
+  const pts = values.map((v, i) => [(i / (values.length - 1)) * w, h - 3 - ((v - lo) / span) * (h - 6)] as const);
+  const up = values[values.length - 1] >= values[0];
+  return (
+    <svg className={`hi-spark ${up ? "hi-spark-up" : "hi-spark-down"}`} width={w} height={h} viewBox={`0 0 ${w} ${h}`} role="img" aria-label={`Last ${values.length} games: ${values.map((v) => v.toFixed(1)).join(", ")}`}>
+      <polyline points={pts.map((p) => p.join(",")).join(" ")} fill="none" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r="2.6" />
+    </svg>
+  );
+}
+
 function SummaryCard({ games, data }: { games: MatchRecord[]; data: StaticData }) {
   const n = games.length;
   const wins = games.filter((m) => m.result === "Win").length;
@@ -280,6 +294,7 @@ function SummaryCard({ games, data }: { games: MatchRecord[]; data: StaticData }
         <div className="hi-sum-cell hi-sum-cs" title={`Average over ${farm.games} game${farm.games === 1 ? "" : "s"} with a recorded timeline`}>
           <span className="stat-label">{tx("CS / min")}</span>
           <span className="hi-mid-num tnum">{farm.perMin.toFixed(1)}</span>
+          <Sparkline values={games.map(gameCsPerMin).filter((v): v is number => v !== undefined).slice(-12)} />
           <span className="hi-sub tnum">{at10.length ? `${Math.round(at10.reduce((a, b) => a + b, 0) / at10.length)} ${tx("at 10 min")}` : `${farm.games} ${farm.games === 1 ? "game" : "games"}`}</span>
         </div>
       )}
@@ -877,7 +892,9 @@ export function HistoryView() {
       ) : (
         <>
           <div className="hi-top">
-            <SummaryCard games={games} data={data} />
+            <div className="hi-summary-wrap">
+              <SummaryCard games={games} data={data} />
+            </div>
             <TrendChart games={games} data={data} />
           </div>
 

@@ -20,6 +20,7 @@ import { GameIcon } from "../ui/GameIcon";
 import { Icon } from "../ui/icons";
 import { AugmentTip } from "../ui/GameTips";
 import { GameTimelinePanel } from "./GameTimeline";
+import { compareToUsual } from "../engine/gameReport";
 import { ItemIcon } from "../ui/ItemIcon";
 import { Tip } from "../ui/Tip";
 import "./postgame.css";
@@ -181,6 +182,7 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
     };
   }, [history, record]);
 
+  const usual = useMemo(() => compareToUsual(record, history, data), [record, history, data]);
   const name = champ?.name ?? record.champion;
   const ratio = record.deaths === 0 ? record.kills + record.assists : (record.kills + record.assists) / record.deaths;
   const ratioDelta = champStats.ratioBefore !== undefined ? ratio - champStats.ratioBefore : undefined;
@@ -284,6 +286,30 @@ export function PostGameSummary({ record, onClose, onOpenHistory }: Props) {
               {counterBuilt.length > 0 && ` Good call on ${counterBuilt.map((r) => r.item.name).join(", ")} against this comp.`}
             </p>
           </section>
+
+          {usual.length > 0 && (
+            <section className="pg-sec" aria-label="Compared with your usual">
+              <div className="pg-sec-head">
+                <h3>{tx("Compared with your usual")}</h3>
+                <span className="pg-muted">{tx("Your earlier games on this champion")}</span>
+              </div>
+              <ul className="pg-usual">
+                {usual.map((r) => (
+                  <li key={r.key} className={r.better ? "pg-usual-up" : "pg-usual-down"}>
+                    <span className="pg-usual-icon" aria-hidden="true">
+                      <Icon name={r.better ? "check" : "info"} size={12} />
+                    </span>
+                    <span className="pg-usual-label">{tx(r.label)}</span>
+                    <span className="pg-usual-val tnum">{r.value}</span>
+                    <span className="pg-usual-avg tnum">
+                      {tx("usually")} {r.avg}
+                    </span>
+                    <span className="pg-usual-diff tnum">{r.diff}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {record.timeline && record.timeline.samples.length > 0 && (
             <section className="pg-sec" aria-label="Game timeline">

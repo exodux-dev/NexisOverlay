@@ -913,3 +913,41 @@ span.hi-sub:not(:only-child) {
     display: none;
   }
 }
+
+.hi-spark {
+  display: block;
+  margin: 2px 0 1px;
+  overflow: visible;
+}
+.hi-spark polyline {
+  stroke: var(--accent);
+}
+.hi-spark circle {
+  fill: var(--accent);
+}
+.hi-spark-up polyline,
+.hi-spark-up circle {
+  stroke: var(--green, #34d399);
+  fill: none;
+}
+.hi-spark-up circle {
+  fill: var(--green, #34d399);
+}
+
+/* Four stats don't fit a narrow summary: two per row instead (win rate | KDA, streak | CS). */
+.hi-summary-wrap {
+  container-type: inline-size;
+  min-width: 0;
+}
+.hi-summary-wrap > .hi-summary {
+  height: 100%;
+}
+@container (max-width: 680px) {
+  .hi-summary:has(.hi-sum-cs) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .hi-summary:has(.hi-sum-cs) > .hi-sum-cell:nth-child(3) {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
