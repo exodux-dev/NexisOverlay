@@ -868,8 +868,17 @@
 .tb-stat {
   flex: none;
 }
-@media (max-width: 980px) {
-  /* The portrait is enough at narrow widths; the name would collide with the game clock. */
+.tb-champ-text {
+  min-width: 58px;
+}
+/* The hotkey hint gives way first, so the champion name stays readable. */
+@media (max-width: 1320px) {
+  .topbar .tb-hint {
+    display: none;
+  }
+}
+@media (max-width: 1100px) {
+  /* The portrait is enough at narrow widths; a cut-off "A…" name helps nobody. */
   .tb-champ-text {
     display: none;
   }

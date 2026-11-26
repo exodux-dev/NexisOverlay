@@ -322,7 +322,13 @@ function chooseBoots(ctx: BuildContext, family: Family): { boots?: Item; reason:
     const it = best && data.items.get(best.id);
     if (onMap(it) && it.tags.includes("Boots")) {
       dataBoots = it;
-      reason = isArena(ctx) ? "Highest top-4 rate boots for this champion" : "Highest win rate boots for this champion";
+      // Say "highest" only when it is: a rarely built pair can have a better raw rate but is
+      // left out above (too few games), so then the honest reason is "most built".
+      const rate = (s: { wins: number; games: number }) => s.wins / Math.max(1, s.games);
+      const mine = ctx.stats.boots[String(best!.id)]!;
+      const beaten = Object.entries(ctx.stats.boots).some(([id, s]) => Number(id) !== best!.id && s.games >= 30 && rate(s) > rate(mine) + 0.02);
+      const what = isArena(ctx) ? "top-4 rate" : "win rate";
+      reason = beaten ? `Most built boots for this champion (${Math.round(rate(mine) * 100)}% ${isArena(ctx) ? "top 4" : "WR"})` : `Highest ${what} boots for this champion`;
     }
   }
 

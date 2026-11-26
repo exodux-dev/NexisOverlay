@@ -243,6 +243,17 @@ describe("recommendBuild", () => {
     expect(plan.order.map((r) => r.item.name)).toContain("Randuin's Omen");
   });
 
+  it("says 'most built' when a rarely built pair has the better rate (no false 'highest')", () => {
+    const berserker = findItem(data, "Berserker's Greaves")!.id;
+    const swift = findItem(data, "Boots of Swiftness")!.id;
+    const stats = { games: 1400, wins: 560, items: {}, boots: { [berserker]: { games: 1297, wins: 492 }, [swift]: { games: 69, wins: 43 } } };
+    const plan = recommendBuild({ data, champion: findChampion(data, "Jinx")!, threat: analyzeEnemies([]), stats });
+    expect(plan.boots?.item.id).toBe(berserker);
+    expect(plan.boots?.reasons.join(' ')).toMatch(/Most built boots/);
+    const clear = { ...stats, boots: { [berserker]: { games: 1297, wins: 700 }, [swift]: { games: 69, wins: 30 } } };
+    expect(recommendBuild({ data, champion: findChampion(data, "Jinx")!, threat: analyzeEnemies([]), stats: clear }).boots?.reasons.join(' ')).toMatch(/Highest win rate boots/);
+  });
+
   it("keeps the boots the player already owns", () => {
     const me = { ...player(data, "Ahri", "ORDER", ["Mercury's Treads"]), isMe: true };
     const plan = recommendBuild({ data, champion: me.champion!, threat: analyzeEnemies(demo().enemies), me });
