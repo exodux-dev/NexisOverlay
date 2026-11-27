@@ -1,0 +1,31 @@
+name: Release notes
+
+# Keeps published GitHub releases in sync with docs/releases/<tag>.md: editing a notes file on
+# main updates that release's description (new releases are published by build.yml).
+on:
+  push:
+    branches: [main]
+    paths: ["docs/releases/v*.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for f in docs/releases/v*.md; do
+            tag="$(basename "$f" .md)"
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+              gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --notes-file "$f"
+              echo "updated $tag"
+            else
+              echo "no release $tag yet (build.yml publishes it)"
+            fi
+          done
