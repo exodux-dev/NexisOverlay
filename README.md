@@ -1,25 +1,27 @@
 <div align="center">
 
-# Nexis Overlay
+<img src="docs/brand/header.svg" alt="Nexis Overlay: a calm League of Legends companion" width="100%" />
 
-**A fast, free and open-source League of Legends companion.**
-Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner's Rift, in a lightweight overlay that looks at home next to the League client.
+<br />
 
-![Platform](https://img.shields.io/badge/platform-Windows%2010%20%2F%2011-0a1428?style=flat-square)
-![Size](https://img.shields.io/badge/download-~2%20MB%20portable-c8aa6e?style=flat-square)
-![Tauri](https://img.shields.io/badge/built%20with-Tauri%202%20%2B%20React-24c8db?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-3fb950?style=flat-square)
-![Built with Claude](https://img.shields.io/badge/built%20with-Claude-d97757?style=flat-square)
+<a href="https://github.com/exodux-dev/NexisOverlay/releases/latest"><img src="https://img.shields.io/github/v/release/exodux-dev/NexisOverlay?style=for-the-badge&label=Download&color=7c6cff&labelColor=1a1d2b" alt="Download the latest release" /></a>
+<a href="https://ko-fi.com/exoduxdev"><img src="https://img.shields.io/badge/Support-Ko--fi-ff5e5b?style=for-the-badge&logo=ko-fi&logoColor=white&labelColor=1a1d2b" alt="Support on Ko-fi" /></a>
 
-[![Support on Ko-fi](https://img.shields.io/badge/support-Ko--fi-ff5e5b?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/exoduxdev)
+![Platform](https://img.shields.io/badge/platform-Windows%2010%20%2F%2011-5eead4?style=flat-square&labelColor=1a1d2b)
+![Size](https://img.shields.io/badge/download-~2%20MB%20portable-a99bff?style=flat-square&labelColor=1a1d2b)
+![Tauri](https://img.shields.io/badge/built%20with-Tauri%202%20%2B%20React-24c8db?style=flat-square&labelColor=1a1d2b)
+![License](https://img.shields.io/badge/license-MIT-3fb950?style=flat-square&labelColor=1a1d2b)
+![Built with Claude](https://img.shields.io/badge/built%20with-Claude-d97757?style=flat-square&labelColor=1a1d2b)
 
-<a href="docs/trailer/nexis-trailer.mp4"><img src="docs/trailer/poster.png" alt="Watch the Nexis Overlay trailer (33 s, with sound)" width="820" /></a>
+<br />
 
-<sub>▶ <a href="docs/trailer/nexis-trailer.mp4">Watch the trailer</a> (33 s, with sound)</sub>
+<a href="docs/trailer/nexis-trailer.mp4"><img src="docs/brand/tour.svg" alt="A quick tour of Nexis Overlay" width="100%" /></a>
+
+<sub>▶ <a href="docs/trailer/nexis-trailer.mp4">Watch the full trailer</a> (33 s, with sound)</sub>
 
 </div>
 
----
+<img src="docs/brand/divider.svg" width="100%" alt="" />
 
 ## Why Nexis
 
@@ -30,6 +32,8 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 | **Ads & tracking** | None | Usually both |
 | **Your data** | Stays in a `data` folder next to the exe | Cloud account, AppData |
 | **Source** | Open source (MIT) | Closed |
+
+<img src="docs/brand/divider.svg" width="100%" alt="" />
 
 ## Highlights
 
@@ -42,6 +46,8 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 | ![](docs/screenshots/enemies.png) | **Know the lobby.** Loading-screen scouting of all 10 players (rank, form, champion experience, tags like *One-trick* or *Loss streak*) and a live team-power comparison. |
 | ![](docs/screenshots/guide.png) | **Guides & skill orders.** Level-by-level skill grid, combos, champion mechanics (Kayn forms, Aphelios weapons), and stack goals for stacking champions like Smolder and Veigar. |
 | ![](docs/screenshots/tiers.png) | **Tier lists & patch movers.** S–D tier lists for every mode and role, plus the biggest risers and fallers after each patch. |
+
+<img src="docs/brand/divider.svg" width="100%" alt="" />
 
 ## Features
 
@@ -57,6 +63,9 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 - Optional **Import to League:** saves your chosen rune page and item set to the client (off by default; only ever replaces entries named *Nexis:*).
 
 **Always-on mini HUD**
+
+<img src="docs/brand/hud-demo.svg" alt="The Nexis HUD fades while you play and wakes up when it matters" width="100%" />
+
 - A compact panel in game. The default (Standard) look shows only your next buy, what you're saving for, your skills and your augments. Core build, enemy damage, team gold, tips and CS/min are one switch away (or pick the Full look).
 - **Fades during play:** mostly see-through while you play, fully visible when you're dead, can afford your next item, have a skill point or augments are on screen (opacity is adjustable).
 - **Level-up arrow** on League's own ability bar over the ability to level next (line it up once in Settings).
@@ -86,6 +95,8 @@ Builds, augments, runes and scouting for ARAM: Mayhem, ARAM, Arena and Summoner'
 - Themes (new graphite + violet default, Classic League look), accent color, UI scale, window size presets, Ctrl+K command palette, tray menu, start hidden, launch with Windows.
 - Settings → Diagnostics: live status of every component, an event log and a one-click report for bug reports.
 
+<img src="docs/brand/divider.svg" width="100%" alt="" />
+
 ## Install
 
 1. Download **NexisOverlay-portable** from the latest [Build](../../actions/workflows/build.yml) run (or Releases) and unzip it anywhere.
@@ -104,6 +115,8 @@ Nexis is fully portable: settings, history and caches stay in a `data` folder ne
 
 Every hotkey can be rebound in **Settings → Hotkeys**; the recorder warns about clashes with NVIDIA, Xbox Game Bar, Steam, Discord and League's own binds.
 
+<img src="docs/brand/divider.svg" width="100%" alt="" />
+
 ## Fair play
 
 Nexis is built to stay within Riot's third-party developer policies and never touches the game process.
@@ -114,6 +127,8 @@ Nexis is built to stay within Riot's third-party developer policies and never to
 - The only thing Nexis can write to the League client is the optional rune page / item set import.
 
 See [SECURITY.md](SECURITY.md) for exactly what Nexis accesses. Nexis isn't endorsed by Riot Games; as with any third-party tool, use it at your own discretion.
+
+<img src="docs/brand/divider.svg" width="100%" alt="" />
 
 ## Data sources
 
@@ -126,6 +141,8 @@ See [SECURITY.md](SECURITY.md) for exactly what Nexis accesses. Nexis isn't endo
 | Static data | Riot [Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon) (updates automatically each patch) |
 
 Pages are cached and refreshed every few hours; old cache files are cleaned up automatically. You can also point Nexis at your own dataset built from the Riot API ([docs/STATS.md](docs/STATS.md)). None of these sites are affiliated with Nexis; credit for the data goes to them.
+
+<img src="docs/brand/divider.svg" width="100%" alt="" />
 
 ## Development
 
@@ -172,9 +189,13 @@ scripts/            Riot API stats aggregator, mock game server
 
 </details>
 
+<img src="docs/brand/divider.svg" width="100%" alt="" />
+
 ## Contributing
 
 Issues and pull requests are welcome. Good first areas: champion traits (`src/data/championKb.ts`), item knowledge (`src/data/itemKb.ts`), guides (`src/data/coachKb.ts`) and augment tags (`src/engine/augments.ts`).
+
+<img src="docs/brand/divider.svg" width="100%" alt="" />
 
 ## Credits
 
@@ -182,11 +203,15 @@ Issues and pull requests are welcome. Good first areas: champion traits (`src/da
 - Stats from [HexMayhem](https://hexmayhem.com) and [OP.GG](https://op.gg); game data from Riot Data Dragon and [CommunityDragon](https://communitydragon.org).
 - Inspired by u.gg, Blitz, Porofessor and Mobalytics.
 
+<img src="docs/brand/divider.svg" width="100%" alt="" />
+
 ## Support
 
 <a href="https://ko-fi.com/exoduxdev"><img src="docs/screenshots/kofi-banner.png" alt="Support Nexis on Ko-fi" width="820" /></a>
 
 Nexis is free and always will be. Supporting the project helps with development: new features, updates every patch and quick fixes when the stats sites change. If Nexis helped you win a few games, a coffee on [Ko-fi](https://ko-fi.com/exoduxdev) means a lot. Thank you! 💜
+
+<img src="docs/brand/divider.svg" width="100%" alt="" />
 
 ## License
 
