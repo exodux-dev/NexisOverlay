@@ -31,15 +31,47 @@
 
 ## Highlights
 
-| | |
-| --- | --- |
-| ![](docs/screenshots/hud.png) | **A calm in-game HUD.** Your next buy, skills and augments in a small panel that fades to see-through while you play and comes back when you're dead, can afford your next item or have a skill point. A glowing arrow marks the ability to level on League's own ability bar, and an optional line shows your CS per minute. |
-| ![](docs/screenshots/layer.png) | **Augment tier badges, in game.** When the augment cards pop up, Nexis reads them and places an S–D grade, win rate and pick rate under each card, ranked for your champion. |
-| ![](docs/screenshots/augments.png) | **Augments for your champion.** Per-champion augment ranking for ARAM: Mayhem and Arena, combo highlights, reroll advice and a searchable augment tier list. |
-| ![](docs/screenshots/pick-helper.png) | **Champ select that helps.** Auto-detects your champion and mode, compares bench and teammate picks by win rate, and analyses your team comp (damage split, frontline, engage, scaling). |
-| ![](docs/screenshots/enemies.png) | **Know the lobby.** Loading-screen scouting of all 10 players (rank, form, champion experience, tags like *One-trick* or *Loss streak*) and a live team-power comparison. |
-| ![](docs/screenshots/guide.png) | **Guides & skill orders.** Level-by-level skill grid, combos, champion mechanics (Kayn forms, Aphelios weapons), and stack goals for stacking champions like Smolder and Veigar. |
-| ![](docs/screenshots/tiers.png) | **Tier lists & patch movers.** S–D tier lists for every mode and role, plus the biggest risers and fallers after each patch. |
+<img src="docs/screenshots/hud.png" alt="A calm in-game HUD" width="100%" />
+
+<p align="center"><b>A calm in-game HUD</b><br /><sub>Next buy, skills and augments. It fades while you play and comes back when it matters, with a level-up arrow on League's own ability bar.</sub></p>
+
+<br />
+
+<img src="docs/screenshots/layer.png" alt="Augment tier badges, in game" width="100%" />
+
+<p align="center"><b>Augment tier badges, in game</b><br /><sub>An S–D grade, win rate and pick rate under each augment card, ranked for your champion.</sub></p>
+
+<br />
+
+<img src="docs/screenshots/augments.png" alt="Augments for your champion" width="100%" />
+
+<p align="center"><b>Augments for your champion</b><br /><sub>Per-champion rankings for ARAM: Mayhem and Arena, combo highlights and reroll advice.</sub></p>
+
+<br />
+
+<img src="docs/screenshots/pick-helper.png" alt="Champ select that helps" width="100%" />
+
+<p align="center"><b>Champ select that helps</b><br /><sub>Bench and teammate picks compared by win rate, plus a team comp breakdown.</sub></p>
+
+<br />
+
+<img src="docs/screenshots/enemies.png" alt="Know the lobby" width="100%" />
+
+<p align="center"><b>Know the lobby</b><br /><sub>Scouting for all 10 players and a live team-power comparison.</sub></p>
+
+<br />
+
+<img src="docs/screenshots/guide.png" alt="Guides & skill orders" width="100%" />
+
+<p align="center"><b>Guides & skill orders</b><br /><sub>Level-by-level skill grid, combos and champion mechanics.</sub></p>
+
+<br />
+
+<img src="docs/screenshots/tiers.png" alt="Tier lists & patch movers" width="100%" />
+
+<p align="center"><b>Tier lists & patch movers</b><br /><sub>S–D tiers for every mode and role, and the biggest risers and fallers each patch.</sub></p>
+
+<br />
 
 <img src="docs/brand/divider.svg" width="100%" alt="" />
 
