@@ -1,7 +1,7 @@
 // Screenshots the in-game layer (hud window) over fake game art.
 // Prereq: `npx vite --port 1421 --strictPort` running. Usage:
 //   node scripts/screenshot-layer.mjs [outDir]
-// Env: LAYER_URL (default http://localhost:1421/?view=hud), BACKDROP_FILE, REAL_IMAGES=1
+// Env: LAYER_URL (default http://localhost:1421/?view=hud), BACKDROP_FILE, REAL_IMAGES=1, CARDS (real augment screen)
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
@@ -51,7 +51,7 @@ const FAKE_GAME = `
   const r = { x: 0.14, y: 0.16, w: 0.72, h: 0.46 };
   const bg = document.createElement("div");
   bg.id = "fake-game";
-  bg.style.cssText = "position:fixed;inset:0;z-index:-1;background:" + (backdrop ? "linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45))," + backdrop + ";" : "") + (backdrop ? "" : [
+  bg.style.cssText = "position:fixed;inset:0;z-index:-1;background:" + (backdrop ? (${JSON.stringify(!!process.env.CARDS)} ? "" : "linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),") + backdrop + ";" : "") + (backdrop ? "" : [
     "radial-gradient(circle at 18% 78%, rgba(255,240,200,.95) 0 6%, transparent 22%)",
     "radial-gradient(circle at 82% 30%, rgba(120,220,255,.9) 0 5%, transparent 25%)",
     "radial-gradient(circle at 50% 95%, rgba(255,120,60,.85) 0 8%, transparent 30%)",
@@ -60,7 +60,7 @@ const FAKE_GAME = `
     "linear-gradient(160deg, #7fb069, #d9c38a 45%, #4c7a9a)"
   ].join(",") + ";");
   const names = ${JSON.stringify(NAMES)};
-  ${JSON.stringify(CARD_XS)}.forEach((cx, i) => {
+  ${JSON.stringify(process.env.CARDS ? [] : CARD_XS)}.forEach((cx, i) => {
     const c = document.createElement("div");
     const w = 0.165, left = (r.x + cx * r.w - w / 2) * 100;
     c.style.cssText = "position:absolute;left:" + left + "vw;width:" + w * 100 + "vw;top:" + (r.y + 0.02) * 100 +
@@ -74,7 +74,11 @@ const FAKE_GAME = `
 })();
 `;
 
+// CARDS='[{"text":"…","x":…,"y":…,"w":…,"h":…}]' (fractions of the scan region): OCR lines of a real
+// augment screen in BACKDROP_FILE; no placeholder cards are drawn then.
+const REAL_CARDS = process.env.CARDS ? JSON.parse(process.env.CARDS) : null;
 const lines = () =>
+  REAL_CARDS ??
   CARD_XS.map((cx, i) => {
     const w = 0.16;
     return { text: NAMES[i], x: cx - w / 2, y: 0.08, w, h: 0.05 };
@@ -142,6 +146,8 @@ async function shoot(browser, width, height, name, { stats = false, clear = fals
     { lines: lines(), stats },
   );
   await page.waitForSelector(".nl-badge", { timeout: 5000 });
+  // Real augment screen: just the badges (the HUD panel would cover the third card's badge).
+  if (REAL_CARDS) await page.addStyleTag({ content: ".nl-hud, .nl-pick-reminder, .nl-top-notice { display: none !important; }" });
   if (clear) {
     await page.evaluate(() => {
       const p = { ok: true, auto: true, scan: { millis: 40, lines: [] } };
