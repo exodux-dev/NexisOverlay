@@ -40,7 +40,7 @@
 
 <br />
 
-<p align="center"><img src="docs/screenshots/ingame-hud.png" alt="The Nexis HUD in a real game" width="100%" /><br /><b>The HUD in a real game</b><br /><sub>Next buy and what you're saving for, top right, while you play (ARAM: Mayhem).</sub></p>
+<p align="center"><img src="docs/screenshots/ingame-hud.png" alt="The Nexis HUD in a real game" width="100%" /><br /><b>The HUD in a real game</b><br /><sub>Next buy and what you're saving for, top right, while you play.</sub></p>
 
 <p align="center"><img src="docs/screenshots/ingame-overlay.png" alt="The full Nexis overlay opened mid-game" width="100%" /><br /><b>The full overlay, mid-game</b><br /><sub>Press Ctrl+Shift+Space in game for builds, runes and the shop; press it again to get back to the game.</sub></p>
 
