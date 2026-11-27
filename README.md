@@ -36,13 +36,9 @@
 <p align="center"><b>Everything for your next game, in one window</b><br /><sub>Build, runes, skill order and what to buy right now, from real match stats, next to the League client or over the game.</sub></p>
 
 <details>
-<summary><b>🖼️ See 11 more screenshots</b>&nbsp;&nbsp;<kbd>click to open</kbd></summary>
+<summary><b>🖼️ See 9 more screenshots</b>&nbsp;&nbsp;<kbd>click to open</kbd></summary>
 
 <br />
-
-<p align="center"><img src="docs/screenshots/ingame-hud.png" alt="The Nexis HUD in a real game" width="100%" /><br /><b>The HUD in a real game</b><br /><sub>Next buy and what you're saving for, top right, while you play.</sub></p>
-
-<p align="center"><img src="docs/screenshots/ingame-overlay.png" alt="The full Nexis overlay opened mid-game" width="100%" /><br /><b>The full overlay, mid-game</b><br /><sub>Press Ctrl+Shift+Space in game for builds, runes and the shop; press it again to get back to the game.</sub></p>
 
 <p align="center"><img src="docs/screenshots/augments.png" alt="Augments for your champion" width="100%" /><br /><b>Augments for your champion</b><br /><sub>Per-champion rankings for ARAM: Mayhem and Arena, combos and reroll advice.</sub></p>
 
@@ -80,8 +76,6 @@
 - Optional **Import to League:** saves your chosen rune page and item set to the client (off by default; only ever replaces entries named *Nexis:*).
 
 **Always-on mini HUD**
-
-<img src="docs/screenshots/ingame-hud.png" alt="The Nexis HUD in a real game" width="100%" />
 
 - A compact panel in game. The default (Standard) look shows only your next buy, what you're saving for, your skills and your augments. Core build, enemy damage, team gold, tips and CS/min are one switch away (or pick the Full look).
 - **Fades during play:** mostly see-through while you play, fully visible when you're dead, can afford your next item, have a skill point or augments are on screen (opacity is adjustable).
