@@ -5,20 +5,21 @@ push to `main` with that version publishes the GitHub release with this file as 
 
 ## Format
 
-Only these sections, in this order, and only the ones that have something in them:
+A banner on top (`docs/brand/releases/<tag>.svg`, made like the v1.1.0 one, linked by its raw
+GitHub URL), then only these sections, in this order, and only the ones that have something:
 
 ```md
-## Nexis Overlay v1.2.0
+<img src="https://raw.githubusercontent.com/exodux-dev/NexisOverlay/main/docs/brand/releases/v1.2.0.svg" alt="Nexis Overlay v1.2.0: …" width="100%" />
 
-### Features added
-- Short, user-facing line per feature. Credit people inline when an idea was theirs
-  (*Thanks to Evo for the idea!*).
+## ✨ Features added
+- **🧭 Feature name** short line. Credit people inline (*Thanks to **Evo** for the idea!*).
 
-### Improvements
-- Changes to existing features.
+## ⚡ Improvements
+- **🔎 What changed** short line.
 
-### Bug fixes
-- What was broken and is now fixed.
+## 🐛 Bug fixes
+- **🎬 What was broken** is fixed.
 ```
 
-No other sections: no download instructions, thanks, fair play, requirements or disclaimers.
+Big `##` headings, one emoji + bold name per line, one short sentence each. No other sections:
+no download instructions, thanks, fair play, requirements or disclaimers.
