@@ -39,7 +39,7 @@ describe("hud settings migration", () => {
   });
 
   it("normalizes and reorders widgets", () => {
-    expect(normalizeOrder(["skill", "bogus", "skill", "shop"])).toEqual(["skill", "shop", "path", "threats", "augments", "power", "farm"]);
+    expect(normalizeOrder(["skill", "bogus", "skill", "shop"])).toEqual(["skill", "shop", "path", "threats", "augments", "power", "farm", "stats"]);
     expect(moveWidget(["shop", "path", "skill"], "path", -1)).toEqual(["path", "shop", "skill"]);
     expect(moveWidget(["shop", "path"], "shop", -1)).toEqual(["shop", "path"]);
     expect(moveWidget(["shop", "path"], "path", 1)).toEqual(["shop", "path"]);
@@ -161,11 +161,11 @@ describe("hud power line", () => {
 });
 
 describe("HUD presets", () => {
-  it("Minimal keeps only the next buy + skill order as icons, Full restores defaults", async () => {
+  it("Minimal is the small stats table, Full restores defaults", async () => {
     const { HUD_DEFAULTS, activeHudPreset, hudPreset, normalizeHud } = await import("./hudSettings");
     const custom = normalizeHud({ x: 0.3, y: 0.7, scale: 1.2, showPower: true });
     const min = normalizeHud({ ...custom, ...hudPreset("minimal") });
-    expect(min).toMatchObject({ showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: false, showPower: false, showHint: false, compact: true });
+    expect(min).toMatchObject({ showStats: true, showNextItem: false, showSkillOrder: false, showBuildPath: false, showThreats: false, showAugments: false, showPower: false, showHint: false, compact: true });
     // Position and size are kept.
     expect(min).toMatchObject({ x: 0.3, y: 0.7, scale: 1.2 });
     expect(activeHudPreset(min)).toBe("minimal");
@@ -186,7 +186,7 @@ describe("death shop view", () => {
     const d = deathView(minimal);
     expect(d).toMatchObject({ collapsed: false, compact: false, showNextItem: true });
     expect(d.order[0]).toBe("shop");
-    expect(d.order).toHaveLength(7);
+    expect(d.order).toHaveLength(8);
     expect(normalizeHud({}).deathShop).toBe(true);
   });
 });
@@ -225,7 +225,7 @@ describe("farming widget", () => {
   it("is off by default, on in Full, and old settings get it appended", () => {
     expect(HUD_DEFAULTS.showFarm).toBe(false);
     expect(hudPreset("full").showFarm).toBe(true);
-    expect(normalizeHud({ order: ["shop", "skill"] }).order.at(-1)).toBe("farm");
+    expect(normalizeHud({ order: ["shop", "skill"] }).order.at(-1)).toBe("stats");
     expect(normalizeHud({ showFarm: true }).showFarm).toBe(true);
   });
 });

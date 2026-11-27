@@ -4,7 +4,7 @@
 export type HudPosition = "top-right" | "top-left" | "right-middle" | "bottom-left";
 
 /** HUD widgets, drawn top to bottom in `order`. */
-export type HudWidget = "shop" | "path" | "skill" | "threats" | "augments" | "power" | "farm";
+export type HudWidget = "shop" | "path" | "skill" | "threats" | "augments" | "power" | "farm" | "stats";
 
 export interface HudSettings {
   /** Preset anchor (v1). Used when no free position (`x`/`y`) has been saved yet. */
@@ -30,6 +30,8 @@ export interface HudSettings {
   showPower: boolean;
   /** CS per minute (your scoreboard), with a role target on Summoner's Rift. Off by default. */
   showFarm: boolean;
+  /** Compact stats table (CS/min, KP, KDA, level, item gold vs the game average) — the Minimal look. */
+  showStats: boolean;
   /** "Ctrl+Shift+Space for full view" footer. */
   showHint: boolean;
   /** Mostly see-through during normal play; fully visible when it matters (see hudWakeReason). */
@@ -73,7 +75,7 @@ export function abilitySlot(h: Pick<HudSettings, "barX" | "barY" | "barGap">, ke
   return { x: h.barX * width + (i - 1.5) * gap, y: h.barY * height, size: gap * 0.85 };
 }
 
-export const HUD_WIDGETS: HudWidget[] = ["shop", "path", "skill", "threats", "augments", "power", "farm"];
+export const HUD_WIDGETS: HudWidget[] = ["shop", "path", "skill", "threats", "augments", "power", "farm", "stats"];
 
 export const HUD_DEFAULTS: HudSettings = {
   position: "top-right",
@@ -88,6 +90,7 @@ export const HUD_DEFAULTS: HudSettings = {
   showAugments: true,
   showPower: false,
   showFarm: false,
+  showStats: false,
   showHint: false,
   pickReminder: true,
   deathShop: true,
@@ -116,7 +119,7 @@ export const HUD_POSITIONS: Array<{ value: HudPosition; label: string }> = [
 ];
 
 /** The settings toggle that switches a widget on. */
-export const WIDGET_FLAG: Record<HudWidget, keyof Pick<HudSettings, "showNextItem" | "showBuildPath" | "showSkillOrder" | "showThreats" | "showAugments" | "showPower" | "showFarm">> = {
+export const WIDGET_FLAG: Record<HudWidget, keyof Pick<HudSettings, "showNextItem" | "showBuildPath" | "showSkillOrder" | "showThreats" | "showAugments" | "showPower" | "showFarm" | "showStats">> = {
   shop: "showNextItem",
   path: "showBuildPath",
   skill: "showSkillOrder",
@@ -124,6 +127,7 @@ export const WIDGET_FLAG: Record<HudWidget, keyof Pick<HudSettings, "showNextIte
   augments: "showAugments",
   power: "showPower",
   farm: "showFarm",
+  stats: "showStats",
 };
 
 /** The HUD while you're dead: full size, shop first and on (other widgets as you set them). */
@@ -143,10 +147,10 @@ export const HUD_FULL_WIDGETS = { showNextItem: true, showSkillOrder: true, show
  */
 export function hudPreset(p: HudPreset): Partial<HudSettings> {
   if (p === "minimal")
-    return { showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: false, showPower: false, showFarm: false, showHint: false, showTips: false, compact: true, collapsed: false };
+    return { showNextItem: false, showSkillOrder: false, showBuildPath: false, showThreats: false, showAugments: false, showPower: false, showFarm: false, showStats: true, showHint: false, showTips: false, compact: true, collapsed: false };
   if (p === "standard")
-    return { showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: true, showPower: false, showFarm: false, showHint: false, showTips: false, compact: false, collapsed: false };
-  return { ...HUD_FULL_WIDGETS, showFarm: true, showTips: true, compact: false, collapsed: false };
+    return { showNextItem: true, showSkillOrder: true, showBuildPath: false, showThreats: false, showAugments: true, showPower: false, showFarm: false, showStats: false, showHint: false, showTips: false, compact: false, collapsed: false };
+  return { ...HUD_FULL_WIDGETS, showFarm: true, showStats: false, showTips: true, compact: false, collapsed: false };
 }
 
 /** The preset the current settings match exactly, if any. */
@@ -211,6 +215,7 @@ export function normalizeHud(raw: unknown): HudSettings {
     showAugments: bool("showAugments"),
     showPower: bool("showPower"),
     showFarm: bool("showFarm"),
+    showStats: bool("showStats"),
     showHint: bool("showHint"),
     pickReminder: bool("pickReminder"),
     deathShop: bool("deathShop"),

@@ -548,6 +548,7 @@ const HUD_WIDGET_INFO: Record<HudWidget, { label: string; sub: string }> = {
   skill: { label: "Skill order", sub: "Max order — and the next ability to level when a skill point is free" },
   threats: { label: "Enemy damage & threats", sub: "AD / AP / true damage split, plus flags like healing, tanks or heavy CC" },
   augments: { label: "Augments", sub: "The augments you've taken this game (ARAM: Mayhem / Arena)" },
+  stats: { label: "Stats (you vs average)", sub: "A small table: CS/min, gold/min, kill participation, KDA and level against the game average, plus next buy and skill to level" },
   farm: { label: "Farming (CS/min)", sub: "Your CS per minute — green at 7+ for lanes, 6+ for jungle on Summoner's Rift" },
   power: { label: "Team power", sub: "Team item-gold difference and your lane's (Summoner's Rift), from the scoreboard" },
 };
@@ -631,7 +632,7 @@ function HudLayoutCard() {
           <div className="field-row">
             <div className="field-text">
               <span className="field-label">{tr("Look")}</span>
-              <span className="field-hint">{tr("Standard: next buy, skills and augments. Minimal: the same as small icons, without augments. Full: every widget and tips.")}</span>
+              <span className="field-hint">{tr("Minimal: a tiny stats table (you vs the game average, next buy, skill to level). Standard: next buy, skills and augments. Full: every widget and tips.")}</span>
             </div>
             <Segmented<HudPreset | "custom">
               size="sm"

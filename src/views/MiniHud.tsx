@@ -32,6 +32,7 @@ import { actions, getState, useApp, useDerived } from "../app/store";
 import * as bridge from "../bridge";
 import { findAugment } from "../engine/augments";
 import { farmPace, type FarmPace } from "../engine/farm";
+import { liveStats, type StatRow } from "../engine/liveStats";
 import type { SkillKey } from "../engine/guide";
 import { findItem } from "../engine/staticData";
 import { nextStackGoal } from "../data/stackGoals";
@@ -124,6 +125,8 @@ export interface HudModel {
   power?: HudPower;
   /** Your CS per minute (scoreboard), with a role target on the Rift. */
   farm?: FarmPace;
+  /** You vs the game average (scoreboard): the Minimal stats table. */
+  stats: StatRow[];
   /** Stacking champions: the next stack milestone to aim for by this game time (reference pace). */
   stack?: {
     name: string;
@@ -157,6 +160,11 @@ export function useHudModel(): HudModel {
     () => farmPace({ cs, gameTime: gameTimeS, mode: gameMode, position }),
     // Re-evaluated when CS changes or every 10 s of game time.
     [cs, Math.floor(gameTimeS / 10), gameMode, position], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  const stats = useMemo(
+    () => liveStats(game, data),
+    // Recomputed when the scoreboard changes or every 10 s of game time (CS/min).
+    [game?.me, game?.allies, game?.enemies, game?.loading, Math.floor(gameTimeS / 10), data], // eslint-disable-line react-hooks/exhaustive-deps
   );
   const minute =
     game?.source === "live" ? Math.floor((game.gameTime ?? 0) / 60) : 0;
@@ -250,6 +258,7 @@ export function useHudModel(): HudModel {
       })),
       power,
       farm,
+      stats,
       stack,
       aphelios: game?.apheliosMain,
     };
@@ -268,6 +277,7 @@ export function useHudModel(): HudModel {
     champion,
     power,
     farm,
+    stats,
     stack,
     game?.apheliosMain,
   ]);
@@ -355,6 +365,13 @@ export function sampleHudModel(data: StaticData | null | undefined): HudModel {
     ],
     power: { team: -2100, lane: { label: "Mid", diff: 450, vs: "Zed" } },
     farm: { cs: 142, perMin: 7.1, target: 7, tone: "good" },
+    stats: [
+      { key: "csm", label: "CSM", mine: 7.2, avg: 6.2, mineText: "7.2", avgText: "6.2", tone: "up" },
+      { key: "gpm", label: "GPM", mine: 239, avg: 278, mineText: "239", avgText: "278", tone: "down" },
+      { key: "kp", label: "KP", mine: 0.42, avg: 0.48, mineText: "42%", avgText: "48%", tone: "down" },
+      { key: "kda", label: "KDA", mine: 3.5, avg: 2.1, mineText: "3.5", avgText: "2.1", tone: "up" },
+      { key: "lvl", label: "LVL", mine: 11, avg: 11, mineText: "11", avgText: "11", tone: "even" },
+    ],
   };
 }
 
@@ -381,6 +398,8 @@ function widgetHasContent(w: HudWidget, m: HudModel): boolean {
       return !!m.power;
     case "farm":
       return !!m.farm;
+    case "stats":
+      return m.stats.length > 0;
   }
 }
 
@@ -862,6 +881,7 @@ const WIDGET_LABEL: Record<HudWidget, string> = {
   augments: "Augments",
   power: "Team power",
   farm: "Farming",
+  stats: "Stats",
 };
 
 interface CardProps {
@@ -979,6 +999,8 @@ function renderWidget(w: HudWidget, m: HudModel, c: boolean): ReactNode {
       return m.power ? <PowerWidget p={m.power} c={c} /> : null;
     case "farm":
       return m.farm ? <FarmWidget f={m.farm} c={c} /> : null;
+    case "stats":
+      return m.stats.length ? <StatsWidget m={m} /> : null;
   }
 }
 
@@ -1337,6 +1359,48 @@ function ThreatWidget({ m, c }: { m: HudModel; c: boolean }) {
               {!c && <small>{THREAT_ANSWER[t.key]}</small>}
             </span>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The Minimal look: one small table — your number next to the game average (green ahead, red
+ * behind), plus your next buy and the skill to level when there is one.
+ */
+function StatsWidget({ m }: { m: HudModel }) {
+  const buy = m.shop?.buyNow[0] ?? (m.next ? { name: m.next.item.name, cost: m.next.item.cost, affordable: m.next.affordable } : undefined);
+  const lvl = m.skill?.pending && m.skill.levelUp ? m.skill.levelUp : undefined;
+  return (
+    <div className="nl-stats">
+      <div className="nl-stats-head">
+        <span className="nl-stats-brand">NEXIS</span>
+        <span className="nl-stats-vs">{t("you")} / {t("avg")}</span>
+      </div>
+      {m.stats.map((r) => (
+        <div key={r.key} className="nl-stats-row">
+          <span className="nl-stats-label">{r.label}</span>
+          <span className="nl-stats-val">
+            <b className={`nl-st-${r.tone}`}>{r.mineText}</b>
+            <span className="nl-stats-sep">/</span>
+            <span className="nl-stats-avg">{r.avgText}</span>
+          </span>
+        </div>
+      ))}
+      {buy && (
+        <div className="nl-stats-row nl-stats-extra">
+          <span className="nl-stats-label">{t("BUY")}</span>
+          <span className="nl-stats-buy">
+            <span className="nl-stats-buy-name">{buy.name}</span>
+            <b className={buy.affordable ? "nl-st-up" : "nl-stats-avg"}>{buy.cost}</b>
+          </span>
+        </div>
+      )}
+      {lvl && (
+        <div className="nl-stats-row nl-stats-extra">
+          <span className="nl-stats-label">{t("LEVEL")}</span>
+          <b className="nl-st-up nl-stats-key">{lvl}</b>
         </div>
       )}
     </div>

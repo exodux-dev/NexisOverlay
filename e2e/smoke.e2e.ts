@@ -61,7 +61,7 @@ test("champ select switches to Build with pick helper and team comp", async ({ s
 
 test("live game shows the HUD mini panel and team power", async ({ start, context }) => {
   const game = liveGame();
-  const page = await start({ settings: { hud: { showPower: true, showFarm: true } } });
+  const page = await start({ settings: { hud: { showPower: true, showFarm: true, showStats: true } } });
   await emit(page, "live-game", game);
   await expect(tab(page, "build")).toHaveAttribute("aria-current", "page");
   await tab(page, "enemies").click();
@@ -79,6 +79,9 @@ test("live game shows the HUD mini panel and team power", async ({ start, contex
   await expect(hud.locator(".nl-farm")).toContainText("3.6");
   await expect(hud.locator(".nl-farm")).toContainText("44 CS");
   await expect(hud.locator(".nl-farm-goal")).toHaveCount(0);
+  // Stats table: you vs the game average.
+  await expect(hud.locator(".nl-stats")).toContainText("KDA");
+  await expect(hud.locator(".nl-stats")).toContainText("LVL");
 });
 
 test("augment offer (Mayhem) shows ranked augments", async ({ start }) => {
@@ -316,7 +319,7 @@ test("HUD Minimal / Standard / Full preset", async ({ start }) => {
   await expect(preset.getByRole("radio", { name: "Standard" })).toHaveAttribute("aria-checked", "true");
   await preset.getByRole("radio", { name: "Minimal" }).click();
   await expect(preset.getByRole("radio", { name: "Minimal" })).toHaveAttribute("aria-checked", "true");
-  expect(await storeValue<Record<string, boolean>>(page, "(s) => s.settings.hud")).toMatchObject({ compact: true, showBuildPath: false, showThreats: false, showNextItem: true, showSkillOrder: true });
+  expect(await storeValue<Record<string, boolean>>(page, "(s) => s.settings.hud")).toMatchObject({ compact: true, showStats: true, showBuildPath: false, showThreats: false, showNextItem: false, showSkillOrder: false });
   await preset.getByRole("radio", { name: "Full" }).click();
   expect(await storeValue<boolean>(page, "(s) => s.settings.hud.showBuildPath")).toBe(true);
   expect(await storeValue<boolean>(page, "(s) => s.settings.hud.showTips")).toBe(true);

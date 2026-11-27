@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-11-27.2",
+    title: "A tiny stats HUD",
+    items: [
+      "New Minimal look: a small table with your CS/min, gold/min, kill participation, KDA and level next to the game average (green when you're ahead, red when behind), plus your next buy and the skill to level.",
+      "Pick it in Settings → In-game overlay → Look → Minimal, or turn on Stats with any look.",
+    ],
+  },
+  {
     id: "2026-11-27.1",
     title: "How did that game go?",
     items: [

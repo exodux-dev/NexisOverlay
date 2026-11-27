@@ -1202,3 +1202,102 @@ body.nl-editing .tip {
   padding-left: 0.55em;
   border-left: 1px solid color-mix(in srgb, var(--frame) 70%, transparent);
 }
+
+/* Minimal look: a small Blitz-style stats table */
+.nl-hud:has(.nl-stats) {
+  width: auto;
+  min-width: 10.5em;
+  max-width: 14em;
+  padding: 0.55em 0.75em 0.6em;
+}
+.nl-hud:has(.nl-stats) .nl-sec + .nl-sec {
+  margin-top: 0.4em;
+}
+.nl-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22em;
+  font-variant-numeric: tabular-nums;
+}
+.nl-stats-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1em;
+  margin-bottom: 0.15em;
+}
+.nl-stats-brand {
+  font-size: 0.78em;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: var(--nl-accent, #a99bff);
+}
+.nl-stats-vs {
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.nl-stats-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.2em;
+}
+.nl-stats-label {
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  opacity: 0.85;
+}
+.nl-stats-val {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+  font-size: 0.9em;
+}
+.nl-stats-val b {
+  font-weight: 800;
+}
+.nl-stats-sep,
+.nl-stats-avg {
+  color: var(--muted);
+  font-weight: 600;
+}
+.nl-st-up {
+  color: var(--ok, #34d399);
+}
+.nl-st-down {
+  color: #f87171;
+}
+.nl-st-even {
+  color: var(--text);
+}
+.nl-stats-extra {
+  margin-top: 0.15em;
+  padding-top: 0.3em;
+  border-top: 1px solid color-mix(in srgb, var(--line, #ffffff) 40%, transparent);
+}
+.nl-stats-extra + .nl-stats-extra {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.nl-stats-buy {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45em;
+  min-width: 0;
+  font-size: 0.85em;
+}
+.nl-stats-buy-name {
+  max-width: 7.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nl-stats-key {
+  font-size: 0.9em;
+}
