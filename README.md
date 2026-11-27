@@ -40,9 +40,9 @@
 
 <br />
 
-<p align="center"><img src="docs/screenshots/hud.png" alt="A calm in-game HUD" width="100%" /><br /><b>A calm in-game HUD</b><br /><sub>Next buy, skills and augments; it fades while you play, with a level-up arrow on League's own ability bar.</sub></p>
+<p align="center"><img src="docs/screenshots/ingame-hud.png" alt="The Nexis HUD in a real game" width="100%" /><br /><b>The HUD in a real game</b><br /><sub>Next buy and what you're saving for, top right, while you play (ARAM: Mayhem).</sub></p>
 
-<p align="center"><img src="docs/screenshots/layer.png" alt="Augment tier badges, in game" width="100%" /><br /><b>Augment tier badges, in game</b><br /><sub>A grade, win rate and pick rate under each augment card, ranked for your champion.</sub></p>
+<p align="center"><img src="docs/screenshots/ingame-overlay.png" alt="The full Nexis overlay opened mid-game" width="100%" /><br /><b>The full overlay, mid-game</b><br /><sub>Press Ctrl+Shift+Space in game for builds, runes and the shop; press it again to get back to the game.</sub></p>
 
 <p align="center"><img src="docs/screenshots/augments.png" alt="Augments for your champion" width="100%" /><br /><b>Augments for your champion</b><br /><sub>Per-champion rankings for ARAM: Mayhem and Arena, combos and reroll advice.</sub></p>
 
@@ -81,7 +81,7 @@
 
 **Always-on mini HUD**
 
-<img src="docs/brand/hud-demo.svg" alt="The Nexis HUD fades while you play and wakes up when it matters" width="100%" />
+<img src="docs/screenshots/ingame-hud.png" alt="The Nexis HUD in a real game" width="100%" />
 
 - A compact panel in game. The default (Standard) look shows only your next buy, what you're saving for, your skills and your augments. Core build, enemy damage, team gold, tips and CS/min are one switch away (or pick the Full look).
 - **Fades during play:** mostly see-through while you play, fully visible when you're dead, can afford your next item, have a skill point or augments are on screen (opacity is adjustable).
