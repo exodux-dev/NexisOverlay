@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="470" viewBox="0 0 1200 470" role="img" aria-label="Why Nexis: a 2 MB portable download versus 100+ MB installers, 40-80 MB of memory versus 300-600 MB, no ads or tracking, your data stays in a local folder, and it's open source (MIT).">
+  <title>Why Nexis</title>
+  <defs>
+    <clipPath id="card"><rect width="1200" height="470" rx="26"/></clipPath>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="55"/></filter>
+    <linearGradient id="border" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4" stop-opacity=".6"/><stop offset=".5" stop-color="#a99bff" stop-opacity=".4"/><stop offset="1" stop-color="#7c6cff" stop-opacity=".6"/></linearGradient>
+    <linearGradient id="good" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#5eead4"/></linearGradient>
+    <linearGradient id="bad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f87171" stop-opacity=".85"/><stop offset="1" stop-color="#fb923c" stop-opacity=".85"/></linearGradient>
+  </defs>
+  <g clip-path="url(#card)" font-family="'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif">
+    <rect width="1200" height="470" fill="#0a0d16"/>
+    <g filter="url(#blur)"><circle cx="80" cy="60" r="180" fill="#312e81" opacity=".8"/><circle cx="1150" cy="420" r="200" fill="#0f766e" opacity=".55"/></g>
+    <text x="56" y="62" font-size="14" font-weight="800" letter-spacing="4" fill="#a99bff">WHY NEXIS</text>
+    <text x="56" y="100" font-size="32" font-weight="700" fill="#ffffff">Light on your PC, honest with your data.</text>
+    <text x="420" y="146" font-size="14" font-weight="800" letter-spacing="2" fill="#5eead4">NEXIS</text>
+    <text x="800" y="146" font-size="14" font-weight="800" letter-spacing="2" fill="#8b91ad">TYPICAL COMPANION APP</text>
+    <line x1="56" y1="160" x2="1144" y2="160" stroke="#ffffff" stroke-opacity=".08"/>
+    <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.2s" dur=".5s" fill="freeze"/>
+      <text x="56" y="206" font-size="20" font-weight="600" fill="#e9ebf5">Download</text>
+      <rect x="420" y="186" width="330" height="10" rx="5" fill="#ffffff" fill-opacity=".05"/>
+      <rect x="420" y="186" width="0" height="10" rx="5" fill="url(#good)"><animate attributeName="width" keyTimes="0;.1;.25;.9;.97;1" values="0;0;10;10;0;0" dur="8.0s" repeatCount="indefinite" keySplines=".2 0 .2 1;.2 0 .2 1;.2 0 .2 1;.2 0 .2 1;.2 0 .2 1" calcMode="spline"/></rect>
+      <text x="420" y="220" font-size="16" font-weight="700" fill="#5eead4">~2 MB portable zip</text>
+      <rect x="800" y="186" width="330" height="10" rx="5" fill="#ffffff" fill-opacity=".05"/>
+      <rect x="800" y="186" width="0" height="10" rx="5" fill="url(#bad)"><animate attributeName="width" keyTimes="0;.12;.42;.9;.97;1" values="0;0;330;330;0;0" dur="8.0s" repeatCount="indefinite" keySplines=".2 0 .2 1;.2 0 .2 1;.2 0 .2 1;.2 0 .2 1;.2 0 .2 1" calcMode="spline"/></rect>
+      <text x="800" y="220" font-size="16" font-weight="600" fill="#9aa1bd">100+ MB installer + sign-in</text>
+    </g>
+    <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.45s" dur=".5s" fill="freeze"/>
+      <text x="56" y="272" font-size="20" font-weight="600" fill="#e9ebf5">Memory</text>
+      <rect x="420" y="252" width="330" height="10" rx="5" fill="#ffffff" fill-opacity=".05"/>
+      <rect x="420" y="252" width="0" height="10" rx="5" fill="url(#good)"><animate attributeName="width" keyTimes="0;.1;.25;.9;.97;1" values="0;0;44;44;0;0" dur="8.0s" repeatCount="indefinite" keySplines=".2 0 .2 1;.2 0 .2 1;.2 0 .2 1;.2 0 .2 1;.2 0 .2 1" calcMode="spline"/></rect>
+      <text x="420" y="286" font-size="16" font-weight="700" fill="#5eead4">~40–80 MB</text>
+      <rect x="800" y="252" width="330" height="10" rx="5" fill="#ffffff" fill-opacity=".05"/>
+      <rect x="800" y="252" width="0" height="10" rx="5" fill="url(#bad)"><animate attributeName="width" keyTimes="0;.12;.42;.9;.97;1" values="0;0;330;330;0;0" dur="8.0s" repeatCount="indefinite" keySplines=".2 0 .2 1;.2 0 .2 1;.2 0 .2 1;.2 0 .2 1;.2 0 .2 1" calcMode="spline"/></rect>
+      <text x="800" y="286" font-size="16" font-weight="600" fill="#9aa1bd">300–600 MB</text>
+    </g>
+    <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.7s" dur=".5s" fill="freeze"/>
+      <text x="56" y="338" font-size="20" font-weight="600" fill="#e9ebf5">Ads &amp; tracking</text>
+      <g transform="translate(431 332)"><circle r="12" fill="#5eead4" fill-opacity=".16"/><path d="M-5 0l3.5 3.5L5.5-4" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <animateTransform attributeName="transform" type="scale" additive="sum" keyTimes="0;.2;.26;.3;1" values="0;0;1.25;1;1" dur="8.0s" repeatCount="indefinite"/></g>
+      <text x="454" y="338" font-size="17" font-weight="700" fill="#5eead4">None</text>
+      <g transform="translate(811 332)"><circle r="12" fill="#f87171" fill-opacity=".14"/><path d="M-4.5-4.5l9 9M4.5-4.5l-9 9" stroke="#f87171" stroke-width="2.4" stroke-linecap="round"/>
+        <animateTransform attributeName="transform" type="scale" additive="sum" keyTimes="0;.3;.36;.4;1" values="0;0;1.25;1;1" dur="8.0s" repeatCount="indefinite"/></g>
+      <text x="834" y="338" font-size="17" font-weight="600" fill="#9aa1bd">Usually both</text>
+    </g>
+    <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="0.95s" dur=".5s" fill="freeze"/>
+      <text x="56" y="388" font-size="20" font-weight="600" fill="#e9ebf5">Your data</text>
+      <g transform="translate(431 382)"><circle r="12" fill="#5eead4" fill-opacity=".16"/><path d="M-5 0l3.5 3.5L5.5-4" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <animateTransform attributeName="transform" type="scale" additive="sum" keyTimes="0;.2;.26;.3;1" values="0;0;1.25;1;1" dur="8.0s" repeatCount="indefinite"/></g>
+      <text x="454" y="388" font-size="17" font-weight="700" fill="#5eead4">A folder next to the exe</text>
+      <g transform="translate(811 382)"><circle r="12" fill="#f87171" fill-opacity=".14"/><path d="M-4.5-4.5l9 9M4.5-4.5l-9 9" stroke="#f87171" stroke-width="2.4" stroke-linecap="round"/>
+        <animateTransform attributeName="transform" type="scale" additive="sum" keyTimes="0;.3;.36;.4;1" values="0;0;1.25;1;1" dur="8.0s" repeatCount="indefinite"/></g>
+      <text x="834" y="388" font-size="17" font-weight="600" fill="#9aa1bd">Cloud account, AppData</text>
+    </g>
+    <g opacity="0"><animate attributeName="opacity" from="0" to="1" begin="1.2s" dur=".5s" fill="freeze"/>
+      <text x="56" y="438" font-size="20" font-weight="600" fill="#e9ebf5">Source code</text>
+      <g transform="translate(431 432)"><circle r="12" fill="#5eead4" fill-opacity=".16"/><path d="M-5 0l3.5 3.5L5.5-4" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <animateTransform attributeName="transform" type="scale" additive="sum" keyTimes="0;.2;.26;.3;1" values="0;0;1.25;1;1" dur="8.0s" repeatCount="indefinite"/></g>
+      <text x="454" y="438" font-size="17" font-weight="700" fill="#5eead4">Open source (MIT)</text>
+      <g transform="translate(811 432)"><circle r="12" fill="#f87171" fill-opacity=".14"/><path d="M-4.5-4.5l9 9M4.5-4.5l-9 9" stroke="#f87171" stroke-width="2.4" stroke-linecap="round"/>
+        <animateTransform attributeName="transform" type="scale" additive="sum" keyTimes="0;.3;.36;.4;1" values="0;0;1.25;1;1" dur="8.0s" repeatCount="indefinite"/></g>
+      <text x="834" y="438" font-size="17" font-weight="600" fill="#9aa1bd">Closed</text>
+    </g>
+  </g>
+  <rect x=".75" y=".75" width="1198.5" height="468.5" rx="25.5" fill="none" stroke="url(#border)" stroke-width="1.5"/>
+</svg>

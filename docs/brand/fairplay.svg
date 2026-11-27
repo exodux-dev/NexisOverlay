@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-label="Fair play: official read-only game data, a normal screenshot only for augment cards, no memory reading, injection or input automation, no hidden information or timers, and nothing is written to League unless you turn on Import to League.">
+  <title>Fair play</title>
+  <defs>
+    <clipPath id="card"><rect width="1200" height="330" rx="26"/></clipPath>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="55"/></filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="border" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c6cff" stop-opacity=".6"/><stop offset=".5" stop-color="#a99bff" stop-opacity=".4"/><stop offset="1" stop-color="#5eead4" stop-opacity=".6"/></linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c6cff"/><stop offset="1" stop-color="#5eead4"/></linearGradient>
+  </defs>
+  <g clip-path="url(#card)" font-family="'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif">
+    <rect width="1200" height="330" fill="#0a0d16"/>
+    <g filter="url(#blur)"><circle cx="190" cy="170" r="170" fill="#0f766e" opacity=".55"/><circle cx="1150" cy="40" r="160" fill="#312e81" opacity=".8"/></g>
+    <g transform="translate(190 165)">
+      <circle r="92" fill="#5eead4" opacity=".07"><animate attributeName="r" values="84;100;84" dur="4s" repeatCount="indefinite"/></circle>
+      <path d="M0 -78 L64 -54 V2 C64 44 34 70 0 82 C-34 70 -64 44 -64 2 V-54 Z" fill="#0f2f2d" stroke="#5eead4" stroke-width="3" filter="url(#glow)"/>
+      <path d="M-26 0 L-6 20 L28 -18" fill="none" stroke="#5eead4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="80" stroke-dashoffset="80"><animate attributeName="stroke-dashoffset" keyTimes="0;.06;.16;.92;1" values="80;80;0;0;80" dur="9s" repeatCount="indefinite"/></path>
+    </g>
+    <text x="350" y="66" font-size="14" font-weight="800" letter-spacing="4" fill="#a99bff">FAIR PLAY</text>
+    <text x="350" y="102" font-size="30" font-weight="700" fill="#ffffff">Built to stay within Riot's rules.</text>
+    <g transform="translate(362 150)">
+      <g opacity="0"><animate attributeName="opacity" keyTimes="0;0.150;0.190;.92;1" values="0;0;1;1;0" dur="9s" repeatCount="indefinite"/>
+        <circle r="11" fill="#5eead4" fill-opacity=".16"/><path d="M-5 0l3.5 3.5L5.5-4" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <text x="24" y="6" font-size="18" fill="#dfe3f1">Official, read-only game data (Riot&#39;s Live Client API and the League client)</text>
+    </g>
+    <g transform="translate(362 188)">
+      <g opacity="0"><animate attributeName="opacity" keyTimes="0;0.230;0.270;.92;1" values="0;0;1;1;0" dur="9s" repeatCount="indefinite"/>
+        <circle r="11" fill="#5eead4" fill-opacity=".16"/><path d="M-5 0l3.5 3.5L5.5-4" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <text x="24" y="6" font-size="18" fill="#dfe3f1">Screen reading is a normal screenshot, only for the augment cards</text>
+    </g>
+    <g transform="translate(362 226)">
+      <g opacity="0"><animate attributeName="opacity" keyTimes="0;0.310;0.350;.92;1" values="0;0;1;1;0" dur="9s" repeatCount="indefinite"/>
+        <circle r="11" fill="#5eead4" fill-opacity=".16"/><path d="M-5 0l3.5 3.5L5.5-4" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <text x="24" y="6" font-size="18" fill="#dfe3f1">No memory reading, injection or input automation</text>
+    </g>
+    <g transform="translate(362 264)">
+      <g opacity="0"><animate attributeName="opacity" keyTimes="0;0.390;0.430;.92;1" values="0;0;1;1;0" dur="9s" repeatCount="indefinite"/>
+        <circle r="11" fill="#5eead4" fill-opacity=".16"/><path d="M-5 0l3.5 3.5L5.5-4" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <text x="24" y="6" font-size="18" fill="#dfe3f1">No hidden info: no enemy cooldowns, no jungle or objective timers</text>
+    </g>
+    <g transform="translate(362 302)">
+      <g opacity="0"><animate attributeName="opacity" keyTimes="0;0.470;0.510;.92;1" values="0;0;1;1;0" dur="9s" repeatCount="indefinite"/>
+        <circle r="11" fill="#5eead4" fill-opacity=".16"/><path d="M-5 0l3.5 3.5L5.5-4" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <text x="24" y="6" font-size="18" fill="#dfe3f1">Writes nothing to League unless you turn on Import to League</text>
+    </g>
+  </g>
+  <rect x=".75" y=".75" width="1198.5" height="328.5" rx="25.5" fill="none" stroke="url(#border)" stroke-width="1.5"/>
+</svg>

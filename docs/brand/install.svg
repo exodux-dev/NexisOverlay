@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="Install in 30 seconds: 1. download the portable zip from the latest release, 2. unzip and run Nexis Overlay.exe (it lives in the tray), 3. set League to Borderless.">
+  <title>Install</title>
+  <defs>
+    <clipPath id="card"><rect width="1200" height="300" rx="26"/></clipPath>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="55"/></filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="border" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c6cff" stop-opacity=".6"/><stop offset=".5" stop-color="#a99bff" stop-opacity=".4"/><stop offset="1" stop-color="#5eead4" stop-opacity=".6"/></linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c6cff"/><stop offset="1" stop-color="#5eead4"/></linearGradient>
+  </defs>
+  <g clip-path="url(#card)" font-family="'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif">
+    <rect width="1200" height="300" fill="#0a0d16"/>
+    <g filter="url(#blur)"><circle cx="1100" cy="40" r="170" fill="#5b47d6" opacity=".6"/><circle cx="120" cy="300" r="170" fill="#0f766e" opacity=".5"/></g>
+    <text x="56" y="62" font-size="14" font-weight="800" letter-spacing="4" fill="#a99bff">INSTALL IN 30 SECONDS</text>
+    <line x1="150" y1="140" x2="1050" y2="140" stroke="#ffffff" stroke-opacity=".08" stroke-width="3"/>
+    <line x1="150" y1="140" x2="150" y2="140" stroke="url(#flow)" stroke-width="3" stroke-linecap="round"><animate attributeName="x2" keyTimes="0;.1;.55;.9;1" values="150;150;1050;1050;150" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1;.4 0 .2 1;.4 0 .2 1"/></line>
+    <g transform="translate(150 140)">
+      <circle r="30" fill="#141724" stroke="#33384d" stroke-width="2"/>
+      <circle r="30" fill="#0f2f2d" stroke="#5eead4" stroke-width="2.5" filter="url(#glow)" opacity="0"><animate attributeName="opacity" keyTimes="0;0.100;0.140;.9;.95;1" values="0;0;1;1;0;0" dur="7s" repeatCount="indefinite"/></circle>
+      <text y="9" font-size="24" font-weight="800" text-anchor="middle" fill="#ffffff">1</text>
+      <text y="72" font-size="22" font-weight="700" text-anchor="middle" fill="#ffffff">Download</text>
+      <text y="100" font-size="16" text-anchor="middle" fill="#9aa1bd">Grab NexisOverlay-portable.zip</text>
+      <text y="122" font-size="16" text-anchor="middle" fill="#9aa1bd">from the latest release</text>
+    </g>
+    <g transform="translate(600 140)">
+      <circle r="30" fill="#141724" stroke="#33384d" stroke-width="2"/>
+      <circle r="30" fill="#0f2f2d" stroke="#5eead4" stroke-width="2.5" filter="url(#glow)" opacity="0"><animate attributeName="opacity" keyTimes="0;0.325;0.365;.9;.95;1" values="0;0;1;1;0;0" dur="7s" repeatCount="indefinite"/></circle>
+      <text y="9" font-size="24" font-weight="800" text-anchor="middle" fill="#ffffff">2</text>
+      <text y="72" font-size="22" font-weight="700" text-anchor="middle" fill="#ffffff">Unzip &amp; run</text>
+      <text y="100" font-size="16" text-anchor="middle" fill="#9aa1bd">Nexis Overlay.exe lives in</text>
+      <text y="122" font-size="16" text-anchor="middle" fill="#9aa1bd">your system tray</text>
+    </g>
+    <g transform="translate(1050 140)">
+      <circle r="30" fill="#141724" stroke="#33384d" stroke-width="2"/>
+      <circle r="30" fill="#0f2f2d" stroke="#5eead4" stroke-width="2.5" filter="url(#glow)" opacity="0"><animate attributeName="opacity" keyTimes="0;0.550;0.590;.9;.95;1" values="0;0;1;1;0;0" dur="7s" repeatCount="indefinite"/></circle>
+      <text y="9" font-size="24" font-weight="800" text-anchor="middle" fill="#ffffff">3</text>
+      <text y="72" font-size="22" font-weight="700" text-anchor="middle" fill="#ffffff">Borderless</text>
+      <text y="100" font-size="16" text-anchor="middle" fill="#9aa1bd">League → Video → Window Mode</text>
+      <text y="122" font-size="16" text-anchor="middle" fill="#9aa1bd">→ Borderless</text>
+    </g>
+  </g>
+  <rect x=".75" y=".75" width="1198.5" height="298.5" rx="25.5" fill="none" stroke="url(#border)" stroke-width="1.5"/>
+</svg>

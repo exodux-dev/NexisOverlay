@@ -25,13 +25,7 @@
 
 ## Why Nexis
 
-|  | Nexis | Typical companion app |
-| --- | --- | --- |
-| **Install** | ~2 MB portable zip, no installer, no account | 100+ MB installer, sign-in |
-| **Memory** | ~40–80 MB (Rust + system WebView) | 300–600 MB (bundled Chromium / Overwolf) |
-| **Ads & tracking** | None | Usually both |
-| **Your data** | Stays in a `data` folder next to the exe | Cloud account, AppData |
-| **Source** | Open source (MIT) | Closed |
+<img src="docs/brand/why.svg" alt="Why Nexis: a 2 MB portable download versus 100+ MB installers, 40-80 MB of memory versus 300-600 MB, no ads or tracking, your data stays in a local folder, and it's open source (MIT)." width="100%" />
 
 <img src="docs/brand/divider.svg" width="100%" alt="" />
 
@@ -99,6 +93,8 @@
 
 ## Install
 
+<img src="docs/brand/install.svg" alt="Install in 30 seconds: download the portable zip, unzip and run Nexis Overlay.exe, set League to Borderless." width="100%" />
+
 1. Download **NexisOverlay-portable** from the latest [Build](../../actions/workflows/build.yml) run (or Releases) and unzip it anywhere.
 2. Run `Nexis Overlay.exe`. It lives in the system tray.
 3. In League, set **Video → Window Mode → Borderless** (overlays can't draw over exclusive fullscreen).
@@ -119,12 +115,7 @@ Every hotkey can be rebound in **Settings → Hotkeys**; the recorder warns abou
 
 ## Fair play
 
-Nexis is built to stay within Riot's third-party developer policies and never touches the game process.
-
-- **Official, read-only game data** from Riot's [Live Client Data API](https://developer.riotgames.com/docs/lol#game-client-api) and the League client's local API.
-- **Screen reading is a normal screenshot** of your own monitor (like OBS or Discord), used only to read the augment selection screen.
-- **No memory reading, injection or input automation. No hidden information:** no enemy cooldowns, no jungle or objective timers, no real-time "do this now" prompts.
-- The only thing Nexis can write to the League client is the optional rune page / item set import.
+<img src="docs/brand/fairplay.svg" alt="Fair play: official read-only game data, a normal screenshot only for augment cards, no memory reading, injection or input automation, no hidden information or timers, nothing written to League unless you turn on Import to League." width="100%" />
 
 See [SECURITY.md](SECURITY.md) for exactly what Nexis accesses. Nexis isn't endorsed by Riot Games; as with any third-party tool, use it at your own discretion.
 
