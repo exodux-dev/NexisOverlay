@@ -36,7 +36,7 @@
 <p align="center"><b>Everything for your next game, in one window</b><br /><sub>Build, runes, skill order and what to buy right now, from real match stats, next to the League client or over the game.</sub></p>
 
 <details>
-<summary><b>More screenshots</b> (in game, augments, runes, champ select, guides, tier lists and more)</summary>
+<summary><img src="docs/brand/more-screenshots.svg" alt="See 11 more screenshots (click to open)" width="100%" /></summary>
 
 <br />
 
