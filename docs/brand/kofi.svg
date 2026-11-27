@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-label="Support Nexis on Ko-fi: free forever, your support helps with development.">
+  <title>Support Nexis on Ko-fi</title>
+  <defs>
+    <clipPath id="card"><rect width="1200" height="280" rx="26"/></clipPath>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="55"/></filter>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="soft" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="10"/></filter>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset=".55" stop-color="#a99bff"/><stop offset="1" stop-color="#ff5e5b"/></linearGradient>
+    <linearGradient id="fill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4" stop-opacity=".16"/><stop offset="1" stop-color="#ff5e5b" stop-opacity=".2"/></linearGradient>
+    <linearGradient id="btn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff5e5b"/><stop offset=".55" stop-color="#ff7a6b"/><stop offset="1" stop-color="#c06ce8"/></linearGradient>
+    <linearGradient id="x" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a99bff"/><stop offset="1" stop-color="#ff5e5b"/></linearGradient>
+    <linearGradient id="border" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5eead4" stop-opacity=".75"/><stop offset=".5" stop-color="#a99bff" stop-opacity=".55"/><stop offset="1" stop-color="#ff5e5b" stop-opacity=".8"/></linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="btnclip"><rect x="900" y="106" width="250" height="68" rx="34"/></clipPath>
+    <pattern id="hexes" width="28" height="48" patternUnits="userSpaceOnUse"><path d="M14 0l14 8v16l-14 8L0 24V8z" fill="none" stroke="#fff" stroke-width="1"/></pattern>
+    <linearGradient id="fadeR" x1="0" y1="0" x2="1" y2="0"><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>
+    <mask id="hm"><rect width="1200" height="280" fill="url(#fadeR)"/></mask>
+  </defs>
+  <g clip-path="url(#card)" font-family="'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif">
+    <rect width="1200" height="280" fill="#0c0f18"/>
+    <g filter="url(#blur)">
+      <circle cx="120" cy="60" r="170" fill="#5eead4" opacity=".22"><animateTransform attributeName="transform" type="translate" values="0 0;40 30;0 0" dur="12s" repeatCount="indefinite"/></circle>
+      <circle cx="1080" cy="290" r="220" fill="#ff5e5b" opacity=".32"><animateTransform attributeName="transform" type="translate" values="0 0;-50 -20;0 0" dur="14s" repeatCount="indefinite"/></circle>
+      <circle cx="620" cy="-60" r="200" fill="#a99bff" opacity=".22"/>
+    </g>
+    <rect width="1200" height="280" fill="url(#hexes)" opacity=".07" mask="url(#hm)"/>
+
+    <!-- Nexis x Ko-fi mark -->
+    <g transform="translate(150 140)">
+      <circle r="92" fill="#ff5e5b" opacity=".08"><animate attributeName="r" values="84;98;84" dur="3.2s" repeatCount="indefinite"/></circle>
+      <g transform="scale(3.1) translate(-32 -32)">
+        <path d="M32 3l25.1 14.5v29L32 61 6.9 46.5v-29z" fill="url(#fill)"/>
+        <path d="M32 3l25.1 14.5v29L32 61 6.9 46.5v-29z" fill="none" stroke="url(#ring)" stroke-width="2.4" stroke-linejoin="round"/>
+        <!-- a spark travelling around the hexagon -->
+        <path d="M32 3l25.1 14.5v29L32 61 6.9 46.5v-29z" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="10 164" filter="url(#glow)">
+          <animate attributeName="stroke-dashoffset" from="174" to="0" dur="3.5s" repeatCount="indefinite"/>
+        </path>
+        <!-- steam -->
+        <g fill="none" stroke="#a99bff" stroke-width="1.8" stroke-linecap="round">
+          <path d="M26 21c-1.4-2 1.4-3.4 0-5.4"><animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 2;0 -3" dur="2.4s" repeatCount="indefinite"/></path>
+          <path d="M32 19.5c-1.4-2 1.4-3.4 0-5.4"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin=".8s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 2;0 -3" dur="2.4s" begin=".8s" repeatCount="indefinite"/></path>
+          <path d="M38 21c-1.4-2 1.4-3.4 0-5.4"><animate attributeName="opacity" values="0;1;0" dur="2.4s" begin="1.6s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 2;0 -3" dur="2.4s" begin="1.6s" repeatCount="indefinite"/></path>
+        </g>
+        <path d="M19 25h24v10.5c0 6.4-5.2 11.5-11.5 11.5h-1C24.2 47 19 41.9 19 35.5z" fill="#fff"/>
+        <path d="M43 27.5h2.2a5 5 0 0 1 0 10H42" fill="none" stroke="#fff" stroke-width="3.2"/>
+        <!-- beating heart -->
+        <g transform="translate(31 35)">
+          <path d="M0 6s-6-3.4-6-7.3a3.2 3.2 0 0 1 6-1.6 3.2 3.2 0 0 1 6 1.6c0 3.9-6 7.3-6 7.3z" fill="#ff5e5b">
+            <animateTransform attributeName="transform" type="scale" values="1;1.22;1;1.14;1;1" keyTimes="0;.12;.24;.36;.5;1" dur="1.6s" repeatCount="indefinite"/>
+          </path>
+        </g>
+      </g>
+    </g>
+
+    <!-- text -->
+    <text x="310" y="92" font-size="15" font-weight="800" letter-spacing="5" fill="#a99bff">NEXIS OVERLAY</text>
+    <text x="307" y="152" font-size="46" font-weight="700" letter-spacing="-1" fill="#ffffff">Support Nexis <tspan fill="url(#x)">× Ko-fi</tspan></text>
+    <text x="310" y="196" font-size="21" fill="#a7aecb">Free forever. Supporting the project helps with</text>
+    <text x="310" y="224" font-size="21" fill="#a7aecb">development: new features, patch updates and quick fixes.</text>
+
+    <!-- button -->
+    <rect x="900" y="106" width="250" height="68" rx="34" fill="#ff5e5b" filter="url(#soft)" opacity=".5">
+      <animate attributeName="opacity" values=".35;.7;.35" dur="2.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="900" y="106" width="250" height="68" rx="34" fill="url(#btn)"/>
+    <g clip-path="url(#btnclip)"><rect x="700" y="96" width="70" height="90" fill="url(#shine)" transform="skewX(-20)"><animate attributeName="x" values="700;1260;1260" keyTimes="0;.4;1" dur="3.6s" repeatCount="indefinite"/></rect></g>
+    <text x="1025" y="148" text-anchor="middle" font-size="22" font-weight="800" fill="#ffffff">☕ Support on Ko-fi</text>
+  </g>
+  <rect x=".75" y=".75" width="1198.5" height="278.5" rx="25.5" fill="none" stroke="url(#border)" stroke-width="1.5"/>
+</svg>

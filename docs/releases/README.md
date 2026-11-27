@@ -12,14 +12,20 @@ GitHub URL), then only these sections, in this order, and only the ones that hav
 <img src="https://raw.githubusercontent.com/exodux-dev/NexisOverlay/main/docs/brand/releases/v1.2.0.svg" alt="Nexis Overlay v1.2.0: …" width="100%" />
 
 ## ✨ Features added
-- **🧭 Feature name** short line. Credit people inline (*Thanks to **Evo** for the idea!*).
+
+### Biggest feature, as a short title
+Two or three plain sentences: what it does and why it helps. Credit people inline
+(*Thanks to **Evo** for the idea!*).
+
+**Also new**
+- Smaller features, one short line each
 
 ## ⚡ Improvements
-- **🔎 What changed** short line.
+- **What changed:** short line
 
 ## 🐛 Bug fixes
-- **🎬 What was broken** is fixed.
+- **What was broken** is fixed
 ```
 
-Big `##` headings, one emoji + bold name per line, one short sentence each. No other sections:
-no download instructions, thanks, fair play, requirements or disclaimers.
+Emoji only on the three section headings, never on individual lines. Friendly, plain sentences.
+No other sections: no download instructions, thanks, fair play, requirements or disclaimers.
