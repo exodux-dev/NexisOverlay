@@ -1,7 +1,7 @@
 // Screenshots the in-game layer (hud window) over fake game art.
 // Prereq: `npx vite --port 1421 --strictPort` running. Usage:
 //   node scripts/screenshot-layer.mjs [outDir]
-// Env: LAYER_URL (default http://localhost:1421/?view=hud), BACKDROP_FILE, REAL_IMAGES=1, CARDS (real augment screen)
+// Env: LAYER_URL (default http://localhost:1421/?view=hud), BACKDROP_FILE, REAL_IMAGES=1, CARDS + REGION (real augment screen)
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
@@ -119,6 +119,8 @@ async function shoot(browser, width, height, name, { stats = false, clear = fals
     null,
     { timeout: 15000 },
   );
+  // REGION='{"x":…,"y":…,"w":…,"h":…}': scan region for this shot (fractions of the screen).
+  if (process.env.REGION) await page.evaluate((r) => window.__nexis.devHooks.set((s) => ({ settings: { ...s.settings, scanRegion: r } })), JSON.parse(process.env.REGION));
   await page.evaluate(
     ({ lines, stats }) => {
       const { devHooks } = window.__nexis;
