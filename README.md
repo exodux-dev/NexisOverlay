@@ -31,47 +31,38 @@
 
 ## Highlights
 
-<img src="docs/screenshots/hud.png" alt="A calm in-game HUD" width="100%" />
+<img src="docs/screenshots/build.png" alt="The Nexis Overlay app: build, shop and skill order for your champion" width="100%" />
 
-<p align="center"><b>A calm in-game HUD</b><br /><sub>Next buy, skills and augments. It fades while you play and comes back when it matters, with a level-up arrow on League's own ability bar.</sub></p>
+<p align="center"><b>Everything for your next game, in one window</b><br /><sub>Build, runes, skill order and what to buy right now, from real match stats, next to the League client or over the game.</sub></p>
 
-<br />
-
-<img src="docs/screenshots/layer.png" alt="Augment tier badges, in game" width="100%" />
-
-<p align="center"><b>Augment tier badges, in game</b><br /><sub>An S–D grade, win rate and pick rate under each augment card, ranked for your champion.</sub></p>
+<details>
+<summary><b>More screenshots</b> (in game, augments, runes, champ select, guides, tier lists and more)</summary>
 
 <br />
 
-<img src="docs/screenshots/augments.png" alt="Augments for your champion" width="100%" />
+<p align="center"><img src="docs/screenshots/hud.png" alt="A calm in-game HUD" width="100%" /><br /><b>A calm in-game HUD</b><br /><sub>Next buy, skills and augments; it fades while you play, with a level-up arrow on League's own ability bar.</sub></p>
 
-<p align="center"><b>Augments for your champion</b><br /><sub>Per-champion rankings for ARAM: Mayhem and Arena, combo highlights and reroll advice.</sub></p>
+<p align="center"><img src="docs/screenshots/layer.png" alt="Augment tier badges, in game" width="100%" /><br /><b>Augment tier badges, in game</b><br /><sub>A grade, win rate and pick rate under each augment card, ranked for your champion.</sub></p>
 
-<br />
+<p align="center"><img src="docs/screenshots/augments.png" alt="Augments for your champion" width="100%" /><br /><b>Augments for your champion</b><br /><sub>Per-champion rankings for ARAM: Mayhem and Arena, combos and reroll advice.</sub></p>
 
-<img src="docs/screenshots/pick-helper.png" alt="Champ select that helps" width="100%" />
+<p align="center"><img src="docs/screenshots/runes.png" alt="Runes" width="100%" /><br /><b>Runes</b><br /><sub>Every rune page with win rate, pick rate and games, laid out like League's rune screen.</sub></p>
 
-<p align="center"><b>Champ select that helps</b><br /><sub>Bench and teammate picks compared by win rate, plus a team comp breakdown.</sub></p>
+<p align="center"><img src="docs/screenshots/pick-helper.png" alt="Champ select that helps" width="100%" /><br /><b>Champ select that helps</b><br /><sub>Bench and teammate picks compared by win rate, plus a team comp breakdown.</sub></p>
 
-<br />
+<p align="center"><img src="docs/screenshots/enemies.png" alt="Know the lobby" width="100%" /><br /><b>Know the lobby</b><br /><sub>Scouting for all 10 players and a live team-power comparison.</sub></p>
 
-<img src="docs/screenshots/enemies.png" alt="Know the lobby" width="100%" />
+<p align="center"><img src="docs/screenshots/guide-plan.png" alt="Guides" width="100%" /><br /><b>Guides</b><br /><sub>Skill order, combos and a plan for every kind of fight.</sub></p>
 
-<p align="center"><b>Know the lobby</b><br /><sub>Scouting for all 10 players and a live team-power comparison.</sub></p>
+<p align="center"><img src="docs/screenshots/tiers.png" alt="Tier lists" width="100%" /><br /><b>Tier lists</b><br /><sub>S–D tiers for every mode and role.</sub></p>
 
-<br />
+<p align="center"><img src="docs/screenshots/tier-table.png" alt="Tier table" width="100%" /><br /><b>Tier table</b><br /><sub>The same tiers as a sortable table.</sub></p>
 
-<img src="docs/screenshots/guide.png" alt="Guides & skill orders" width="100%" />
+<p align="center"><img src="docs/screenshots/home.png" alt="Home" width="100%" /><br /><b>Home</b><br /><sub>Your favorites, recent form, top picks and patch changes for you.</sub></p>
 
-<p align="center"><b>Guides & skill orders</b><br /><sub>Level-by-level skill grid, combos and champion mechanics.</sub></p>
+<p align="center"><img src="docs/screenshots/hud-settings.png" alt="Make the HUD yours" width="100%" /><br /><b>Make the HUD yours</b><br /><sub>Pick what the HUD shows, how much it fades and where the level-up arrow sits.</sub></p>
 
-<br />
-
-<img src="docs/screenshots/tiers.png" alt="Tier lists & patch movers" width="100%" />
-
-<p align="center"><b>Tier lists & patch movers</b><br /><sub>S–D tiers for every mode and role, and the biggest risers and fallers each patch.</sub></p>
-
-<br />
+</details>
 
 <img src="docs/brand/divider.svg" width="100%" alt="" />
 
